@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.dagger)
     kotlin("kapt")
+    id("kotlin-parcelize")
 }
 
 android {
@@ -70,5 +71,7 @@ dependencies {
     // viewmodel compose
     implementation(libs.androidx.lifecycle.viewmodel.compose)
 
+    // permission
+    implementation (libs.accompanist.permissions)
 
 }
