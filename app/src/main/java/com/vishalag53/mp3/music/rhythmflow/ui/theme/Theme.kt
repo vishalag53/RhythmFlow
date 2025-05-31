@@ -1,58 +1,78 @@
 package com.vishalag53.mp3.music.rhythmflow.ui.theme
 
-import android.app.Activity
-import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
+import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
 
-private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80
+private val greenLightScheme = lightColorScheme(
+    primary = greenPrimaryLight,
+    secondary = greenSecondaryLight,
+    tertiary = greenTertiaryLight,
+    primaryContainer = greenContainerLight,
+    error = greenErrorLight,
+    errorContainer = greenErrorContainerLight,
+    background = greenBackgroundLight,
+    surface = greenBackgroundLight,
+    onBackground = greenBackgroundDark
 )
 
-private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40
-
-    /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
-    onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    */
+private val greenDarkScheme = darkColorScheme(
+    primary = greenPrimaryDark,
+    secondary = greenSecondaryDark,
+    tertiary = greenTertiaryDark,
+    primaryContainer = greenContainerDark,
+    error = greenErrorDark,
+    errorContainer = greenErrorContainerDark,
+    background = greenBackgroundDark,
+    surface = greenBackgroundDark,
+    onBackground = greenBackgroundLight
 )
 
+private val blueLightScheme = lightColorScheme(
+    primary = bluePrimaryLight,
+    secondary = blueSecondaryLight,
+    tertiary = blueTertiaryLight,
+    primaryContainer = blueContainerLight,
+    error = blueErrorLight,
+    errorContainer = blueErrorContainerLight,
+    background = blueBackgroundLight,
+    surface = blueBackgroundLight,
+    onBackground = blueBackgroundDark
+)
+
+private val blueDarkScheme = darkColorScheme(
+    primary = bluePrimaryDark,
+    secondary = blueSecondaryDark,
+    tertiary = blueTertiaryDark,
+    primaryContainer = blueContainerDark,
+    error = blueErrorDark,
+    errorContainer = blueErrorContainerDark,
+    background = blueBackgroundDark,
+    surface = blueBackgroundDark,
+    onBackground = blueBackgroundLight
+)
+
+@OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @Composable
 fun RhythmFlowTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
     content: @Composable () -> Unit
 ) {
-    val colorScheme = when {
-        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-        }
+    val themeColor    = "Blue"
+    var colorScheme = if (darkTheme) blueDarkScheme else blueLightScheme
 
-        darkTheme -> DarkColorScheme
-        else -> LightColorScheme
+    if(themeColor.equals("Blue")) {
+        colorScheme = if (darkTheme) blueDarkScheme else blueLightScheme
+    } else if (themeColor.equals("Green")){
+        colorScheme = if (darkTheme) greenDarkScheme else greenLightScheme
     }
 
     MaterialTheme(
         colorScheme = colorScheme,
-        typography = Typography,
+        typography = AppTypography,
         content = content
     )
 }
