@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.RhythmFlow.Starting" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">#A6C3EA</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_logo_light_splash</item>
+        <item name="postSplashScreenTheme">@style/Theme.RhythmFlow</item>
+    </style>
+
+</resources>

@@ -63,4 +63,12 @@ dependencies {
     implementation(libs.dagger.hilt)
     implementation(libs.hilt.compose.navigation)
     kapt(libs.dagger.kapt)
+
+    // splash
+    implementation(libs.androidx.core.splashscreen)
+
+    // viewmodel compose
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+
+
 }
