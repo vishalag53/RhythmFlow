@@ -13,8 +13,10 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberPermissionState
+import com.vishalag53.mp3.music.rhythmflow.screen.mainactivity.MainRootScreen
 import com.vishalag53.mp3.music.rhythmflow.ui.theme.RhythmFlowTheme
 import com.vishalag53.mp3.music.rhythmflow.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -33,6 +35,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             RhythmFlowTheme {
+                val navController = rememberNavController()
                 val permissionState = rememberPermissionState(
                     permission = Manifest.permission.READ_EXTERNAL_STORAGE
                 )
@@ -48,6 +51,7 @@ class MainActivity : ComponentActivity() {
                         lifecycleOwner.lifecycle.removeObserver(observer)
                     }
                 }
+                MainRootScreen("Song", navController)
             }
         }
     }
