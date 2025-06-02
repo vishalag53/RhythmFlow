@@ -7,6 +7,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.ui.platform.LocalContext
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
@@ -15,9 +16,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import com.vishalag53.mp3.music.rhythmflow.navigation.RootNavigation
-import com.vishalag53.mp3.music.rhythmflow.screen.mainactivity.MainRootScreen
+import com.vishalag53.mp3.music.rhythmflow.screen.storagepermission.AskStoragePermission
 import com.vishalag53.mp3.music.rhythmflow.ui.theme.RhythmFlowTheme
 import com.vishalag53.mp3.music.rhythmflow.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -37,6 +39,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             RhythmFlowTheme {
                 val navController = rememberNavController()
+                val context = LocalContext.current
                 val permissionState = rememberPermissionState(
                     permission = Manifest.permission.READ_EXTERNAL_STORAGE
                 )
@@ -52,7 +55,11 @@ class MainActivity : ComponentActivity() {
                         lifecycleOwner.lifecycle.removeObserver(observer)
                     }
                 }
-                RootNavigation(navController)
+                if (permissionState.status.isGranted) {
+                    RootNavigation(navController)
+                } else {
+                    AskStoragePermission(context)
+                }
             }
         }
     }
