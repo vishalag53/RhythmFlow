@@ -22,6 +22,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.vishalag53.mp3.music.rhythmflow.R
+import com.vishalag53.mp3.music.rhythmflow.data.model.Audio
 import com.vishalag53.mp3.music.rhythmflow.screen.common.MusicNextPlay
 import com.vishalag53.mp3.music.rhythmflow.screen.common.MusicPlayPause
 import com.vishalag53.mp3.music.rhythmflow.screen.common.MusicPreviousPlay
@@ -30,7 +31,7 @@ import com.vishalag53.mp3.music.rhythmflow.screen.common.MusicTitleDisplayName
 import com.vishalag53.mp3.music.rhythmflow.stringCapitalized
 
 @Composable
-fun PlayerSmall() {
+fun PlayerSmall(audio: Audio) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -42,7 +43,7 @@ fun PlayerSmall() {
             modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.Center
         ) {
-            MusicProgressBar(Color(0xFF736659))
+            MusicProgressBar(Color(0xFF736659), audio)
 
             Row(
                 modifier = Modifier

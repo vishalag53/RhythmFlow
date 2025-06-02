@@ -2,6 +2,7 @@ package com.vishalag53.mp3.music.rhythmflow.screen.smallplayer
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.basicMarquee
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -22,7 +23,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.vishalag53.mp3.music.rhythmflow.R
+import com.vishalag53.mp3.music.rhythmflow.navigation.Screens
 import com.vishalag53.mp3.music.rhythmflow.screen.common.MusicNextPlay
 import com.vishalag53.mp3.music.rhythmflow.screen.common.MusicPlayPause
 import com.vishalag53.mp3.music.rhythmflow.screen.common.MusicPreviousPlay
@@ -34,7 +37,7 @@ import com.vishalag53.mp3.music.rhythmflow.screen.common.MusicTitleDisplayName
 import com.vishalag53.mp3.music.rhythmflow.stringCapitalized
 
 @Composable
-fun SmallPlayerRootScreen() {
+fun SmallPlayerRootScreen(navController: NavHostController) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -46,6 +49,9 @@ fun SmallPlayerRootScreen() {
                     )
                 )
             )
+            .clickable {
+//                navController.navigate(Screens.Player())
+            }
     ) {
         SongProgressBar(0.4F)
 

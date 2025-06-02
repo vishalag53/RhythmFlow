@@ -21,21 +21,23 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.vishalag53.mp3.music.rhythmflow.data.model.Audio
 import com.vishalag53.mp3.music.rhythmflow.formatDuration
+import com.vishalag53.mp3.music.rhythmflow.navigation.Screens
 import com.vishalag53.mp3.music.rhythmflow.screen.common.MusicInfo
 import com.vishalag53.mp3.music.rhythmflow.screen.common.MusicTime
 import com.vishalag53.mp3.music.rhythmflow.screen.common.MusicTitleDisplayName
 import com.vishalag53.mp3.music.rhythmflow.screen.songs.songitem.components.SongMusicIcon
 import com.vishalag53.mp3.music.rhythmflow.stringCapitalized
+import kotlinx.serialization.json.Json
 
 @Composable
-fun SongItem(song: Audio, navController: NavHostController) {
+fun SongItem(audio: Audio, navController: NavHostController) {
     val context = LocalContext.current
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .height(60.dp)
             .clickable {
-
+                navController.navigate(Screens.Player(audio))
             }
     ) {
         Row(
@@ -53,8 +55,8 @@ fun SongItem(song: Audio, navController: NavHostController) {
                 Spacer(modifier = Modifier.width(8.dp))
 
                 MusicTitleDisplayName(
-                    stringCapitalized(song.title),
-                    stringCapitalized(song.displayName),
+                    stringCapitalized(audio.title),
+                    stringCapitalized(audio.displayName),
                     MaterialTheme.colorScheme.primary,
                     true,
                     TextOverflow.Ellipsis,
@@ -68,7 +70,7 @@ fun SongItem(song: Audio, navController: NavHostController) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 MusicTime(
-                    formatDuration(song.duration, context), MaterialTheme.colorScheme.primary, 12.sp
+                    formatDuration(audio.duration, context), MaterialTheme.colorScheme.primary, 12.sp
                 )
                 MusicInfo("Song Info", MaterialTheme.colorScheme.primary, Modifier.size(24.dp))
             }

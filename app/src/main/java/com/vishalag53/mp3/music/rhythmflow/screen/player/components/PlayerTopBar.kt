@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.dp
 import com.vishalag53.mp3.music.rhythmflow.screen.common.MusicInfo
 
 @Composable
-fun PlayerTopBar() {
+fun PlayerTopBar(navigateBack: () -> Unit) {
     Box(
         modifier = Modifier
             .statusBarsPadding()
@@ -28,7 +28,7 @@ fun PlayerTopBar() {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            PlayerBack()
+            PlayerBack(navigateBack)
             MusicInfo("Player Back", Color(0xFF35363B), Modifier.size(28.dp))
         }
     }

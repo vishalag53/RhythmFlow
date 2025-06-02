@@ -13,13 +13,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import com.vishalag53.mp3.music.rhythmflow.data.model.Audio
 import com.vishalag53.mp3.music.rhythmflow.formatBitrate
 import com.vishalag53.mp3.music.rhythmflow.formatDate
 import com.vishalag53.mp3.music.rhythmflow.formatDuration
 import com.vishalag53.mp3.music.rhythmflow.formatSize
 
 @Composable
-fun SongInfoRootScreen() {
+fun SongInfoRootScreen(audio: Audio) {
     val context = LocalContext.current
     val about = arrayOf(
         "Song Name",
@@ -36,17 +37,17 @@ fun SongInfoRootScreen() {
     )
 
     val aboutInfo = arrayOf(
-        "song.title",
-        "song.displayName",
-        "song.artist",
-        "song.album",
-        "formatDuration(song.duration, context)",
-        "formatSize(song.size, context)",
-        "formatBitrate(song.bitrate, context)",
-        "formatDate(song.dateAdded)",
-        "formatDate(song.dateModified)",
-        "song.folderName",
-        "song.path"
+        audio.title,
+        audio.displayName,
+        audio.artist,
+        audio.album,
+        formatDuration(audio.duration, context),
+        formatSize(audio.size, context),
+        formatBitrate(audio.bitrate, context),
+        formatDate(audio.dateAdded),
+        formatDate(audio.dateModified),
+        audio.folderName,
+        audio.path
     )
 
     Box(

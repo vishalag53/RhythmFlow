@@ -16,6 +16,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberPermissionState
+import com.vishalag53.mp3.music.rhythmflow.navigation.RootNavigation
 import com.vishalag53.mp3.music.rhythmflow.screen.mainactivity.MainRootScreen
 import com.vishalag53.mp3.music.rhythmflow.ui.theme.RhythmFlowTheme
 import com.vishalag53.mp3.music.rhythmflow.viewmodel.MainViewModel
@@ -51,7 +52,7 @@ class MainActivity : ComponentActivity() {
                         lifecycleOwner.lifecycle.removeObserver(observer)
                     }
                 }
-                MainRootScreen("Song", navController)
+                RootNavigation(navController)
             }
         }
     }

@@ -19,7 +19,7 @@ import com.vishalag53.mp3.music.rhythmflow.screen.songs.SongsRootScreen
 fun MainRootScreen(tab: String, navController: NavHostController) {
     Scaffold(
         topBar = { AppBarRootScreen() },
-        bottomBar = { SmallPlayerRootScreen() }) { innerPadding ->
+        bottomBar = { SmallPlayerRootScreen(navController) }) { innerPadding ->
         Box(
             modifier = Modifier
                 .fillMaxSize()

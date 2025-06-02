@@ -13,11 +13,12 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.vishalag53.mp3.music.rhythmflow.data.model.Audio
 import com.vishalag53.mp3.music.rhythmflow.screen.player.miniplayer.PlayerMiniPlayer
 import com.vishalag53.mp3.music.rhythmflow.screen.player.playermodalsheet.PlayerBottomSheet
 
 @Composable
-fun PlayerSheetRootScreen() {
+fun PlayerSheetRootScreen(audio: Audio) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -35,15 +36,9 @@ fun PlayerSheetRootScreen() {
         Column(
             modifier = Modifier.fillMaxSize()
         ) {
-            PlayerMiniPlayer()
+            PlayerMiniPlayer(audio)
             Spacer(modifier = Modifier.height(12.dp))
-            PlayerBottomSheet()
+            PlayerBottomSheet(audio)
         }
     }
-}
-
-@Preview(showSystemUi = true)
-@Composable
-fun A() {
-    PlayerSheetRootScreen()
 }

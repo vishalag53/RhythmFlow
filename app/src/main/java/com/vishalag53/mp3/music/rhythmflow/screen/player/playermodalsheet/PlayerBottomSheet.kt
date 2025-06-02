@@ -16,9 +16,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
+import com.vishalag53.mp3.music.rhythmflow.data.model.Audio
 
 @Composable
-fun PlayerBottomSheet() {
+fun PlayerBottomSheet(audio: Audio) {
     val screenWidth = LocalConfiguration.current.screenWidthDp
 
     Box(
@@ -43,7 +44,7 @@ fun PlayerBottomSheet() {
                 )
             }
 
-            PlayerTabRow()
+            PlayerTabRow(audio)
         }
     }
 }

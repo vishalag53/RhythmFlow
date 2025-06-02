@@ -19,6 +19,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.vishalag53.mp3.music.rhythmflow.data.model.Audio
 import com.vishalag53.mp3.music.rhythmflow.screen.common.MusicProgressBar
 import com.vishalag53.mp3.music.rhythmflow.screen.common.MusicTitleDisplayName
 import com.vishalag53.mp3.music.rhythmflow.screen.player.components.PlayerControllers
@@ -28,9 +29,9 @@ import com.vishalag53.mp3.music.rhythmflow.screen.player.playermodalsheet.Player
 import com.vishalag53.mp3.music.rhythmflow.stringCapitalized
 
 @Composable
-fun PlayerRootScreen() {
+fun PlayerRootScreen(audio: Audio, navigateBack: () -> Unit) {
     Scaffold(
-        topBar = { PlayerTopBar() },
+        topBar = { PlayerTopBar(navigateBack) },
     ) { innerPadding ->
         Box(
             modifier = Modifier
@@ -59,8 +60,8 @@ fun PlayerRootScreen() {
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         MusicTitleDisplayName(
-                            title = stringCapitalized("song.title"),
-                            display = stringCapitalized("song.displayName"),
+                            title = stringCapitalized(audio.title),
+                            display = stringCapitalized(audio.displayName),
                             color = Color(0xFFFDCF9E),
                             softWrap = true,
                             overflow = TextOverflow.Ellipsis,
@@ -72,7 +73,7 @@ fun PlayerRootScreen() {
                         PlayerPlaybackSpeed()
                     }
                     Spacer(modifier = Modifier.height(10.dp))
-                    MusicProgressBar(Color(0xFF35363B))
+                    MusicProgressBar(Color(0xFF35363B), audio)
                     Spacer(modifier = Modifier.height(10.dp))
                     PlayerControllers()
                 }
@@ -84,7 +85,7 @@ fun PlayerRootScreen() {
                         .height(126.dp)
                         .fillMaxWidth()
                 ) {
-                    PlayerBottomSheet()
+                    PlayerBottomSheet(audio)
                 }
             }
         }

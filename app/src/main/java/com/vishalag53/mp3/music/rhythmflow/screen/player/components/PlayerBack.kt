@@ -1,5 +1,6 @@
 package com.vishalag53.mp3.music.rhythmflow.screen.player.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
@@ -10,11 +11,15 @@ import androidx.compose.ui.unit.dp
 import com.vishalag53.mp3.music.rhythmflow.R
 
 @Composable
-internal fun PlayerBack() {
+internal fun PlayerBack(navigateBack: () -> Unit) {
     Icon(
         painter = painterResource(R.drawable.ic_back),
         contentDescription = "Back",
         tint = Color(0xFF35363B),
-        modifier = Modifier.size(28.dp)
+        modifier = Modifier
+            .size(28.dp)
+            .clickable {
+                navigateBack
+            }
     )
 }
