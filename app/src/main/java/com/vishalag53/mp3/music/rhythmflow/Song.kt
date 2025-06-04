@@ -13,15 +13,12 @@ import java.util.concurrent.TimeUnit
 fun formatDuration(duration: Long, context: Context): String {
     val hours = TimeUnit.HOURS.convert(duration, TimeUnit.MILLISECONDS)
     val minutes = TimeUnit.MINUTES.convert(
-        duration,
-        TimeUnit.MILLISECONDS
+        duration, TimeUnit.MILLISECONDS
     ) - hours * TimeUnit.MINUTES.convert(1, TimeUnit.HOURS)
     val seconds = (TimeUnit.SECONDS.convert(
-        duration,
-        TimeUnit.MILLISECONDS
+        duration, TimeUnit.MILLISECONDS
     ) - hours * TimeUnit.SECONDS.convert(1, TimeUnit.HOURS) - minutes * TimeUnit.SECONDS.convert(
-        1,
-        TimeUnit.MINUTES
+        1, TimeUnit.MINUTES
     ))
     return if (hours > 0) {
         context.getString(R.string.duration_with_hour, hours, minutes, seconds)
@@ -64,4 +61,13 @@ fun openAppSettings(context: Context) {
         data = Uri.fromParts("package", context.packageName, null)
     }
     context.startActivity(intent)
+}
+
+fun calculateProgressValue(
+    currentProgress: Long, duration: Long, context: Context
+): Pair<Float, String> {
+    val progress =
+        if (currentProgress > 0) ((currentProgress.toFloat() / duration.toFloat()) * 100f) else 0f
+    val progressString = formatDuration(currentProgress, context)
+    return Pair(progress, progressString)
 }

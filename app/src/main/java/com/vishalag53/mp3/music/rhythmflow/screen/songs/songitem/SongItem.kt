@@ -37,7 +37,7 @@ fun SongItem(audio: Audio, navController: NavHostController) {
             .fillMaxWidth()
             .height(60.dp)
             .clickable {
-                navController.navigate(Screens.Player(audio))
+//                navController.navigate(Screens.Player(audio))
             }
     ) {
         Row(

@@ -1,6 +1,5 @@
 package com.vishalag53.mp3.music.rhythmflow.viewmodel
 
-import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -37,7 +36,6 @@ class MainViewModel @Inject constructor(
 
     init {
         loadAudioData()
-        Log.d("AudioList", audioList.toString())
     }
 
     private fun loadAudioData() {

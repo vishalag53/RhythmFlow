@@ -1,6 +1,8 @@
 package com.vishalag53.mp3.music.rhythmflow
 
 import android.Manifest
+import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -18,6 +20,8 @@ import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
+import com.vishalag53.mp3.music.rhythmflow.musicplayer.AudioViewModel
+import com.vishalag53.mp3.music.rhythmflow.musicplayer.service.RhythmFlowService
 import com.vishalag53.mp3.music.rhythmflow.navigation.RootNavigation
 import com.vishalag53.mp3.music.rhythmflow.screen.storagepermission.AskStoragePermission
 import com.vishalag53.mp3.music.rhythmflow.ui.theme.RhythmFlowTheme
@@ -30,6 +34,8 @@ import kotlinx.coroutines.launch
 class MainActivity : ComponentActivity() {
 
     private val viewModel: MainViewModel by viewModels()
+    private val audioViewModel: AudioViewModel by viewModels()
+    private var isServiceRunning = false
 
     @OptIn(ExperimentalPermissionsApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -80,4 +86,15 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    fun startService() {
+        if (!isServiceRunning) {
+            val intent = Intent(this, RhythmFlowService::class.java)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                startForegroundService(intent)
+            } else {
+                startService(intent)
+            }
+            isServiceRunning = true
+        }
+    }
 }

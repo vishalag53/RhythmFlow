@@ -11,14 +11,19 @@ import com.vishalag53.mp3.music.rhythmflow.screen.player.PlayerRootScreen
 import kotlin.reflect.typeOf
 
 @Composable
-fun RootNavigation(navController: NavHostController) {
+fun RootNavigation(
+    navController: NavHostController
+) {
     NavHost(
         navController = navController,
         startDestination = Screens.Main.Songs
     ) {
 
         composable<Screens.Main.Songs> {
-            MainRootScreen(tab = "Songs", navController)
+            MainRootScreen(
+                tab = "Songs",
+                navController = navController
+            )
         }
 
         composable<Screens.Player>(

@@ -25,7 +25,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.vishalag53.mp3.music.rhythmflow.R
-import com.vishalag53.mp3.music.rhythmflow.navigation.Screens
 import com.vishalag53.mp3.music.rhythmflow.screen.common.MusicNextPlay
 import com.vishalag53.mp3.music.rhythmflow.screen.common.MusicPlayPause
 import com.vishalag53.mp3.music.rhythmflow.screen.common.MusicPreviousPlay
@@ -37,7 +36,9 @@ import com.vishalag53.mp3.music.rhythmflow.screen.common.MusicTitleDisplayName
 import com.vishalag53.mp3.music.rhythmflow.stringCapitalized
 
 @Composable
-fun SmallPlayerRootScreen(navController: NavHostController) {
+fun SmallPlayerRootScreen(
+    navController: NavHostController
+) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -53,7 +54,7 @@ fun SmallPlayerRootScreen(navController: NavHostController) {
 //                navController.navigate(Screens.Player())
             }
     ) {
-        SongProgressBar(0.4F)
+        SongProgressBar(0.5f)
 
         Column(
             modifier = Modifier.padding(2.dp)

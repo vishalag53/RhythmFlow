@@ -88,4 +88,10 @@ dependencies {
     implementation(libs.androidx.media3.session)
     implementation(libs.androidx.media3.common)
     implementation(libs.androidx.media3.datasource.okhttp)
+
+    // Glide
+    implementation(libs.glide)
+
+    // Coil
+    implementation(libs.coil.compose)
 }

@@ -16,10 +16,12 @@ import com.vishalag53.mp3.music.rhythmflow.screen.smallplayer.SmallPlayerRootScr
 import com.vishalag53.mp3.music.rhythmflow.screen.songs.SongsRootScreen
 
 @Composable
-fun MainRootScreen(tab: String, navController: NavHostController) {
-    Scaffold(
-        topBar = { AppBarRootScreen() },
-        bottomBar = { SmallPlayerRootScreen(navController) }) { innerPadding ->
+fun MainRootScreen(
+    tab: String, navController: NavHostController
+) {
+    Scaffold(topBar = { AppBarRootScreen() }, bottomBar = {
+        SmallPlayerRootScreen(navController = navController)
+    }) { innerPadding ->
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -27,8 +29,7 @@ fun MainRootScreen(tab: String, navController: NavHostController) {
                 .background(
                     brush = Brush.verticalGradient(
                         colors = listOf(
-                            MaterialTheme.colorScheme.background,
-                            Color(0xFF3078AB)
+                            MaterialTheme.colorScheme.background, Color(0xFF3078AB)
                         )
                     )
                 )
