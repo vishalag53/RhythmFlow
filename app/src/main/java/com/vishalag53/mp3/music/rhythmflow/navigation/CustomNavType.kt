@@ -9,6 +9,7 @@ import kotlinx.serialization.KSerializer
 import kotlinx.serialization.json.Json
 import kotlin.reflect.KClass
 
+@Suppress("DEPRECATION")
 class CustomNavType<T: Parcelable> (
     private val clazz: KClass<T>,
     private val serializer: KSerializer<T>

@@ -65,7 +65,7 @@ class RhythmFlowNotificationManager @Inject constructor(
                     pendingIntent = mediaSession.sessionActivity
                 )
             )
-            .setSmallIconResourceId(R.drawable.ic_launcher_background)
+            .setSmallIconResourceId(R.drawable.ic_logo_light_splash)
             .build()
             .also {
                 it.setMediaSessionToken(mediaSession.platformToken)

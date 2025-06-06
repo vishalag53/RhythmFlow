@@ -40,7 +40,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.vishalag53.mp3.music.rhythmflow.data.model.Audio
 import com.vishalag53.mp3.music.rhythmflow.formatDuration
-import kotlin.math.floor
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -240,7 +239,6 @@ fun ArtistInfo(
 
 @Composable
 fun PlayerIconItem(
-    modifier: Modifier = Modifier,
     icon: ImageVector,
     borderStroke: BorderStroke? = null,
     backgroundColor: Color = MaterialTheme.colorScheme.surface,
@@ -268,3 +266,22 @@ fun PlayerIconItem(
         }
     }
 }
+
+
+//HomeScreen(
+//progress = viewModel.progress,
+//onProgress = { viewModel.onUiEvents(UIEvents.SeekTo(it)) },
+//isAudioPlaying = viewModel.isPlaying,
+//audiList = viewModel.audioList,
+//currentPlayingAudio = viewModel.currentSelectedAudio,
+//onStart = {
+//    viewModel.onUiEvents(UIEvents.PlayPause)
+//},
+//onItemClick = {
+//    viewModel.onUiEvents(UIEvents.SelectedAudioChange(it))
+//    startService()
+//},
+//onNext = {
+//    viewModel.onUiEvents(UIEvents.SeekToNext)
+//}
+//)

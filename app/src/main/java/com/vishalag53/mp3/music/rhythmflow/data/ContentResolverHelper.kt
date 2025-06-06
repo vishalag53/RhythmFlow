@@ -1,6 +1,5 @@
 package com.vishalag53.mp3.music.rhythmflow.data
 
-import android.content.ContentUris
 import android.content.Context
 import android.database.Cursor
 import android.os.Build
@@ -35,7 +34,6 @@ constructor(@ApplicationContext val context: Context) {
     )
 
     private val selectionClause = "${MediaStore.Audio.Media.IS_MUSIC} != 0"
-    private var selectionArg = arrayOf("1")
     private val sortOrder = "${MediaStore.Audio.Media.DISPLAY_NAME} ASC"
 
     @WorkerThread
@@ -79,13 +77,9 @@ constructor(@ApplicationContext val context: Context) {
                     cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.SIZE))
                 val pathCC: List<String> = pathC.split("/")
                 val folderName = pathCC[pathCC.size - 2]
-                val uri = ContentUris.withAppendedId(
-                    MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, idC.toLong()
-                )
 
                 if (durationC > 0 && File(pathC).exists()) {
                     val song = Audio(
-                        uri = uri,
                         id = idC,
                         displayName = displayNameC,
                         title = titleC,

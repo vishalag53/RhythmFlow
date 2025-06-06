@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.core.net.toUri
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -26,7 +25,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 private val audioDummy = Audio(
-    "".toUri(), "", "", "", "", 0L, 0L, "", 0L, "", "", 0L, 0L
+    "", "", "", "", 0L, 0L, "", 0L, "", "", 0L, 0L
 )
 
 @OptIn(SavedStateHandleSaveableApi::class)
@@ -102,7 +101,7 @@ class AudioViewModel @Inject constructor(
 
     private fun setMediaItems() {
         audioList.map { audio ->
-            MediaItem.Builder().setUri(audio.uri).setMediaMetadata(
+            MediaItem.Builder().setMediaMetadata(
                 MediaMetadata.Builder().setAlbumArtist(audio.artist).setDisplayTitle(audio.title)
                     .setSubtitle(audio.displayName).build()
             ).build()

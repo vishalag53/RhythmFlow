@@ -42,10 +42,10 @@ fun formatDate(date: Long): String {
     return simpleDateFormat.format(Date(date * 1000L))
 }
 
-fun totalSongTime(songsList: List<Audio>, context: Context): String {
+fun totalAudioTime(audioList: List<Audio>, context: Context): String {
     var totalTime: Long = 0
-    for (song in songsList) {
-        totalTime += song.duration
+    for (audio in audioList) {
+        totalTime += audio.duration
     }
     return context.getString(R.string.total_time_text, formatDuration(totalTime, context))
 }
