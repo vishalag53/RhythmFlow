@@ -32,7 +32,7 @@ fun AudioItem(audio: Audio, navController: NavHostController) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 6.dp, vertical = 3.dp)
+            .padding(10.dp)
             .clickable {
                 navController.navigate(Screens.Player(audio))
             },
@@ -46,12 +46,14 @@ fun AudioItem(audio: Audio, navController: NavHostController) {
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             AudioTitleDisplayName(
-                stringCapitalized(audio.title),
-                stringCapitalized(audio.displayName),
-                MaterialTheme.colorScheme.primary,
-                true,
-                TextOverflow.Ellipsis,
-                Modifier.padding(6.dp)
+                title = stringCapitalized(audio.title),
+                display = stringCapitalized(audio.displayName),
+                color = MaterialTheme.colorScheme.primary,
+                softWrap = true,
+                overflow = TextOverflow.Ellipsis,
+                modifierColumn = Modifier
+                    .padding(6.dp)
+                    .weight(1f)
             )
 
             Row(
