@@ -9,7 +9,7 @@
 
     <application
         android:allowBackup="true"
-        android:name=".RhythmFlowApplication"
+        android:name=".main.other.presentation.RhythmFlowApplication"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
@@ -19,7 +19,7 @@
         android:theme="@style/Theme.RhythmFlow"
         tools:targetApi="31">
         <activity
-            android:name=".MainActivity"
+            android:name=".main.other.presentation.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.RhythmFlow.Starting">
             <intent-filter>

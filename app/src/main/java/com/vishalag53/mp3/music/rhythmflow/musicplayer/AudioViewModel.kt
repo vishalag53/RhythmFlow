@@ -11,7 +11,7 @@ import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
 import androidx.lifecycle.viewmodel.compose.saveable
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
-import com.vishalag53.mp3.music.rhythmflow.calculateProgressValue
+import com.vishalag53.mp3.music.rhythmflow.core.domain.calculateProgressValue
 import com.vishalag53.mp3.music.rhythmflow.data.model.Audio
 import com.vishalag53.mp3.music.rhythmflow.data.repository.AudioRepository
 import com.vishalag53.mp3.music.rhythmflow.musicplayer.service.RhythmFlowServiceHandler

@@ -39,7 +39,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.vishalag53.mp3.music.rhythmflow.data.model.Audio
-import com.vishalag53.mp3.music.rhythmflow.formatDuration
+import com.vishalag53.mp3.music.rhythmflow.core.domain.formatDuration
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
