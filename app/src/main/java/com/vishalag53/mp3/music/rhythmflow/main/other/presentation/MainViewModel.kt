@@ -1,11 +1,8 @@
 package com.vishalag53.mp3.music.rhythmflow.main.other.presentation
 
-import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
-import androidx.lifecycle.viewmodel.compose.saveable
 import com.vishalag53.mp3.music.rhythmflow.data.model.Audio
 import com.vishalag53.mp3.music.rhythmflow.data.repository.AudioRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,14 +15,18 @@ import javax.inject.Inject
 @OptIn(SavedStateHandleSaveableApi::class)
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val repository: AudioRepository,
-    savedStateHandle: SavedStateHandle
-): ViewModel() {
+    private val repository: AudioRepository
+) : ViewModel() {
 
-    var audioList by savedStateHandle.saveable { mutableStateOf(listOf<Audio>()) }
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading = _isLoading.asStateFlow()
+
+    private val _audioList = MutableStateFlow<List<Audio>>(emptyList())
+    val audioList = _audioList.asStateFlow()
 
     private val _keepSplashOn = MutableStateFlow(true)
     val keepSplashOn get() = _keepSplashOn.asStateFlow()
+
 
     init {
         viewModelScope.launch {
@@ -34,14 +35,13 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    init {
-        loadAudioData()
-    }
-
-    private fun loadAudioData() {
+    fun loadAudioData() {
         viewModelScope.launch {
+            _isLoading.value = true
             val audio = repository.getAudioData()
-            audioList = audio
+            _audioList.value = audio
+            delay(1000L)
+            _isLoading.value = false
         }
     }
 }

@@ -23,15 +23,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
-import com.vishalag53.mp3.music.rhythmflow.main.other.presentation.MainViewModel
 import com.vishalag53.mp3.music.rhythmflow.R
 import com.vishalag53.mp3.music.rhythmflow.core.domain.totalAudioTime
+import com.vishalag53.mp3.music.rhythmflow.data.model.Audio
 
 @Composable
-fun SongsTopBar() {
-    val viewModel = hiltViewModel<MainViewModel>()
-    val songs = viewModel.audioList
+fun SongsTopBar(audioList: List<Audio>) {
     val context = LocalContext.current
 
     Box(
@@ -71,7 +68,7 @@ fun SongsTopBar() {
                 Spacer(modifier = Modifier.width(2.dp))
 
                 Text(
-                    text = "(${songs.size})${totalAudioTime(songs, context)}",
+                    text = "(${audioList.size})${totalAudioTime(audioList, context)}",
                     style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Medium),
                     color = MaterialTheme.colorScheme.secondary,
                     maxLines = 1,

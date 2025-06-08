@@ -53,12 +53,3 @@ fun stringCapitalized(string: String): String {
         word.replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
     }
 }
-
-fun calculateProgressValue(
-    currentProgress: Long, duration: Long, context: Context
-): Pair<Float, String> {
-    val progress =
-        if (currentProgress > 0) ((currentProgress.toFloat() / duration.toFloat()) * 100f) else 0f
-    val progressString = formatDuration(currentProgress, context)
-    return Pair(progress, progressString)
-}

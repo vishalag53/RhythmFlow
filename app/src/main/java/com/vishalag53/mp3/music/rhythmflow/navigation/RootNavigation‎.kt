@@ -13,22 +13,27 @@ import kotlin.reflect.typeOf
 
 @Composable
 fun RootNavigation(
-    navController: NavHostController
+    navController: NavHostController,
+    audioList: List<Audio>
 ) {
     NavHost(
         navController = navController,
         startDestination = Screens.Main.Songs
     ) {
-        mainGraph(navController)
+        mainGraph(navController, audioList)
         playerGraph(navController)
     }
 }
 
-private fun NavGraphBuilder.mainGraph(navController: NavHostController) {
+private fun NavGraphBuilder.mainGraph(
+    navController: NavHostController,
+    audioList: List<Audio>
+) {
     composable<Screens.Main.Songs> {
         MainRootScreen(
             tab = "Songs",
-            navController = navController
+            navController = navController,
+            audioList = audioList
         )
     }
 }

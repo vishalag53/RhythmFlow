@@ -11,13 +11,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavHostController
+import com.vishalag53.mp3.music.rhythmflow.data.model.Audio
 import com.vishalag53.mp3.music.rhythmflow.main.appbar.presentation.AppBarRootScreen
 import com.vishalag53.mp3.music.rhythmflow.main.smallplayer.presentation.SmallPlayerRootScreen
 import com.vishalag53.mp3.music.rhythmflow.main.songs.presentation.SongsRootScreen
 
 @Composable
 fun MainRootScreen(
-    tab: String, navController: NavHostController
+    tab: String, navController: NavHostController, audioList: List<Audio>
 ) {
     Scaffold(topBar = { AppBarRootScreen() }, bottomBar = {
         SmallPlayerRootScreen()
@@ -35,7 +36,7 @@ fun MainRootScreen(
                 )
         ) {
             when (tab) {
-                "Songs" -> SongsRootScreen(navController)
+                "Songs" -> SongsRootScreen(navController, audioList)
             }
         }
     }

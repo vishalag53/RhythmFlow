@@ -9,8 +9,6 @@ import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.trackselection.DefaultTrackSelector
 import androidx.media3.session.MediaSession
-import com.vishalag53.mp3.music.rhythmflow.musicplayer.notification.RhythmFlowNotificationManager
-import com.vishalag53.mp3.music.rhythmflow.musicplayer.service.RhythmFlowServiceHandler
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
@@ -45,20 +43,5 @@ object MediaModule {
         @ApplicationContext context: Context,
         player: ExoPlayer
     ): MediaSession = MediaSession.Builder(context, player).build()
-
-    @Provides
-    @Singleton
-    fun provideNotificationManager(
-        @ApplicationContext context: Context,
-        player: ExoPlayer,
-    ): RhythmFlowNotificationManager = RhythmFlowNotificationManager(
-        context = context,
-        exoPlayer = player
-    )
-
-    @Provides
-    @Singleton
-    fun provideServiceHandler(exoPlayer: ExoPlayer): RhythmFlowServiceHandler =
-        RhythmFlowServiceHandler(exoPlayer)
 
 }
