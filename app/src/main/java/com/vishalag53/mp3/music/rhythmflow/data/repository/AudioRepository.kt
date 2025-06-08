@@ -1,6 +1,6 @@
 package com.vishalag53.mp3.music.rhythmflow.data.repository
 
-import com.vishalag53.mp3.music.rhythmflow.data.ContentResolverHelper
+import com.vishalag53.mp3.music.rhythmflow.data.contentresolverhelper.ContentResolverHelper
 import com.vishalag53.mp3.music.rhythmflow.data.model.Audio
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext

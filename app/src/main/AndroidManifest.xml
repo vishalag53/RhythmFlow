@@ -9,7 +9,7 @@
 
     <application
         android:allowBackup="true"
-        android:name=".main.other.presentation.RhythmFlowApplication"
+        android:name=".presentation.main.other.RhythmFlowApplication"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
@@ -19,7 +19,7 @@
         android:theme="@style/Theme.RhythmFlow"
         tools:targetApi="31">
         <activity
-            android:name=".main.other.presentation.MainActivity"
+            android:name=".presentation.main.other.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.RhythmFlow.Starting">
             <intent-filter>
@@ -28,15 +28,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service
-            android:name=".musicplayer.service.RhythmFlowService"
-            android:exported="true"
-            android:foregroundServiceType="mediaPlayback"
-            tools:ignore="ForegroundServicePermission">
-            <intent-filter>
-                <action android:name="androidx.media3.session.MediaButtonReceiver"/>
-            </intent-filter>
-        </service>
     </application>
 
 </manifest>
