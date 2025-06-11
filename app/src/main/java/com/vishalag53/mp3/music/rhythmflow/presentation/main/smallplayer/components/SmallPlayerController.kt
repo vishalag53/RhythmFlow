@@ -1,5 +1,6 @@
 package com.vishalag53.mp3.music.rhythmflow.presentation.main.smallplayer.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -15,7 +16,9 @@ import androidx.compose.ui.unit.dp
 import com.vishalag53.mp3.music.rhythmflow.R
 
 @Composable
-fun SmallPlayerController() {
+fun SmallPlayerController(
+    onNext: () -> Unit, onPrev: () -> Unit, onStart: () -> Unit, isAudioPlaying: Boolean
+) {
     Row(
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -26,17 +29,22 @@ fun SmallPlayerController() {
             modifier = Modifier
                 .width(17.dp)
                 .height(20.dp)
-        )
+                .clickable {
+                    onPrev()
+                })
 
         Spacer(modifier = Modifier.width(10.dp))
 
         Icon(
-            painter = if (true) painterResource(R.drawable.ic_play)
-            else painterResource(R.drawable.ic_pause),
+            painter = if (isAudioPlaying) painterResource(R.drawable.ic_pause)
+            else painterResource(R.drawable.ic_play),
             contentDescription = null,
             tint = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.size(46.dp)
-        )
+            modifier = Modifier
+                .size(46.dp)
+                .clickable {
+                    onStart()
+                })
 
         Spacer(modifier = Modifier.width(10.dp))
 
@@ -47,6 +55,8 @@ fun SmallPlayerController() {
             modifier = Modifier
                 .width(17.dp)
                 .height(20.dp)
-        )
+                .clickable {
+                    onNext()
+                })
     }
 }

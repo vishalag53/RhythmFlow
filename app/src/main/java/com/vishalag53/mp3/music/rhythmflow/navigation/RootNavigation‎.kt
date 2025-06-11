@@ -13,12 +13,10 @@ import kotlin.reflect.typeOf
 
 @Composable
 fun RootNavigation(
-    navController: NavHostController,
-    audioList: List<Audio>
+    navController: NavHostController, audioList: List<Audio>
 ) {
     NavHost(
-        navController = navController,
-        startDestination = Screens.Main.Songs
+        navController = navController, startDestination = Screens.Main.Songs
     ) {
         mainGraph(navController, audioList)
         playerGraph(navController)
@@ -26,31 +24,26 @@ fun RootNavigation(
 }
 
 private fun NavGraphBuilder.mainGraph(
-    navController: NavHostController,
-    audioList: List<Audio>
+    navController: NavHostController, audioList: List<Audio>
 ) {
     composable<Screens.Main.Songs> {
         MainRootScreen(
-            tab = "Songs",
-            navController = navController,
-            audioList = audioList
+            tab = "Songs", navController = navController, audioList = audioList
         )
     }
 }
 
 private fun NavGraphBuilder.playerGraph(navController: NavHostController) {
     composable<Screens.Player>(
-            typeMap = mapOf(
-                typeOf<Audio>() to CustomNavType(Audio::class, Audio.serializer())
-            )
-        ) {
-            val args = it.toRoute<Screens.Player>()
+        typeMap = mapOf(
+            typeOf<Audio>() to CustomNavType(Audio::class, Audio.serializer())
+        )
+    ) {
+        val args = it.toRoute<Screens.Player>()
 
-            PlayerRootScreen(
-                args.audio,
-                navigateBack = {
-                    navController.popBackStack()
-                }
-            )
-        }
+        PlayerRootScreen(
+            args.audio, navigateBack = {
+                navController.popBackStack()
+            })
+    }
 }

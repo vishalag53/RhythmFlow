@@ -7,22 +7,41 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.vishalag53.mp3.music.rhythmflow.data.model.Audio
 import com.vishalag53.mp3.music.rhythmflow.presentation.main.appbar.AppBarRootScreen
-import com.vishalag53.mp3.music.rhythmflow.presentation.main.smallplayer.SmallPlayerRootScreen
+import com.vishalag53.mp3.music.rhythmflow.presentation.main.smallplayer.SmallPlayerViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.main.songs.SongsRootScreen
 
 @Composable
 fun MainRootScreen(
     tab: String, navController: NavHostController, audioList: List<Audio>
 ) {
-    Scaffold(topBar = { AppBarRootScreen() }, bottomBar = {
-        SmallPlayerRootScreen()
-    }) { innerPadding ->
+    val smallPlayerViewModel = hiltViewModel<SmallPlayerViewModel>()
+
+    LaunchedEffect(Unit) {
+        smallPlayerViewModel.setAudioList(audioList)
+    }
+
+    Scaffold(
+        topBar = { AppBarRootScreen() },
+//        bottomBar = {
+//            SmallPlayerRootScreen(
+//                audio = smallPlayerViewModel.currentSelectedAudio.value,
+//                progress = smallPlayerViewModel.progress.floatValue,
+//                progressString = smallPlayerViewModel.progressString.value,
+//                isAudioPlaying = smallPlayerViewModel.isPlaying.value,
+//                onStart = { smallPlayerViewModel.onSmallPlayerEvents(SmallPlayerEvents.PlayPause) },
+//                onNext = { smallPlayerViewModel.onSmallPlayerEvents(SmallPlayerEvents.SeekToNextItem) },
+//                onPrev = { smallPlayerViewModel.onSmallPlayerEvents(SmallPlayerEvents.SeekToPreviousItem) }
+//            )
+//        }
+    ) { innerPadding ->
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -36,7 +55,17 @@ fun MainRootScreen(
                 )
         ) {
             when (tab) {
-                "Songs" -> SongsRootScreen(navController, audioList)
+                "Songs" -> SongsRootScreen(
+                    navController = navController,
+                    audioList = audioList,
+//                    onItemClick = {
+//                        smallPlayerViewModel.onSmallPlayerEvents(
+//                            SmallPlayerEvents.SelectedAudioChange(
+//                                it
+//                            )
+//                        )
+//                    }
+                )
             }
         }
     }

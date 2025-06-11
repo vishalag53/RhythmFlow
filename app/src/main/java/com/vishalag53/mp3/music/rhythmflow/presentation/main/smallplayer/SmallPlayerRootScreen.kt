@@ -1,7 +1,6 @@
 package com.vishalag53.mp3.music.rhythmflow.presentation.main.smallplayer
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,8 +19,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.vishalag53.mp3.music.rhythmflow.data.model.Audio
+import com.vishalag53.mp3.music.rhythmflow.domain.core.formatDuration
 import com.vishalag53.mp3.music.rhythmflow.domain.core.stringCapitalized
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.AudioTitleDisplayName
 import com.vishalag53.mp3.music.rhythmflow.presentation.main.smallplayer.components.SmallPlayerController
@@ -29,7 +31,17 @@ import com.vishalag53.mp3.music.rhythmflow.presentation.main.smallplayer.compone
 import com.vishalag53.mp3.music.rhythmflow.presentation.main.smallplayer.components.SmallPlayerTime
 
 @Composable
-fun SmallPlayerRootScreen() {
+fun SmallPlayerRootScreen(
+    audio: Audio,
+    progress: Float,
+    progressString: String,
+    isAudioPlaying: Boolean,
+    onStart: () -> Unit,
+    onNext: () -> Unit,
+    onPrev: () -> Unit
+) {
+    val context = LocalContext.current
+
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -43,7 +55,7 @@ fun SmallPlayerRootScreen() {
             )
     ) {
         LinearProgressIndicator(
-            progress = { 0.5f },
+            progress = { progress / audio.duration },
             modifier = Modifier
                 .fillMaxWidth()
                 .clip(RectangleShape),
@@ -56,7 +68,7 @@ fun SmallPlayerRootScreen() {
             modifier = Modifier.padding(2.dp)
         ) {
             Spacer(modifier = Modifier.height(2.dp))
-            SmallPlayerTime()
+            SmallPlayerTime(progressString, formatDuration(audio.duration, context))
             Spacer(modifier = Modifier.height(3.dp))
 
             Row(
@@ -68,15 +80,14 @@ fun SmallPlayerRootScreen() {
             ) {
 
                 AudioTitleDisplayName(
-                    title = stringCapitalized("Title Name"),
-                    display = stringCapitalized("Display Name"),
+                    title = stringCapitalized(audio.title),
+                    display = stringCapitalized(audio.displayName),
                     color = MaterialTheme.colorScheme.primary,
                     softWrap = false,
-                    overflow = TextOverflow.Visible,
+                    overflow = TextOverflow.Ellipsis,
                     modifierColumn = Modifier
                         .padding(start = 2.dp)
-                        .weight(1f),
-                    modifierText = Modifier.basicMarquee()
+                        .weight(1f)
                 )
 
                 Spacer(modifier = Modifier.width(12.dp))
@@ -84,7 +95,12 @@ fun SmallPlayerRootScreen() {
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    SmallPlayerController()
+                    SmallPlayerController(
+                        onNext = onNext,
+                        onPrev = onPrev,
+                        onStart = onStart,
+                        isAudioPlaying = isAudioPlaying
+                    )
                     Spacer(modifier = Modifier.width(12.dp))
                     SmallPlayerQueue()
                 }

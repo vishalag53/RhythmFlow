@@ -22,12 +22,16 @@ import androidx.navigation.NavHostController
 import com.vishalag53.mp3.music.rhythmflow.R
 import com.vishalag53.mp3.music.rhythmflow.data.model.Audio
 import com.vishalag53.mp3.music.rhythmflow.domain.core.formatDuration
-import com.vishalag53.mp3.music.rhythmflow.navigation.Screens
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.AudioTitleDisplayName
 import com.vishalag53.mp3.music.rhythmflow.domain.core.stringCapitalized
+import com.vishalag53.mp3.music.rhythmflow.navigation.Screens
 
 @Composable
-fun AudioItem(audio: Audio, navController: NavHostController) {
+fun AudioItem(
+    audio: Audio,
+    navController: NavHostController,
+//    onItemClick: () -> Unit,
+) {
     val context = LocalContext.current
     Card(
         modifier = Modifier
@@ -35,6 +39,7 @@ fun AudioItem(audio: Audio, navController: NavHostController) {
             .padding(10.dp)
             .clickable {
                 navController.navigate(Screens.Player(audio))
+//                onItemClick()
             },
         colors = CardDefaults.cardColors(MaterialTheme.colorScheme.secondary)
     ) {

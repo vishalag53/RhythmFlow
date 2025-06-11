@@ -69,7 +69,10 @@ class MainActivity : ComponentActivity() {
                     if (isLoading.value) {
                         Loading()
                     } else {
-                        RootNavigation(navController = navController, audioList.value)
+                        RootNavigation(
+                            navController = navController,
+                            audioList = audioList.value
+                        )
                     }
                 } else {
                     AskStoragePermission()

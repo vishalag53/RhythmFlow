@@ -13,14 +13,14 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun SmallPlayerTime() {
+fun SmallPlayerTime(progressTime: String, duration: String) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.Absolute.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            text = "00:00",
+            text = progressTime,
             style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Medium),
             color = MaterialTheme.colorScheme.primary,
             fontSize = 12.sp,
@@ -29,7 +29,7 @@ fun SmallPlayerTime() {
         )
 
         Text(
-            text = "10:00",
+            text = duration,
             style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Medium),
             color = MaterialTheme.colorScheme.primary,
             fontSize = 12.sp,

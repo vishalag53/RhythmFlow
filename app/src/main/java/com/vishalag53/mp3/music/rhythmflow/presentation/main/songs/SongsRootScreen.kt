@@ -4,7 +4,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -15,7 +15,11 @@ import com.vishalag53.mp3.music.rhythmflow.presentation.main.songs.components.Au
 import com.vishalag53.mp3.music.rhythmflow.presentation.main.songs.components.SongsTopBar
 
 @Composable
-fun SongsRootScreen(navController: NavHostController, audioList: List<Audio>) {
+fun SongsRootScreen(
+    navController: NavHostController,
+    audioList: List<Audio>,
+//    onItemClick: (Int) -> Unit
+) {
     Scaffold(
         topBar = { SongsTopBar(audioList) },
     ) { innerPadding ->
@@ -28,8 +32,12 @@ fun SongsRootScreen(navController: NavHostController, audioList: List<Audio>) {
                 state = rememberLazyListState(),
                 modifier = Modifier.fillMaxSize()
             ) {
-                items(audioList) { song ->
-                    AudioItem(song, navController)
+                itemsIndexed(audioList) { index, audio ->
+                    AudioItem(
+                        audio = audio,
+                        navController = navController,
+//                        onItemClick = { onItemClick(index) }
+                    )
                 }
             }
         }

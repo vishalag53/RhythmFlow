@@ -18,7 +18,6 @@ fun AudioTitleDisplayName(
     softWrap: Boolean,
     overflow: TextOverflow,
     modifierColumn: Modifier = Modifier,
-    modifierText: Modifier = Modifier
 ) {
     Column(
         modifier = modifierColumn,
@@ -30,8 +29,7 @@ fun AudioTitleDisplayName(
             color = color,
             maxLines = 1,
             softWrap = softWrap,
-            overflow = overflow,
-            modifier = modifierText
+            overflow = overflow
         )
 
         Text(
@@ -40,8 +38,7 @@ fun AudioTitleDisplayName(
             color = color,
             maxLines = 1,
             softWrap = softWrap,
-            overflow = overflow,
-            modifier = modifierText
+            overflow = overflow
         )
     }
 }
