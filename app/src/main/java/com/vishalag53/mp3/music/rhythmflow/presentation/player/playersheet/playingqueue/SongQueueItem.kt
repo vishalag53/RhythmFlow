@@ -1,5 +1,6 @@
 package com.vishalag53.mp3.music.rhythmflow.presentation.player.playersheet.playingqueue
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -21,18 +22,30 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.vishalag53.mp3.music.rhythmflow.R
 import com.vishalag53.mp3.music.rhythmflow.data.model.Audio
 import com.vishalag53.mp3.music.rhythmflow.domain.core.formatDuration
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.AudioTitleDisplayName
 import com.vishalag53.mp3.music.rhythmflow.domain.core.stringCapitalized
+import com.vishalag53.mp3.music.rhythmflow.navigation.Screens
 import com.vishalag53.mp3.music.rhythmflow.presentation.main.other.MainViewModel
 
 @Composable
-fun SongQueueItem(audio: Audio, mainViewModel: MainViewModel) {
+fun SongQueueItem(
+    audio: Audio,
+    mainViewModel: MainViewModel,
+    navController: NavHostController,
+    audioList: List<Audio>
+) {
     val context = LocalContext.current
     Box(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable {
+                mainViewModel.addAudioListPlayer(audioList = audioList)
+                navController.navigate(Screens.Player(audio = audio))
+            },
     ) {
         Row(
             modifier = Modifier

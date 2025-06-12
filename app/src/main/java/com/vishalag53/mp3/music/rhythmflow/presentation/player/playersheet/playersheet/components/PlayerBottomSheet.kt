@@ -16,11 +16,16 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.vishalag53.mp3.music.rhythmflow.data.model.Audio
 import com.vishalag53.mp3.music.rhythmflow.presentation.main.other.MainViewModel
 
 @Composable
-fun PlayerBottomSheet(audio: Audio, mainViewModel: MainViewModel) {
+fun PlayerBottomSheet(
+    audio: Audio,
+    mainViewModel: MainViewModel,
+    navController: NavHostController
+) {
     val screenWidth = LocalConfiguration.current.screenWidthDp
 
     Box(
@@ -45,7 +50,11 @@ fun PlayerBottomSheet(audio: Audio, mainViewModel: MainViewModel) {
                 )
             }
 
-            PlayerTabRow(audio = audio, mainViewModel = mainViewModel)
+            PlayerTabRow(
+                audio = audio,
+                mainViewModel = mainViewModel,
+                navController = navController,
+            )
         }
     }
 }

@@ -24,6 +24,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.vishalag53.mp3.music.rhythmflow.data.model.Audio
 import com.vishalag53.mp3.music.rhythmflow.presentation.main.other.MainViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.player.playersheet.playingqueue.SongQueueListsItem
@@ -31,7 +32,11 @@ import com.vishalag53.mp3.music.rhythmflow.presentation.player.playersheet.songi
 import kotlinx.coroutines.launch
 
 @Composable
-internal fun PlayerTabRow(audio: Audio, mainViewModel: MainViewModel) {
+internal fun PlayerTabRow(
+    audio: Audio,
+    mainViewModel: MainViewModel,
+    navController: NavHostController
+) {
     val tabs = listOf("Playing queue", "Song info")
     var selectedTabIndex by remember { mutableIntStateOf(0) }
     val pagerState = rememberPagerState(pageCount = { 2 })
@@ -82,7 +87,11 @@ internal fun PlayerTabRow(audio: Audio, mainViewModel: MainViewModel) {
                 state = pagerState
             ) { page ->
                 when (page) {
-                    0 -> SongQueueListsItem(mainViewModel)
+                    0 -> SongQueueListsItem(
+                        mainViewModel = mainViewModel,
+                        navController = navController,
+                    )
+
                     1 -> SongInfoRootScreen(audio)
                 }
             }

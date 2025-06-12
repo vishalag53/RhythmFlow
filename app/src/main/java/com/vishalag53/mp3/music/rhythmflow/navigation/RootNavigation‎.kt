@@ -55,7 +55,8 @@ private fun NavGraphBuilder.playerGraph(
             navigateBack = {
                 navController.popBackStack()
             },
-            mainViewModel = mainViewModel
+            mainViewModel = mainViewModel,
+            navController = navController,
         )
     }
 }

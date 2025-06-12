@@ -8,10 +8,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.vishalag53.mp3.music.rhythmflow.presentation.main.other.MainViewModel
 
 @Composable
-internal fun SongQueueListsItem(mainViewModel: MainViewModel) {
+internal fun SongQueueListsItem(mainViewModel: MainViewModel, navController: NavHostController) {
     val audioList = mainViewModel.audioListPlayer.collectAsState().value
 
     LazyColumn(
@@ -20,7 +21,12 @@ internal fun SongQueueListsItem(mainViewModel: MainViewModel) {
             .padding(horizontal = 8.dp, vertical = 6.dp)
     ) {
         items(audioList) { audio ->
-            SongQueueItem(audio, mainViewModel)
+            SongQueueItem(
+                audio = audio,
+                audioList = audioList,
+                mainViewModel = mainViewModel,
+                navController = navController
+            )
         }
     }
 }

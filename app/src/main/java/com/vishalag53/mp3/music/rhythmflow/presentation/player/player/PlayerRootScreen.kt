@@ -19,6 +19,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.vishalag53.mp3.music.rhythmflow.data.model.Audio
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.AudioProgressBar
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.AudioTitleDisplayName
@@ -30,7 +31,12 @@ import com.vishalag53.mp3.music.rhythmflow.presentation.player.player.components
 import com.vishalag53.mp3.music.rhythmflow.presentation.player.playersheet.playersheet.components.PlayerBottomSheet
 
 @Composable
-fun PlayerRootScreen(audio: Audio, navigateBack: () -> Unit, mainViewModel: MainViewModel) {
+fun PlayerRootScreen(
+    audio: Audio,
+    navigateBack: () -> Unit,
+    mainViewModel: MainViewModel,
+    navController: NavHostController
+) {
     Scaffold(
         topBar = {
             PlayerTopBar(navigateBack)
@@ -88,7 +94,11 @@ fun PlayerRootScreen(audio: Audio, navigateBack: () -> Unit, mainViewModel: Main
                         .height(126.dp)
                         .fillMaxWidth()
                 ) {
-                    PlayerBottomSheet(audio = audio, mainViewModel = mainViewModel)
+                    PlayerBottomSheet(
+                        audio = audio,
+                        mainViewModel = mainViewModel,
+                        navController = navController
+                    )
                 }
             }
         }
