@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import com.vishalag53.mp3.music.rhythmflow.data.model.Audio
+import com.vishalag53.mp3.music.rhythmflow.presentation.main.other.MainViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.main.songs.components.AudioItem
 import com.vishalag53.mp3.music.rhythmflow.presentation.main.songs.components.SongsTopBar
 
@@ -18,6 +19,7 @@ import com.vishalag53.mp3.music.rhythmflow.presentation.main.songs.components.So
 fun SongsRootScreen(
     navController: NavHostController,
     audioList: List<Audio>,
+    mainViewModel: MainViewModel,
 //    onItemClick: (Int) -> Unit
 ) {
     Scaffold(
@@ -35,7 +37,9 @@ fun SongsRootScreen(
                 itemsIndexed(audioList) { index, audio ->
                     AudioItem(
                         audio = audio,
+                        audioList = audioList,
                         navController = navController,
+                        mainViewModel = mainViewModel,
 //                        onItemClick = { onItemClick(index) }
                     )
                 }

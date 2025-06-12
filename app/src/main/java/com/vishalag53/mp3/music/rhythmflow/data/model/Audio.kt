@@ -3,13 +3,13 @@ package com.vishalag53.mp3.music.rhythmflow.data.model
 import android.net.Uri
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
-import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
+import androidx.core.net.toUri
 
 @Serializable
 @Parcelize
 data class Audio(
-    @Contextual val uri: Uri,
+    val uriString: String,
     val id: String,
     val displayName: String,
     val title: String,
@@ -22,4 +22,6 @@ data class Audio(
     val folderName: String,
     val size: Long,
     val bitrate: Long
-): Parcelable
+): Parcelable {
+    val uri: Uri get() = uriString.toUri()
+}

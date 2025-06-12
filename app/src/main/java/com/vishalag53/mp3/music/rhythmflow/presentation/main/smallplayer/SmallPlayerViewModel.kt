@@ -6,7 +6,6 @@ import androidx.compose.runtime.asLongState
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.media3.common.MediaItem
@@ -25,7 +24,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 private val dummyAudio = Audio(
-    uri = "".toUri(),
+    uriString = "",
     id = "",
     displayName = "",
     title = "",

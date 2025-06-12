@@ -71,7 +71,8 @@ class MainActivity : ComponentActivity() {
                     } else {
                         RootNavigation(
                             navController = navController,
-                            audioList = audioList.value
+                            audioList = audioList.value,
+                            mainViewModel = mainViewModel
                         )
                     }
                 } else {

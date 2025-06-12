@@ -15,17 +15,22 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.vishalag53.mp3.music.rhythmflow.R
+import com.vishalag53.mp3.music.rhythmflow.data.model.Audio
+import com.vishalag53.mp3.music.rhythmflow.domain.core.formatDuration
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.AudioTitleDisplayName
 import com.vishalag53.mp3.music.rhythmflow.domain.core.stringCapitalized
+import com.vishalag53.mp3.music.rhythmflow.presentation.main.other.MainViewModel
 
 @Composable
-fun SongQueueItem() {
+fun SongQueueItem(audio: Audio, mainViewModel: MainViewModel) {
+    val context = LocalContext.current
     Box(
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -51,8 +56,8 @@ fun SongQueueItem() {
                 Spacer(modifier = Modifier.width(8.dp))
 
                 AudioTitleDisplayName(
-                    title = stringCapitalized("Title"),
-                    display = stringCapitalized("Title"),
+                    title = stringCapitalized(audio.title),
+                    display = stringCapitalized(audio.displayName),
                     color = Color(0xFF35363B),
                     softWrap = true,
                     overflow = TextOverflow.Ellipsis,
@@ -67,7 +72,7 @@ fun SongQueueItem() {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "00:00",
+                    text = formatDuration(audio.duration, context),
                     style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Medium),
                     color = Color(0xFF35363B),
                     fontSize = 12.sp,

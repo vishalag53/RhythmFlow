@@ -36,9 +36,9 @@ fun PlayerTopBar(navigateBack: () -> Unit) {
                 contentDescription = "Back",
                 tint = Color(0xFF35363B),
                 modifier = Modifier
-                    .size(28.dp)
+                    .size(36.dp)
                     .clickable {
-                        navigateBack
+                        navigateBack()
                     }
             )
 
@@ -46,7 +46,7 @@ fun PlayerTopBar(navigateBack: () -> Unit) {
                 painter = painterResource(R.drawable.ic_menu),
                 contentDescription = null,
                 tint = Color(0xFF35363B),
-                modifier = Modifier.size(28.dp)
+                modifier = Modifier.size(36.dp)
             )
         }
     }

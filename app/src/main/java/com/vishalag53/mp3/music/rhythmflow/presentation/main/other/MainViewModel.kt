@@ -27,6 +27,8 @@ class MainViewModel @Inject constructor(
     private val _keepSplashOn = MutableStateFlow(true)
     val keepSplashOn get() = _keepSplashOn.asStateFlow()
 
+    private val _audioListPlayer = MutableStateFlow<List<Audio>>(emptyList())
+    val audioListPlayer = _audioListPlayer.asStateFlow()
 
     init {
         viewModelScope.launch {
@@ -43,5 +45,9 @@ class MainViewModel @Inject constructor(
             delay(1000L)
             _isLoading.value = false
         }
+    }
+
+    fun addAudioListPlayer(audioList : List<Audio>) {
+        _audioListPlayer.value = audioList
     }
 }

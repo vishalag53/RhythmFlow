@@ -23,16 +23,18 @@ import com.vishalag53.mp3.music.rhythmflow.data.model.Audio
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.AudioProgressBar
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.AudioTitleDisplayName
 import com.vishalag53.mp3.music.rhythmflow.domain.core.stringCapitalized
+import com.vishalag53.mp3.music.rhythmflow.presentation.main.other.MainViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.player.player.components.PlayerControllers
 import com.vishalag53.mp3.music.rhythmflow.presentation.player.player.components.PlayerPlaybackSpeed
 import com.vishalag53.mp3.music.rhythmflow.presentation.player.player.components.PlayerTopBar
 import com.vishalag53.mp3.music.rhythmflow.presentation.player.playersheet.playersheet.components.PlayerBottomSheet
 
 @Composable
-fun PlayerRootScreen(audio: Audio, navigateBack: () -> Unit) {
+fun PlayerRootScreen(audio: Audio, navigateBack: () -> Unit, mainViewModel: MainViewModel) {
     Scaffold(
         topBar = {
-            PlayerTopBar(navigateBack) },
+            PlayerTopBar(navigateBack)
+        },
     ) { innerPadding ->
         Box(
             modifier = Modifier
@@ -86,7 +88,7 @@ fun PlayerRootScreen(audio: Audio, navigateBack: () -> Unit) {
                         .height(126.dp)
                         .fillMaxWidth()
                 ) {
-                    PlayerBottomSheet(audio)
+                    PlayerBottomSheet(audio = audio, mainViewModel = mainViewModel)
                 }
             }
         }

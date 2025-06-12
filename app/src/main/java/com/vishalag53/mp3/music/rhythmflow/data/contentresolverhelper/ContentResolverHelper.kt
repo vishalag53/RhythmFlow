@@ -85,7 +85,7 @@ constructor(@ApplicationContext val context: Context) {
 
                 if (durationC > 0 && File(pathC).exists()) {
                     val song = Audio(
-                        uri = uri,
+                        uriString = uri.toString(),
                         id = idC,
                         displayName = displayNameC,
                         title = titleC,

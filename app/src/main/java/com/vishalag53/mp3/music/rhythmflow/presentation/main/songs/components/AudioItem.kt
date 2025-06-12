@@ -25,20 +25,25 @@ import com.vishalag53.mp3.music.rhythmflow.domain.core.formatDuration
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.AudioTitleDisplayName
 import com.vishalag53.mp3.music.rhythmflow.domain.core.stringCapitalized
 import com.vishalag53.mp3.music.rhythmflow.navigation.Screens
+import com.vishalag53.mp3.music.rhythmflow.presentation.main.other.MainViewModel
 
 @Composable
 fun AudioItem(
     audio: Audio,
+    audioList: List<Audio>,
     navController: NavHostController,
+    mainViewModel: MainViewModel
 //    onItemClick: () -> Unit,
 ) {
     val context = LocalContext.current
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(10.dp)
             .clickable {
-                navController.navigate(Screens.Player(audio))
+                mainViewModel.addAudioListPlayer(audioList = audioList)
+                navController.navigate(Screens.Player(audio = audio))
 //                onItemClick()
             },
         colors = CardDefaults.cardColors(MaterialTheme.colorScheme.secondary)

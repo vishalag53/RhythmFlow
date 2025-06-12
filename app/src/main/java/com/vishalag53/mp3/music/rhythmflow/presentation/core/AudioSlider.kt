@@ -11,7 +11,7 @@ import androidx.compose.ui.graphics.Color
 
 @Composable
 internal fun AudioSlider(inactiveColor: Color) {
-    var sliderPosition by remember { mutableFloatStateOf(0.5f) }
+    var sliderPosition by remember { mutableFloatStateOf(0f) }
 
     Slider(
         value = sliderPosition,

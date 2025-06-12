@@ -94,4 +94,7 @@ dependencies {
 
     // Coil
     implementation(libs.coil.compose)
+
+    // animation
+    implementation(libs.accompanist.navigation.animation)
 }

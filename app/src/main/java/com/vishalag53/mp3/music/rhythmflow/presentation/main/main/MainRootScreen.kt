@@ -15,12 +15,16 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.vishalag53.mp3.music.rhythmflow.data.model.Audio
 import com.vishalag53.mp3.music.rhythmflow.presentation.main.appbar.AppBarRootScreen
+import com.vishalag53.mp3.music.rhythmflow.presentation.main.other.MainViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.main.smallplayer.SmallPlayerViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.main.songs.SongsRootScreen
 
 @Composable
 fun MainRootScreen(
-    tab: String, navController: NavHostController, audioList: List<Audio>
+    tab: String,
+    navController: NavHostController,
+    audioList: List<Audio>,
+    mainViewModel: MainViewModel
 ) {
     val smallPlayerViewModel = hiltViewModel<SmallPlayerViewModel>()
 
@@ -58,6 +62,7 @@ fun MainRootScreen(
                 "Songs" -> SongsRootScreen(
                     navController = navController,
                     audioList = audioList,
+                    mainViewModel = mainViewModel,
 //                    onItemClick = {
 //                        smallPlayerViewModel.onSmallPlayerEvents(
 //                            SmallPlayerEvents.SelectedAudioChange(
