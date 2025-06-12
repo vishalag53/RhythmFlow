@@ -1,6 +1,7 @@
 package com.vishalag53.mp3.music.rhythmflow.presentation.player.player
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -24,6 +25,7 @@ import com.vishalag53.mp3.music.rhythmflow.data.model.Audio
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.AudioProgressBar
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.AudioTitleDisplayName
 import com.vishalag53.mp3.music.rhythmflow.domain.core.stringCapitalized
+import com.vishalag53.mp3.music.rhythmflow.navigation.Screens
 import com.vishalag53.mp3.music.rhythmflow.presentation.main.other.MainViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.player.player.components.PlayerControllers
 import com.vishalag53.mp3.music.rhythmflow.presentation.player.player.components.PlayerPlaybackSpeed
@@ -93,6 +95,9 @@ fun PlayerRootScreen(
                     modifier = Modifier
                         .height(126.dp)
                         .fillMaxWidth()
+                        .clickable {
+                            navController.navigate(Screens.PlayerSheet(audio))
+                        }
                 ) {
                     PlayerBottomSheet(
                         audio = audio,

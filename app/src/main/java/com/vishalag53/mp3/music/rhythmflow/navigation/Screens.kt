@@ -11,4 +11,7 @@ sealed interface Screens {
 
     @Serializable
     data class Player(val audio: Audio) : Screens
+
+    @Serializable
+    data class PlayerSheet(val audio: Audio) : Screens
 }

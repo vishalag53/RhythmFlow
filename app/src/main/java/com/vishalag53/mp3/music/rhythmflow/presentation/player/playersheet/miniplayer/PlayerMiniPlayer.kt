@@ -52,8 +52,8 @@ internal fun PlayerMiniPlayer(audio: Audio) {
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     AudioTitleDisplayName(
-                        title = stringCapitalized("song.title"),
-                        display = stringCapitalized("song.displayName"),
+                        title = stringCapitalized(audio.title),
+                        display = stringCapitalized(audio.displayName),
                         color = Color(0xFFFDCF9E),
                         softWrap = true,
                         overflow = TextOverflow.Ellipsis,
