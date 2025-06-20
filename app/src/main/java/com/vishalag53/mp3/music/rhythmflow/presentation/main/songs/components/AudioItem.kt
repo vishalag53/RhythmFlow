@@ -33,7 +33,6 @@ fun AudioItem(
     audioList: List<Audio>,
     navController: NavHostController,
     mainViewModel: MainViewModel
-//    onItemClick: () -> Unit,
 ) {
     val context = LocalContext.current
 
@@ -44,7 +43,6 @@ fun AudioItem(
             .clickable {
                 mainViewModel.addAudioListPlayer(audioList = audioList)
                 navController.navigate(Screens.Player(audio = audio))
-//                onItemClick()
             },
         colors = CardDefaults.cardColors(MaterialTheme.colorScheme.secondary)
     ) {

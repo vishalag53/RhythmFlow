@@ -8,10 +8,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import com.vishalag53.mp3.music.rhythmflow.data.model.Audio
+import com.vishalag53.mp3.music.rhythmflow.domain.core.K
 import com.vishalag53.mp3.music.rhythmflow.presentation.main.main.MainRootScreen
 import com.vishalag53.mp3.music.rhythmflow.presentation.main.other.MainViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.player.player.PlayerRootScreen
-import com.vishalag53.mp3.music.rhythmflow.presentation.player.playersheet.playersheet.PlayerSheetRootScreen
 import kotlin.reflect.typeOf
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -32,7 +32,7 @@ private fun NavGraphBuilder.mainGraph(
 ) {
     composable<Screens.Main.Songs> {
         MainRootScreen(
-            tab = "Songs",
+            tab = K.SONGS,
             navController = navController,
             audioList = audioList,
             mainViewModel = mainViewModel
@@ -56,22 +56,8 @@ private fun NavGraphBuilder.playerGraph(
             navigateBack = {
                 navController.popBackStack()
             },
-            mainViewModel = mainViewModel,
             navController = navController,
-        )
-    }
-
-    composable<Screens.PlayerSheet>(
-        typeMap = mapOf(
-            typeOf<Audio>() to CustomNavType(Audio::class, Audio.serializer())
-        )
-    ) {
-        val args = it.toRoute<Screens.PlayerSheet>()
-
-        PlayerSheetRootScreen(
-            audio = args.audio,
-            mainViewModel = mainViewModel,
-            navController = navController,
+            mainViewModel = mainViewModel
         )
     }
 }

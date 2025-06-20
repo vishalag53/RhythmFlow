@@ -4,6 +4,7 @@ import com.vishalag53.mp3.music.rhythmflow.data.model.Audio
 import kotlinx.serialization.Serializable
 
 sealed interface Screens {
+    @Serializable
     sealed interface Main : Screens {
         @Serializable
         data object Songs : Screens
@@ -11,7 +12,4 @@ sealed interface Screens {
 
     @Serializable
     data class Player(val audio: Audio) : Screens
-
-    @Serializable
-    data class PlayerSheet(val audio: Audio) : Screens
 }

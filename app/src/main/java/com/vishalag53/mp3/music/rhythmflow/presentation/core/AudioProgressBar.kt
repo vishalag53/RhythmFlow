@@ -14,11 +14,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
-import com.vishalag53.mp3.music.rhythmflow.data.model.Audio
 import com.vishalag53.mp3.music.rhythmflow.domain.core.formatDuration
 
 @Composable
-fun AudioProgressBar(inactiveColor: Color, audio: Audio) {
+fun AudioProgressBar(inactiveColor: Color, audioDuration: Long) {
     val context = LocalContext.current
     Column(
         modifier = Modifier
@@ -43,7 +42,7 @@ fun AudioProgressBar(inactiveColor: Color, audio: Audio) {
             )
 
             Text(
-                text = formatDuration(audio.duration, context),
+                text = formatDuration(audioDuration, context),
                 style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Medium),
                 color = Color(0xFFFDCF9E),
                 fontSize = 12.sp,

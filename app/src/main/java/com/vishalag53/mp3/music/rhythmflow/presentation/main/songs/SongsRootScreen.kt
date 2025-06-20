@@ -19,8 +19,7 @@ import com.vishalag53.mp3.music.rhythmflow.presentation.main.songs.components.So
 fun SongsRootScreen(
     navController: NavHostController,
     audioList: List<Audio>,
-    mainViewModel: MainViewModel,
-//    onItemClick: (Int) -> Unit
+    mainViewModel: MainViewModel
 ) {
     Scaffold(
         topBar = { SongsTopBar(audioList) },
@@ -38,9 +37,8 @@ fun SongsRootScreen(
                     AudioItem(
                         audio = audio,
                         audioList = audioList,
-                        navController = navController,
                         mainViewModel = mainViewModel,
-//                        onItemClick = { onItemClick(index) }
+                        navController = navController
                     )
                 }
             }

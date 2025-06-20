@@ -14,6 +14,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.vishalag53.mp3.music.rhythmflow.data.model.Audio
+import com.vishalag53.mp3.music.rhythmflow.domain.core.K
 import com.vishalag53.mp3.music.rhythmflow.presentation.main.appbar.AppBarRootScreen
 import com.vishalag53.mp3.music.rhythmflow.presentation.main.other.MainViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.main.smallplayer.SmallPlayerViewModel
@@ -33,18 +34,7 @@ fun MainRootScreen(
     }
 
     Scaffold(
-        topBar = { AppBarRootScreen() },
-//        bottomBar = {
-//            SmallPlayerRootScreen(
-//                audio = smallPlayerViewModel.currentSelectedAudio.value,
-//                progress = smallPlayerViewModel.progress.floatValue,
-//                progressString = smallPlayerViewModel.progressString.value,
-//                isAudioPlaying = smallPlayerViewModel.isPlaying.value,
-//                onStart = { smallPlayerViewModel.onSmallPlayerEvents(SmallPlayerEvents.PlayPause) },
-//                onNext = { smallPlayerViewModel.onSmallPlayerEvents(SmallPlayerEvents.SeekToNextItem) },
-//                onPrev = { smallPlayerViewModel.onSmallPlayerEvents(SmallPlayerEvents.SeekToPreviousItem) }
-//            )
-//        }
+        topBar = { AppBarRootScreen() }
     ) { innerPadding ->
         Box(
             modifier = Modifier
@@ -59,17 +49,10 @@ fun MainRootScreen(
                 )
         ) {
             when (tab) {
-                "Songs" -> SongsRootScreen(
+                K.SONGS -> SongsRootScreen(
                     navController = navController,
                     audioList = audioList,
-                    mainViewModel = mainViewModel,
-//                    onItemClick = {
-//                        smallPlayerViewModel.onSmallPlayerEvents(
-//                            SmallPlayerEvents.SelectedAudioChange(
-//                                it
-//                            )
-//                        )
-//                    }
+                    mainViewModel = mainViewModel
                 )
             }
         }

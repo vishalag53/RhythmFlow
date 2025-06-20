@@ -52,7 +52,9 @@ fun SongInfoRootScreen(audio: Audio) {
     )
 
     Box(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(top = 8.dp)
     ) {
         Column(
             modifier = Modifier
