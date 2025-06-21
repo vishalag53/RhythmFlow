@@ -3,7 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.dagger)
-    kotlin("kapt")
+    alias(libs.plugins.ksp)
     id("kotlin-parcelize")
     alias(libs.plugins.kotlin.serialization)
 }
@@ -66,7 +66,7 @@ dependencies {
     // Dagger hilt
     implementation(libs.dagger.hilt)
     implementation(libs.hilt.compose.navigation)
-    kapt(libs.dagger.kapt)
+    ksp(libs.dagger.hilt.compiler)
 
     // splash
     implementation(libs.androidx.core.splashscreen)
@@ -94,4 +94,10 @@ dependencies {
 
     // Coil
     implementation(libs.coil.compose)
+
+    // Room
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    ksp(libs.androidx.room.compiler)
+    annotationProcessor(libs.androidx.room.compiler)
 }
