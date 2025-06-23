@@ -25,7 +25,7 @@ fun MainRootScreen(
     mainViewModel: MainViewModel
 ) {
     Scaffold(
-        topBar = { AppBarRootScreen() }
+        topBar = { AppBarRootScreen(navController = navController) }
     ) { innerPadding ->
         Box(
             modifier = Modifier

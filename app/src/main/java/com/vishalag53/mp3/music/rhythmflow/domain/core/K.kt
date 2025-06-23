@@ -8,7 +8,6 @@ object K {
     const val FOLDERS = "Folders"
     const val ARTISTS = "Artists"
     const val ALBUMS = "Albums"
-    const val GENRES = "Genres"
 }
 
 val dummyAudio = Audio(

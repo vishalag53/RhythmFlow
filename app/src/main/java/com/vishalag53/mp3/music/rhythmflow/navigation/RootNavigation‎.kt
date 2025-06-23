@@ -12,6 +12,7 @@ import com.vishalag53.mp3.music.rhythmflow.domain.core.K
 import com.vishalag53.mp3.music.rhythmflow.presentation.main.main.MainRootScreen
 import com.vishalag53.mp3.music.rhythmflow.presentation.main.other.MainViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.player.player.PlayerRootScreen
+import com.vishalag53.mp3.music.rhythmflow.presentation.search.SearchRootScreen
 import kotlin.reflect.typeOf
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -24,6 +25,7 @@ fun RootNavigation(
     ) {
         mainGraph(navController, audioList, mainViewModel)
         playerGraph(navController, mainViewModel)
+        search(navController, mainViewModel)
     }
 }
 
@@ -57,6 +59,21 @@ private fun NavGraphBuilder.playerGraph(
                 navController.popBackStack()
             },
             navController = navController,
+            mainViewModel = mainViewModel
+        )
+    }
+}
+
+private fun NavGraphBuilder.search(
+    navController: NavHostController,
+    mainViewModel: MainViewModel
+) {
+    composable<Screens.Search> {
+        SearchRootScreen(
+            navController = navController,
+            navigateBack = {
+                navController.popBackStack()
+            },
             mainViewModel = mainViewModel
         )
     }
