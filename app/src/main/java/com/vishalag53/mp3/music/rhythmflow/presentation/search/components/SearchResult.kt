@@ -23,7 +23,7 @@ import com.vishalag53.mp3.music.rhythmflow.presentation.search.SearchUiState
 
 @Composable
 fun SearchResult(
-    resultText: String, searchUiState: SearchUiState, onExpandToggle: (Boolean) -> Unit
+    resultText: String, searchUiState: SearchUiState, onExpandToggle: (Boolean) -> Unit, size: Int
 ) {
     Column {
         Row(
@@ -34,7 +34,7 @@ fun SearchResult(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "$resultText (0)",
+                text = "$resultText ($size)",
                 style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
                 color = MaterialTheme.colorScheme.primary
             )

@@ -6,51 +6,103 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.Saver
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.vishalag53.mp3.music.rhythmflow.domain.core.K
-import com.vishalag53.mp3.music.rhythmflow.domain.core.dummyAudio
+import com.vishalag53.mp3.music.rhythmflow.presentation.core.CenteredText
 import com.vishalag53.mp3.music.rhythmflow.presentation.main.other.MainViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.main.songs.components.AudioItem
 import com.vishalag53.mp3.music.rhythmflow.presentation.search.components.SearchHistory
 import com.vishalag53.mp3.music.rhythmflow.presentation.search.components.SearchHistoryItem
 import com.vishalag53.mp3.music.rhythmflow.presentation.search.components.SearchResult
 import com.vishalag53.mp3.music.rhythmflow.presentation.search.components.SearchTopBar
+import com.vishalag53.mp3.music.rhythmflow.presentation.search.components.SearchViewModel
 
 @Composable
 fun SearchRootScreen(
-    navController: NavHostController,
-    navigateBack: () -> Boolean,
-    mainViewModel: MainViewModel
+    navController: NavHostController, navigateBack: () -> Boolean, mainViewModel: MainViewModel
 ) {
-    val searchUiState = remember { mutableStateOf(SearchUiState()) }
+    val searchUiStateSaver: Saver<SearchUiState, *> = Saver(
+        save = {
+            listOf(
+                it.isHistory,
+                it.isExpandedSongs,
+                it.isExpandedPlaylists,
+                it.isExpandedFolders,
+                it.isExpandedArtists,
+                it.isExpandedAlbums
+            )
+        },
+        restore = {
+            SearchUiState(
+                isHistory = it[0],
+                isExpandedSongs = it[1],
+                isExpandedPlaylists = it[2],
+                isExpandedFolders = it[3],
+                isExpandedArtists = it[4],
+                isExpandedAlbums = it[5]
+            )
+        }
+    )
+    val searchUiState = rememberSaveable(stateSaver = searchUiStateSaver) {
+        mutableStateOf(SearchUiState())
+    }
+    val searchViewModel = hiltViewModel<SearchViewModel>()
+    val audioList = mainViewModel.audioList.collectAsStateWithLifecycle().value
+    var searchText by rememberSaveable { mutableStateOf("") }
+
+
+    LaunchedEffect(audioList) {
+        searchViewModel.setAudioList(audioList)
+        if (searchText.isNotBlank()) {
+            searchViewModel.searchQuery(searchText)
+        }
+    }
 
     Scaffold(
         topBar = {
             SearchTopBar(
+                searchText = searchText,
+                onSearchTextChange = {
+                    searchText = it
+                },
                 navigateBack = navigateBack,
                 onHistoryStateChanged = { isHistory ->
-                    searchUiState.value = searchUiState.value.copy(isHistory = isHistory)
-                }
-            )
-        }
-    ) { innerPadding ->
+                    searchUiState.value = searchUiState.value.copy(
+                        isHistory = isHistory,
+                        isExpandedSongs = false,
+                        isExpandedAlbums = false,
+                        isExpandedArtists = false,
+                        isExpandedPlaylists = false,
+                        isExpandedFolders = false
+                    )
+                },
+                searchResult = { query ->
+                    searchViewModel.searchQuery(query)
+                })
+        }) { innerPadding ->
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
             LazyColumn(
-                state = rememberLazyListState(),
-                modifier = Modifier.fillMaxSize()
+                state = rememberLazyListState(), modifier = Modifier.fillMaxSize()
             ) {
                 if (searchUiState.value.isHistory) {
                     item {
@@ -68,17 +120,25 @@ fun SearchRootScreen(
                             onExpandToggle = { isExpanded ->
                                 searchUiState.value =
                                     searchUiState.value.copy(isExpandedSongs = isExpanded)
-                            }
+                            },
+                            size = searchViewModel.searchSongList.collectAsStateWithLifecycle().value.size
                         )
                     }
                     if (searchUiState.value.isExpandedSongs) {
-                        items(1) {
-                            AudioItem(
-                                audio = dummyAudio,
-                                audioList = emptyList(),
-                                navController = navController,
-                                mainViewModel = mainViewModel
-                            )
+                        val songs = searchViewModel.searchSongList.value
+                        if (songs.isEmpty()) {
+                            item {
+                                CenteredText("Not Found Any Song")
+                            }
+                        } else {
+                            items(songs) { audio ->
+                                AudioItem(
+                                    audio = audio,
+                                    audioList = emptyList(),
+                                    navController = navController,
+                                    mainViewModel = mainViewModel
+                                )
+                            }
                         }
                     }
 
@@ -90,15 +150,15 @@ fun SearchRootScreen(
                             onExpandToggle = { isExpanded ->
                                 searchUiState.value =
                                     searchUiState.value.copy(isExpandedPlaylists = isExpanded)
-                            }
+                            },
+                            size = 0
                         )
                     }
                     if (searchUiState.value.isExpandedPlaylists) {
-                        item {
-                            Text(
-                                text = "Play",
-                                color = MaterialTheme.colorScheme.primary
-                            )
+                        if (true) {
+                            item {
+                                CenteredText("Not Found Any Playlist")
+                            }
                         }
                     }
 
@@ -110,15 +170,22 @@ fun SearchRootScreen(
                             onExpandToggle = { isExpanded ->
                                 searchUiState.value =
                                     searchUiState.value.copy(isExpandedAlbums = isExpanded)
-                            }
+                            },
+                            size = searchViewModel.searchAlbumList.collectAsStateWithLifecycle().value.size
                         )
                     }
                     if (searchUiState.value.isExpandedAlbums) {
-                        item {
-                            Text(
-                                text = "Alb",
-                                color = MaterialTheme.colorScheme.primary
-                            )
+                        val albums = searchViewModel.searchAlbumList.value
+                        if (albums.isEmpty()) {
+                            item {
+                                CenteredText("Not Found Any Album")
+                            }
+                        } else {
+                            items(albums) { album ->
+                                Text(
+                                    text = album, color = MaterialTheme.colorScheme.primary
+                                )
+                            }
                         }
                     }
 
@@ -130,19 +197,26 @@ fun SearchRootScreen(
                             onExpandToggle = { isExpanded ->
                                 searchUiState.value =
                                     searchUiState.value.copy(isExpandedArtists = isExpanded)
-                            }
+                            },
+                            size = searchViewModel.searchArtistList.collectAsStateWithLifecycle().value.size
                         )
                     }
                     if (searchUiState.value.isExpandedArtists) {
-                        item {
-                            Text(
-                                text = "Art",
-                                color = MaterialTheme.colorScheme.primary
-                            )
+                        val artists = searchViewModel.searchArtistList.value
+                        if (artists.isEmpty()) {
+                            item {
+                                CenteredText("Not Found Any Artist")
+                            }
+                        } else {
+                            items(artists) { artist ->
+                                Text(
+                                    text = artist, color = MaterialTheme.colorScheme.primary
+                                )
+                            }
                         }
                     }
 
-//                    .
+//                    Folder
                     item {
                         SearchResult(
                             resultText = K.FOLDERS,
@@ -150,15 +224,22 @@ fun SearchRootScreen(
                             onExpandToggle = { isExpanded ->
                                 searchUiState.value =
                                     searchUiState.value.copy(isExpandedFolders = isExpanded)
-                            }
+                            },
+                            size = searchViewModel.searchFolderList.collectAsStateWithLifecycle().value.size
                         )
                     }
                     if (searchUiState.value.isExpandedFolders) {
-                        item {
-                            Text(
-                                text = "Fold",
-                                color = MaterialTheme.colorScheme.primary
-                            )
+                        val folders = searchViewModel.searchFolderList.value
+                        if (folders.isEmpty()) {
+                            item {
+                                CenteredText("Not Found Any Folder")
+                            }
+                        } else {
+                            items(folders) { folder ->
+                                Text(
+                                    text = folder, color = MaterialTheme.colorScheme.primary
+                                )
+                            }
                         }
                     }
 

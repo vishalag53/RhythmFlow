@@ -6,6 +6,5 @@ data class SearchUiState(
     val isExpandedPlaylists: Boolean = false,
     val isExpandedFolders: Boolean = false,
     val isExpandedAlbums: Boolean = false,
-    val isExpandedArtists: Boolean = false,
-    val isExpandedGenres: Boolean = false,
+    val isExpandedArtists: Boolean = false
 )

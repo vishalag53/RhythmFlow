@@ -63,8 +63,10 @@ fun SongInfoRootScreen(audio: Audio) {
             verticalArrangement = Arrangement.Center
         ) {
             for (i in about.indices) {
-                AboutCard(about[i], aboutInfo[i])
-                Spacer(modifier = Modifier.height(12.dp))
+                if (aboutInfo[i] != "<unknown>") {
+                    AboutCard(about[i], aboutInfo[i])
+                    Spacer(modifier = Modifier.height(12.dp))
+                }
             }
         }
     }

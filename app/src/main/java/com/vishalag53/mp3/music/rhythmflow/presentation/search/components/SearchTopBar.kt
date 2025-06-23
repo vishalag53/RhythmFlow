@@ -14,10 +14,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -27,16 +23,18 @@ import com.vishalag53.mp3.music.rhythmflow.R
 
 @Composable
 fun SearchTopBar(
+    searchText: String,
+    onSearchTextChange: (String) -> Unit,
     navigateBack: () -> Boolean,
-    onHistoryStateChanged : (Boolean) -> Unit
+    onHistoryStateChanged: (Boolean) -> Unit,
+    searchResult: (String) -> Unit
 ) {
-    var searchText by remember { mutableStateOf("") }
-
     TextField(
         value = searchText,
         onValueChange = {
-            searchText = it
-            onHistoryStateChanged(searchText.isEmpty())
+            onSearchTextChange(it)
+            searchResult(it)
+            onHistoryStateChanged(it.isEmpty())
         },
         modifier = Modifier
             .fillMaxWidth()
@@ -73,8 +71,9 @@ fun SearchTopBar(
         trailingIcon = {
             if (searchText.isNotEmpty()) {
                 IconButton(onClick = {
-                    searchText = ""
-                    onHistoryStateChanged(searchText.isEmpty())
+                    onSearchTextChange("")
+                    searchResult("")
+                    onHistoryStateChanged(true)
                 }) {
                     Icon(
                         imageVector = Icons.Default.Clear,
