@@ -26,7 +26,7 @@ fun SearchTopBar(
     searchText: String,
     onSearchTextChange: (String) -> Unit,
     navigateBack: () -> Boolean,
-    onHistoryStateChanged: (Boolean) -> Unit,
+    onSearchStateChanged: () -> Unit,
     searchResult: (String) -> Unit
 ) {
     TextField(
@@ -34,7 +34,7 @@ fun SearchTopBar(
         onValueChange = {
             onSearchTextChange(it)
             searchResult(it)
-            onHistoryStateChanged(it.isEmpty())
+            onSearchStateChanged()
         },
         modifier = Modifier
             .fillMaxWidth()
@@ -73,7 +73,7 @@ fun SearchTopBar(
                 IconButton(onClick = {
                     onSearchTextChange("")
                     searchResult("")
-                    onHistoryStateChanged(true)
+                    onSearchStateChanged()
                 }) {
                     Icon(
                         imageVector = Icons.Default.Clear,

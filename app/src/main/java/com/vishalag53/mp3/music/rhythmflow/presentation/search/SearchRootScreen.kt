@@ -27,8 +27,6 @@ import com.vishalag53.mp3.music.rhythmflow.domain.core.K
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.CenteredText
 import com.vishalag53.mp3.music.rhythmflow.presentation.main.other.MainViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.main.songs.components.AudioItem
-import com.vishalag53.mp3.music.rhythmflow.presentation.search.components.SearchHistory
-import com.vishalag53.mp3.music.rhythmflow.presentation.search.components.SearchHistoryItem
 import com.vishalag53.mp3.music.rhythmflow.presentation.search.components.SearchResult
 import com.vishalag53.mp3.music.rhythmflow.presentation.search.components.SearchTopBar
 import com.vishalag53.mp3.music.rhythmflow.presentation.search.components.SearchViewModel
@@ -37,28 +35,23 @@ import com.vishalag53.mp3.music.rhythmflow.presentation.search.components.Search
 fun SearchRootScreen(
     navController: NavHostController, navigateBack: () -> Boolean, mainViewModel: MainViewModel
 ) {
-    val searchUiStateSaver: Saver<SearchUiState, *> = Saver(
-        save = {
-            listOf(
-                it.isHistory,
-                it.isExpandedSongs,
-                it.isExpandedPlaylists,
-                it.isExpandedFolders,
-                it.isExpandedArtists,
-                it.isExpandedAlbums
-            )
-        },
-        restore = {
-            SearchUiState(
-                isHistory = it[0],
-                isExpandedSongs = it[1],
-                isExpandedPlaylists = it[2],
-                isExpandedFolders = it[3],
-                isExpandedArtists = it[4],
-                isExpandedAlbums = it[5]
-            )
-        }
-    )
+    val searchUiStateSaver: Saver<SearchUiState, *> = Saver(save = {
+        listOf(
+            it.isExpandedSongs,
+            it.isExpandedPlaylists,
+            it.isExpandedFolders,
+            it.isExpandedArtists,
+            it.isExpandedAlbums
+        )
+    }, restore = {
+        SearchUiState(
+            isExpandedSongs = it[0],
+            isExpandedPlaylists = it[1],
+            isExpandedFolders = it[2],
+            isExpandedArtists = it[3],
+            isExpandedAlbums = it[4]
+        )
+    })
     val searchUiState = rememberSaveable(stateSaver = searchUiStateSaver) {
         mutableStateOf(SearchUiState())
     }
@@ -82,9 +75,8 @@ fun SearchRootScreen(
                     searchText = it
                 },
                 navigateBack = navigateBack,
-                onHistoryStateChanged = { isHistory ->
+                onSearchStateChanged = {
                     searchUiState.value = searchUiState.value.copy(
-                        isHistory = isHistory,
                         isExpandedSongs = false,
                         isExpandedAlbums = false,
                         isExpandedArtists = false,
@@ -104,148 +96,139 @@ fun SearchRootScreen(
             LazyColumn(
                 state = rememberLazyListState(), modifier = Modifier.fillMaxSize()
             ) {
-                if (searchUiState.value.isHistory) {
-                    item {
-                        SearchHistory()
-                    }
-                    items(1) {
-                        SearchHistoryItem("Item $it")
-                    }
-                } else {
 //                     Songs
-                    item {
-                        SearchResult(
-                            resultText = K.SONGS,
-                            searchUiState = searchUiState.value,
-                            onExpandToggle = { isExpanded ->
-                                searchUiState.value =
-                                    searchUiState.value.copy(isExpandedSongs = isExpanded)
-                            },
-                            size = searchViewModel.searchSongList.collectAsStateWithLifecycle().value.size
-                        )
-                    }
-                    if (searchUiState.value.isExpandedSongs) {
-                        val songs = searchViewModel.searchSongList.value
-                        if (songs.isEmpty()) {
-                            item {
-                                CenteredText("Not Found Any Song")
-                            }
-                        } else {
-                            items(songs) { audio ->
-                                AudioItem(
-                                    audio = audio,
-                                    audioList = emptyList(),
-                                    navController = navController,
-                                    mainViewModel = mainViewModel
-                                )
-                            }
+                item {
+                    SearchResult(
+                        resultText = K.SONGS,
+                        searchUiState = searchUiState.value,
+                        onExpandToggle = { isExpanded ->
+                            searchUiState.value =
+                                searchUiState.value.copy(isExpandedSongs = isExpanded)
+                        },
+                        size = searchViewModel.searchSongList.collectAsStateWithLifecycle().value.size
+                    )
+                }
+                if (searchUiState.value.isExpandedSongs) {
+                    val songs = searchViewModel.searchSongList.value
+                    if (songs.isEmpty()) {
+                        item {
+                            CenteredText("Not Found Any Song")
+                        }
+                    } else {
+                        items(songs) { audio ->
+                            AudioItem(
+                                audio = audio,
+                                audioList = emptyList(),
+                                navController = navController,
+                                mainViewModel = mainViewModel
+                            )
                         }
                     }
+                }
 
 //                     Playlists
-                    item {
-                        SearchResult(
-                            resultText = K.PLAYLISTS,
-                            searchUiState = searchUiState.value,
-                            onExpandToggle = { isExpanded ->
-                                searchUiState.value =
-                                    searchUiState.value.copy(isExpandedPlaylists = isExpanded)
-                            },
-                            size = 0
-                        )
-                    }
-                    if (searchUiState.value.isExpandedPlaylists) {
-                        if (true) {
-                            item {
-                                CenteredText("Not Found Any Playlist")
-                            }
+                item {
+                    SearchResult(
+                        resultText = K.PLAYLISTS,
+                        searchUiState = searchUiState.value,
+                        onExpandToggle = { isExpanded ->
+                            searchUiState.value =
+                                searchUiState.value.copy(isExpandedPlaylists = isExpanded)
+                        },
+                        size = 0
+                    )
+                }
+                if (searchUiState.value.isExpandedPlaylists) {
+                    if (true) {
+                        item {
+                            CenteredText("Not Found Any Playlist")
                         }
                     }
+                }
 
 //                     Albums
-                    item {
-                        SearchResult(
-                            resultText = K.ALBUMS,
-                            searchUiState = searchUiState.value,
-                            onExpandToggle = { isExpanded ->
-                                searchUiState.value =
-                                    searchUiState.value.copy(isExpandedAlbums = isExpanded)
-                            },
-                            size = searchViewModel.searchAlbumList.collectAsStateWithLifecycle().value.size
-                        )
-                    }
-                    if (searchUiState.value.isExpandedAlbums) {
-                        val albums = searchViewModel.searchAlbumList.value
-                        if (albums.isEmpty()) {
-                            item {
-                                CenteredText("Not Found Any Album")
-                            }
-                        } else {
-                            items(albums) { album ->
-                                Text(
-                                    text = album, color = MaterialTheme.colorScheme.primary
-                                )
-                            }
+                item {
+                    SearchResult(
+                        resultText = K.ALBUMS,
+                        searchUiState = searchUiState.value,
+                        onExpandToggle = { isExpanded ->
+                            searchUiState.value =
+                                searchUiState.value.copy(isExpandedAlbums = isExpanded)
+                        },
+                        size = searchViewModel.searchAlbumList.collectAsStateWithLifecycle().value.size
+                    )
+                }
+                if (searchUiState.value.isExpandedAlbums) {
+                    val albums = searchViewModel.searchAlbumList.value
+                    if (albums.isEmpty()) {
+                        item {
+                            CenteredText("Not Found Any Album")
+                        }
+                    } else {
+                        items(albums) { album ->
+                            Text(
+                                text = album, color = MaterialTheme.colorScheme.primary
+                            )
                         }
                     }
+                }
 
 //                    ARTISTS
-                    item {
-                        SearchResult(
-                            resultText = K.ARTISTS,
-                            searchUiState = searchUiState.value,
-                            onExpandToggle = { isExpanded ->
-                                searchUiState.value =
-                                    searchUiState.value.copy(isExpandedArtists = isExpanded)
-                            },
-                            size = searchViewModel.searchArtistList.collectAsStateWithLifecycle().value.size
-                        )
-                    }
-                    if (searchUiState.value.isExpandedArtists) {
-                        val artists = searchViewModel.searchArtistList.value
-                        if (artists.isEmpty()) {
-                            item {
-                                CenteredText("Not Found Any Artist")
-                            }
-                        } else {
-                            items(artists) { artist ->
-                                Text(
-                                    text = artist, color = MaterialTheme.colorScheme.primary
-                                )
-                            }
+                item {
+                    SearchResult(
+                        resultText = K.ARTISTS,
+                        searchUiState = searchUiState.value,
+                        onExpandToggle = { isExpanded ->
+                            searchUiState.value =
+                                searchUiState.value.copy(isExpandedArtists = isExpanded)
+                        },
+                        size = searchViewModel.searchArtistList.collectAsStateWithLifecycle().value.size
+                    )
+                }
+                if (searchUiState.value.isExpandedArtists) {
+                    val artists = searchViewModel.searchArtistList.value
+                    if (artists.isEmpty()) {
+                        item {
+                            CenteredText("Not Found Any Artist")
+                        }
+                    } else {
+                        items(artists) { artist ->
+                            Text(
+                                text = artist, color = MaterialTheme.colorScheme.primary
+                            )
                         }
                     }
+                }
 
 //                    Folder
-                    item {
-                        SearchResult(
-                            resultText = K.FOLDERS,
-                            searchUiState = searchUiState.value,
-                            onExpandToggle = { isExpanded ->
-                                searchUiState.value =
-                                    searchUiState.value.copy(isExpandedFolders = isExpanded)
-                            },
-                            size = searchViewModel.searchFolderList.collectAsStateWithLifecycle().value.size
-                        )
-                    }
-                    if (searchUiState.value.isExpandedFolders) {
-                        val folders = searchViewModel.searchFolderList.value
-                        if (folders.isEmpty()) {
-                            item {
-                                CenteredText("Not Found Any Folder")
-                            }
-                        } else {
-                            items(folders) { folder ->
-                                Text(
-                                    text = folder, color = MaterialTheme.colorScheme.primary
-                                )
-                            }
+                item {
+                    SearchResult(
+                        resultText = K.FOLDERS,
+                        searchUiState = searchUiState.value,
+                        onExpandToggle = { isExpanded ->
+                            searchUiState.value =
+                                searchUiState.value.copy(isExpandedFolders = isExpanded)
+                        },
+                        size = searchViewModel.searchFolderList.collectAsStateWithLifecycle().value.size
+                    )
+                }
+                if (searchUiState.value.isExpandedFolders) {
+                    val folders = searchViewModel.searchFolderList.value
+                    if (folders.isEmpty()) {
+                        item {
+                            CenteredText("Not Found Any Folder")
+                        }
+                    } else {
+                        items(folders) { folder ->
+                            Text(
+                                text = folder, color = MaterialTheme.colorScheme.primary
+                            )
                         }
                     }
+                }
 
-                    item {
-                        Spacer(modifier = Modifier.height(20.dp))
-                    }
+                item {
+                    Spacer(modifier = Modifier.height(20.dp))
                 }
             }
         }

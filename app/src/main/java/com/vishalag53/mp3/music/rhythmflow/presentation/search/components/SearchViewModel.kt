@@ -33,29 +33,36 @@ class SearchViewModel @Inject constructor() : ViewModel() {
     }
 
     fun searchQuery(query: String) {
-        val lowerQuery = query.lowercase()
+        if (query.isNotBlank()) {
+            val lowerQuery = query.lowercase()
 
-        _searchSongList.value = _audioList.value.filter {
-            it.title.lowercase().contains(lowerQuery) || it.displayName.lowercase()
-                .contains(lowerQuery)
+            _searchSongList.value = _audioList.value.filter {
+                it.title.lowercase().contains(lowerQuery) || it.displayName.lowercase()
+                    .contains(lowerQuery)
+            }
+
+            _searchArtistList.value = _audioList.value.mapNotNull {
+                it.artist.takeIf { artist ->
+                    artist != "<unknown>" && artist.lowercase().contains(lowerQuery)
+                }
+            }.distinct()
+
+            _searchAlbumList.value = _audioList.value.mapNotNull {
+                it.album.takeIf { album ->
+                    album != "<unknown>" && album.lowercase().contains(lowerQuery)
+                }
+            }.distinct()
+
+            _searchFolderList.value = _audioList.value.mapNotNull {
+                it.folderName.takeIf { folder ->
+                    folder != "<unknown>" && folder.lowercase().contains(lowerQuery)
+                }
+            }.distinct()
+        } else {
+            _searchSongList.value = emptyList()
+            _searchArtistList.value = emptyList()
+            _searchAlbumList.value = emptyList()
+            _searchFolderList.value = emptyList()
         }
-
-        _searchArtistList.value = _audioList.value.mapNotNull {
-            it.artist.takeIf { artist ->
-                artist != "<unknown>" && artist.lowercase().contains(lowerQuery)
-            }
-        }.distinct()
-
-        _searchAlbumList.value = _audioList.value.mapNotNull {
-            it.album.takeIf { album ->
-                album != "<unknown>" && album.lowercase().contains(lowerQuery)
-            }
-        }.distinct()
-
-        _searchFolderList.value = _audioList.value.mapNotNull {
-            it.folderName.takeIf { folder ->
-                folder != "<unknown>" && folder.lowercase().contains(lowerQuery)
-            }
-        }.distinct()
     }
 }
