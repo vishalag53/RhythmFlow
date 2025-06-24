@@ -27,8 +27,8 @@ import com.vishalag53.mp3.music.rhythmflow.domain.core.K
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.CenteredText
 import com.vishalag53.mp3.music.rhythmflow.presentation.main.other.MainViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.main.songs.components.AudioItem
+import com.vishalag53.mp3.music.rhythmflow.presentation.search.components.SearchField
 import com.vishalag53.mp3.music.rhythmflow.presentation.search.components.SearchResult
-import com.vishalag53.mp3.music.rhythmflow.presentation.search.components.SearchTopBar
 import com.vishalag53.mp3.music.rhythmflow.presentation.search.components.SearchViewModel
 
 @Composable
@@ -69,7 +69,7 @@ fun SearchRootScreen(
 
     Scaffold(
         topBar = {
-            SearchTopBar(
+            SearchField(
                 searchText = searchText,
                 onSearchTextChange = {
                     searchText = it

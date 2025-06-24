@@ -3,6 +3,7 @@ package com.vishalag53.mp3.music.rhythmflow.presentation.search.components
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -22,7 +23,7 @@ import androidx.compose.ui.unit.dp
 import com.vishalag53.mp3.music.rhythmflow.R
 
 @Composable
-fun SearchTopBar(
+fun SearchField(
     searchText: String,
     onSearchTextChange: (String) -> Unit,
     navigateBack: () -> Boolean,
@@ -39,7 +40,8 @@ fun SearchTopBar(
         modifier = Modifier
             .fillMaxWidth()
             .statusBarsPadding()
-            .height(56.dp),
+            .height(56.dp)
+            .padding(horizontal = 8.dp),
         placeholder = {
             Text(
                 text = "Search",
