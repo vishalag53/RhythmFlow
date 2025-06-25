@@ -24,7 +24,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.vishalag53.mp3.music.rhythmflow.domain.core.K
-import com.vishalag53.mp3.music.rhythmflow.presentation.core.CenteredText
 import com.vishalag53.mp3.music.rhythmflow.presentation.main.other.MainViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.main.songs.components.AudioItem
 import com.vishalag53.mp3.music.rhythmflow.presentation.search.components.SearchField
@@ -110,19 +109,13 @@ fun SearchRootScreen(
                 }
                 if (searchUiState.value.isExpandedSongs) {
                     val songs = searchViewModel.searchSongList.value
-                    if (songs.isEmpty()) {
-                        item {
-                            CenteredText("Not Found Any Song")
-                        }
-                    } else {
-                        items(songs) { audio ->
-                            AudioItem(
-                                audio = audio,
-                                audioList = emptyList(),
-                                navController = navController,
-                                mainViewModel = mainViewModel
-                            )
-                        }
+                    items(songs) { audio ->
+                        AudioItem(
+                            audio = audio,
+                            audioList = emptyList(),
+                            navController = navController,
+                            mainViewModel = mainViewModel
+                        )
                     }
                 }
 
@@ -138,13 +131,7 @@ fun SearchRootScreen(
                         size = 0
                     )
                 }
-                if (searchUiState.value.isExpandedPlaylists) {
-                    if (true) {
-                        item {
-                            CenteredText("Not Found Any Playlist")
-                        }
-                    }
-                }
+                if (searchUiState.value.isExpandedPlaylists) { }
 
 //                     Albums
                 item {
@@ -160,16 +147,10 @@ fun SearchRootScreen(
                 }
                 if (searchUiState.value.isExpandedAlbums) {
                     val albums = searchViewModel.searchAlbumList.value
-                    if (albums.isEmpty()) {
-                        item {
-                            CenteredText("Not Found Any Album")
-                        }
-                    } else {
-                        items(albums) { album ->
-                            Text(
-                                text = album, color = MaterialTheme.colorScheme.primary
-                            )
-                        }
+                    items(albums) { album ->
+                        Text(
+                            text = album, color = MaterialTheme.colorScheme.primary
+                        )
                     }
                 }
 
@@ -187,16 +168,10 @@ fun SearchRootScreen(
                 }
                 if (searchUiState.value.isExpandedArtists) {
                     val artists = searchViewModel.searchArtistList.value
-                    if (artists.isEmpty()) {
-                        item {
-                            CenteredText("Not Found Any Artist")
-                        }
-                    } else {
-                        items(artists) { artist ->
-                            Text(
-                                text = artist, color = MaterialTheme.colorScheme.primary
-                            )
-                        }
+                    items(artists) { artist ->
+                        Text(
+                            text = artist, color = MaterialTheme.colorScheme.primary
+                        )
                     }
                 }
 
@@ -214,16 +189,10 @@ fun SearchRootScreen(
                 }
                 if (searchUiState.value.isExpandedFolders) {
                     val folders = searchViewModel.searchFolderList.value
-                    if (folders.isEmpty()) {
-                        item {
-                            CenteredText("Not Found Any Folder")
-                        }
-                    } else {
-                        items(folders) { folder ->
-                            Text(
-                                text = folder, color = MaterialTheme.colorScheme.primary
-                            )
-                        }
+                    items(folders) { folder ->
+                        Text(
+                            text = folder, color = MaterialTheme.colorScheme.primary
+                        )
                     }
                 }
 
