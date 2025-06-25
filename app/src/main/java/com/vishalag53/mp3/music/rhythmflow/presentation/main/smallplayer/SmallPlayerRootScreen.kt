@@ -22,7 +22,7 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.vishalag53.mp3.music.rhythmflow.data.model.Audio
+import com.vishalag53.mp3.music.rhythmflow.data.local.model.Audio
 import com.vishalag53.mp3.music.rhythmflow.domain.core.formatDuration
 import com.vishalag53.mp3.music.rhythmflow.domain.core.stringCapitalized
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.AudioTitleDisplayName

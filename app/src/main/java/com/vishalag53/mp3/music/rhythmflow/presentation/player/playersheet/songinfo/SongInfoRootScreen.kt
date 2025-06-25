@@ -13,7 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import com.vishalag53.mp3.music.rhythmflow.data.model.Audio
+import com.vishalag53.mp3.music.rhythmflow.data.local.model.Audio
 import com.vishalag53.mp3.music.rhythmflow.domain.core.formatBitrate
 import com.vishalag53.mp3.music.rhythmflow.domain.core.formatDate
 import com.vishalag53.mp3.music.rhythmflow.domain.core.formatDuration

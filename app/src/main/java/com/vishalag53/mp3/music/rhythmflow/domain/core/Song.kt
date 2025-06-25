@@ -2,7 +2,7 @@ package com.vishalag53.mp3.music.rhythmflow.domain.core
 
 import android.content.Context
 import com.vishalag53.mp3.music.rhythmflow.R
-import com.vishalag53.mp3.music.rhythmflow.data.model.Audio
+import com.vishalag53.mp3.music.rhythmflow.data.local.model.Audio
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale

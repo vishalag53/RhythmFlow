@@ -1,4 +1,4 @@
-package com.vishalag53.mp3.music.rhythmflow.data.model
+package com.vishalag53.mp3.music.rhythmflow.data.local.model
 
 import android.net.Uri
 import android.os.Parcelable

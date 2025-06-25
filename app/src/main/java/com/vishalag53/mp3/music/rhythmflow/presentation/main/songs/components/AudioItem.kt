@@ -20,7 +20,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.vishalag53.mp3.music.rhythmflow.R
-import com.vishalag53.mp3.music.rhythmflow.data.model.Audio
+import com.vishalag53.mp3.music.rhythmflow.data.local.model.Audio
 import com.vishalag53.mp3.music.rhythmflow.domain.core.formatDuration
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.AudioTitleDisplayName
 import com.vishalag53.mp3.music.rhythmflow.domain.core.stringCapitalized

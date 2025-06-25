@@ -3,8 +3,8 @@ package com.vishalag53.mp3.music.rhythmflow.presentation.main.other
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
-import com.vishalag53.mp3.music.rhythmflow.data.model.Audio
-import com.vishalag53.mp3.music.rhythmflow.data.repository.AudioRepository
+import com.vishalag53.mp3.music.rhythmflow.data.local.model.Audio
+import com.vishalag53.mp3.music.rhythmflow.data.local.repository.AudioRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow

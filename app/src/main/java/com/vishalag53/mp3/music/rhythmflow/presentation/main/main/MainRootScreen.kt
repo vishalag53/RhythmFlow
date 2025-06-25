@@ -11,7 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavHostController
-import com.vishalag53.mp3.music.rhythmflow.data.model.Audio
+import com.vishalag53.mp3.music.rhythmflow.data.local.model.Audio
 import com.vishalag53.mp3.music.rhythmflow.domain.core.K
 import com.vishalag53.mp3.music.rhythmflow.presentation.main.appbar.AppBarRootScreen
 import com.vishalag53.mp3.music.rhythmflow.presentation.main.other.MainViewModel

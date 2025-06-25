@@ -1,6 +1,6 @@
 package com.vishalag53.mp3.music.rhythmflow.domain.core
 
-import com.vishalag53.mp3.music.rhythmflow.data.model.Audio
+import com.vishalag53.mp3.music.rhythmflow.data.local.model.Audio
 
 object K {
     const val SONGS = "Songs"

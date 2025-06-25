@@ -1,4 +1,4 @@
-package com.vishalag53.mp3.music.rhythmflow.data.contentresolverhelper
+package com.vishalag53.mp3.music.rhythmflow.data.local.contentresolverhelper
 
 import android.content.ContentUris
 import android.content.Context
@@ -6,7 +6,7 @@ import android.database.Cursor
 import android.os.Build
 import android.provider.MediaStore
 import androidx.annotation.WorkerThread
-import com.vishalag53.mp3.music.rhythmflow.data.model.Audio
+import com.vishalag53.mp3.music.rhythmflow.data.local.model.Audio
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.File
 import javax.inject.Inject

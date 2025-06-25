@@ -1,7 +1,7 @@
 package com.vishalag53.mp3.music.rhythmflow.presentation.search.components
 
 import androidx.lifecycle.ViewModel
-import com.vishalag53.mp3.music.rhythmflow.data.model.Audio
+import com.vishalag53.mp3.music.rhythmflow.data.local.model.Audio
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
