@@ -8,6 +8,8 @@ object K {
     const val FOLDERS = "Folders"
     const val ARTISTS = "Artists"
     const val ALBUMS = "Albums"
+    const val THEME_BLUE = "Blue"
+    const val THEME_GREEN = "Green"
     const val QUEUE_SONG_ALL = "Queue Song All"
     const val QUEUE_SONG_SEARCH = "Queue Song Search"
 }

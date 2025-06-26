@@ -6,6 +6,7 @@ import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.runtime.Composable
+import com.vishalag53.mp3.music.rhythmflow.domain.core.K
 
 private val greenLightScheme = lightColorScheme(
     primary = greenPrimaryLight,
@@ -61,13 +62,13 @@ fun RhythmFlowTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) {
-    val themeColor    = "Blue"
+    val themeColor = K.THEME_BLUE
     var colorScheme = if (darkTheme) blueDarkScheme else blueLightScheme
 
-    if(themeColor.equals("Blue")) {
-        colorScheme = if (darkTheme) blueDarkScheme else blueLightScheme
-    } else if (themeColor.equals("Green")){
-        colorScheme = if (darkTheme) greenDarkScheme else greenLightScheme
+    when (themeColor) {
+        K.THEME_BLUE -> colorScheme = if (darkTheme) blueDarkScheme else blueLightScheme
+        K.THEME_GREEN -> colorScheme = if (darkTheme) greenDarkScheme else greenLightScheme
+        else -> colorScheme = if (darkTheme) blueDarkScheme else blueLightScheme
     }
 
     MaterialTheme(

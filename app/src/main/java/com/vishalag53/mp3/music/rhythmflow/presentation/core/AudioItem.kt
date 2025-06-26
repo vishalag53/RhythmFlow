@@ -1,12 +1,11 @@
-package com.vishalag53.mp3.music.rhythmflow.presentation.main.songs.components
+package com.vishalag53.mp3.music.rhythmflow.presentation.core
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -22,7 +21,6 @@ import androidx.navigation.NavHostController
 import com.vishalag53.mp3.music.rhythmflow.R
 import com.vishalag53.mp3.music.rhythmflow.data.local.model.Audio
 import com.vishalag53.mp3.music.rhythmflow.domain.core.formatDuration
-import com.vishalag53.mp3.music.rhythmflow.presentation.core.AudioTitleDisplayName
 import com.vishalag53.mp3.music.rhythmflow.domain.core.stringCapitalized
 import com.vishalag53.mp3.music.rhythmflow.navigation.Screens
 import com.vishalag53.mp3.music.rhythmflow.presentation.main.other.MainViewModel
@@ -36,19 +34,17 @@ fun AudioItem(
 ) {
     val context = LocalContext.current
 
-    Card(
+    Box(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(10.dp)
             .clickable {
                 mainViewModel.addAudioListPlayer(audioList = audioList)
                 navController.navigate(Screens.Player(audio = audio))
             },
-        colors = CardDefaults.cardColors(MaterialTheme.colorScheme.secondary)
     ) {
         Row(
             modifier = Modifier
-                .padding(8.dp)
+                .padding(start = 6.dp)
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
@@ -83,6 +79,5 @@ fun AudioItem(
                 )
             }
         }
-
     }
 }

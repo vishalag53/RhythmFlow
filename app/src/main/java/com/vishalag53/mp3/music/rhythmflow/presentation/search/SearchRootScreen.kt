@@ -25,7 +25,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.vishalag53.mp3.music.rhythmflow.domain.core.K
 import com.vishalag53.mp3.music.rhythmflow.presentation.main.other.MainViewModel
-import com.vishalag53.mp3.music.rhythmflow.presentation.main.songs.components.AudioItem
+import com.vishalag53.mp3.music.rhythmflow.presentation.core.AudioItem
 import com.vishalag53.mp3.music.rhythmflow.presentation.search.components.SearchField
 import com.vishalag53.mp3.music.rhythmflow.presentation.search.components.SearchResult
 import com.vishalag53.mp3.music.rhythmflow.presentation.search.components.SearchViewModel
