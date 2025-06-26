@@ -5,12 +5,15 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
 import androidx.core.net.toUri
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 
 @Serializable
 @Parcelize
+@Entity(tableName = "audio_table")
 data class Audio(
+    @PrimaryKey val id: String,
     val uriString: String,
-    val id: String,
     val displayName: String,
     val title: String,
     val album: String,
@@ -22,6 +25,6 @@ data class Audio(
     val folderName: String,
     val size: Long,
     val bitrate: Long
-): Parcelable {
+) : Parcelable {
     val uri: Uri get() = uriString.toUri()
 }
