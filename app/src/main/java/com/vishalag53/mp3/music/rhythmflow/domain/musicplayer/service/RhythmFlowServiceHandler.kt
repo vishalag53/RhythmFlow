@@ -33,22 +33,19 @@ class RhythmFlowServiceHandler @Inject constructor(
     fun onAudioEvents(
         audioEvent: AudioEvent,
         selectedAudioIndex: Int = -1,
-        seekPosition: Long = 0,
-        playbackSpeed: Float = 1.0f
+        seekPosition: Long = 0
     ) {
         when (audioEvent) {
             AudioEvent.Backward -> exoPlayer.seekBack()
             AudioEvent.Forward -> exoPlayer.seekForward()
-            is AudioEvent.PlayBackSpeed -> exoPlayer.setPlaybackSpeed(playbackSpeed)
+            is AudioEvent.PlayBackSpeed -> exoPlayer.setPlaybackSpeed(audioEvent.playbackSpeed)
             AudioEvent.PlayPause -> playOrPause()
             AudioEvent.SeekTo -> exoPlayer.seekTo(seekPosition)
             AudioEvent.SeekToNextItem -> exoPlayer.seekToNextMediaItem()
             AudioEvent.SeekToPreviousItem -> exoPlayer.seekToPreviousMediaItem()
             AudioEvent.SelectAudioChange -> {
                 when (selectedAudioIndex) {
-                    exoPlayer.currentMediaItemIndex -> {
-                        playOrPause()
-                    }
+                    exoPlayer.currentMediaItemIndex -> playOrPause()
 
                     else -> {
                         exoPlayer.seekToDefaultPosition(selectedAudioIndex)
@@ -61,6 +58,10 @@ class RhythmFlowServiceHandler @Inject constructor(
 
             AudioEvent.Stop -> stopProgressUpdate()
             is AudioEvent.UpdateProgress -> exoPlayer.seekTo((exoPlayer.duration * audioEvent.newProgress).toLong())
+            AudioEvent.ClearMediaItems -> exoPlayer.clearMediaItems()
+            is AudioEvent.SetVolume -> exoPlayer.volume = audioEvent.volume
+            is AudioEvent.SetRepeatMode -> exoPlayer.repeatMode = audioEvent.repeatMode
+            is AudioEvent.SetShuffle -> exoPlayer.shuffleModeEnabled = audioEvent.shuffleModeEnabled
         }
     }
 
