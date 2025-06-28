@@ -22,15 +22,18 @@ import com.vishalag53.mp3.music.rhythmflow.R
 import com.vishalag53.mp3.music.rhythmflow.data.local.model.Audio
 import com.vishalag53.mp3.music.rhythmflow.domain.core.formatDuration
 import com.vishalag53.mp3.music.rhythmflow.domain.core.stringCapitalized
-import com.vishalag53.mp3.music.rhythmflow.navigation.Screens
 import com.vishalag53.mp3.music.rhythmflow.presentation.main.other.MainViewModel
+import com.vishalag53.mp3.music.rhythmflow.presentation.main.smallplayer.SmallPlayerEvents
+import com.vishalag53.mp3.music.rhythmflow.presentation.main.smallplayer.SmallPlayerViewModel
 
 @Composable
 fun AudioItem(
     audio: Audio,
     audioList: List<Audio>,
     navController: NavHostController,
-    mainViewModel: MainViewModel
+    mainViewModel: MainViewModel,
+    smallPlayerViewModel: SmallPlayerViewModel,
+    index: Int,
 ) {
     val context = LocalContext.current
 
@@ -38,8 +41,14 @@ fun AudioItem(
         modifier = Modifier
             .fillMaxWidth()
             .clickable {
+                smallPlayerViewModel.onSmallPlayerEvents(SmallPlayerEvents.ClearMediaItems)
+                smallPlayerViewModel.setAudioList(audioList)
+                smallPlayerViewModel.onSmallPlayerEvents(
+                    SmallPlayerEvents.SelectedAudioChange(index)
+                )
                 mainViewModel.addAudioListPlayer(audioList = audioList)
-                navController.navigate(Screens.Player(audio = audio))
+//                navController.navigate(Screens.Player(audio = audio))
+
             },
     ) {
         Row(

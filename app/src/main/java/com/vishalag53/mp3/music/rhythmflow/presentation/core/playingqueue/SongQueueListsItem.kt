@@ -1,4 +1,4 @@
-package com.vishalag53.mp3.music.rhythmflow.presentation.player.playersheet.playingqueue
+package com.vishalag53.mp3.music.rhythmflow.presentation.core.playingqueue
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement

@@ -1,4 +1,4 @@
-package com.vishalag53.mp3.music.rhythmflow.presentation.player.playersheet.songinfo
+package com.vishalag53.mp3.music.rhythmflow.presentation.core.songinfo
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -18,7 +18,6 @@ import com.vishalag53.mp3.music.rhythmflow.domain.core.formatBitrate
 import com.vishalag53.mp3.music.rhythmflow.domain.core.formatDate
 import com.vishalag53.mp3.music.rhythmflow.domain.core.formatDuration
 import com.vishalag53.mp3.music.rhythmflow.domain.core.formatSize
-import com.vishalag53.mp3.music.rhythmflow.presentation.player.playersheet.songinfo.components.AboutCard
 
 @Composable
 fun SongInfoRootScreen(audio: Audio) {

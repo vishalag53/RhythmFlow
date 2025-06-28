@@ -38,7 +38,10 @@ fun SmallPlayerRootScreen(
     isAudioPlaying: Boolean,
     onStart: () -> Unit,
     onNext: () -> Unit,
-    onPrev: () -> Unit
+    onPrev: () -> Unit,
+    audioList: List<Audio>,
+    index: Int,
+    onClick: () -> Unit
 ) {
     val context = LocalContext.current
 
@@ -55,7 +58,7 @@ fun SmallPlayerRootScreen(
             )
     ) {
         LinearProgressIndicator(
-            progress = { progress / audio.duration },
+            progress = { progress },
             modifier = Modifier
                 .fillMaxWidth()
                 .clip(RectangleShape),
@@ -102,7 +105,11 @@ fun SmallPlayerRootScreen(
                         isAudioPlaying = isAudioPlaying
                     )
                     Spacer(modifier = Modifier.width(12.dp))
-                    SmallPlayerQueue()
+                    SmallPlayerQueue(
+                        index = index,
+                        length = audioList.size,
+                        onClick = onClick
+                    )
                 }
             }
         }

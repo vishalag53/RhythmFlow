@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -26,13 +27,17 @@ import androidx.navigation.NavHostController
 import com.vishalag53.mp3.music.rhythmflow.domain.core.K
 import com.vishalag53.mp3.music.rhythmflow.presentation.main.other.MainViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.AudioItem
+import com.vishalag53.mp3.music.rhythmflow.presentation.main.smallplayer.SmallPlayerViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.search.components.SearchField
 import com.vishalag53.mp3.music.rhythmflow.presentation.search.components.SearchResult
 import com.vishalag53.mp3.music.rhythmflow.presentation.search.components.SearchViewModel
 
 @Composable
 fun SearchRootScreen(
-    navController: NavHostController, navigateBack: () -> Boolean, mainViewModel: MainViewModel
+    navController: NavHostController,
+    navigateBack: () -> Boolean,
+    mainViewModel: MainViewModel,
+    smallPlayerViewModel: SmallPlayerViewModel
 ) {
     val searchUiStateSaver: Saver<SearchUiState, *> = Saver(save = {
         listOf(
@@ -109,12 +114,14 @@ fun SearchRootScreen(
                 }
                 if (searchUiState.value.isExpandedSongs) {
                     val songs = searchViewModel.searchSongList.value
-                    items(songs) { audio ->
+                    itemsIndexed(songs) { index, audio ->
                         AudioItem(
                             audio = audio,
-                            audioList = emptyList(),
+                            audioList = songs,
                             navController = navController,
-                            mainViewModel = mainViewModel
+                            mainViewModel = mainViewModel,
+                            smallPlayerViewModel = smallPlayerViewModel,
+                            index = index
                         )
                     }
                 }
@@ -131,7 +138,8 @@ fun SearchRootScreen(
                         size = 0
                     )
                 }
-                if (searchUiState.value.isExpandedPlaylists) { }
+                if (searchUiState.value.isExpandedPlaylists) {
+                }
 
 //                     Albums
                 item {

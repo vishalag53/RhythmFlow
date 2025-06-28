@@ -21,6 +21,7 @@ import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import com.vishalag53.mp3.music.rhythmflow.navigation.RootNavigation
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.Loading
+import com.vishalag53.mp3.music.rhythmflow.presentation.main.smallplayer.SmallPlayerViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.storagepermission.AskStoragePermission
 import com.vishalag53.mp3.music.rhythmflow.presentation.theme.RhythmFlowTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -44,6 +45,7 @@ class MainActivity : ComponentActivity() {
                     permission = Manifest.permission.READ_EXTERNAL_STORAGE
                 )
                 val lifecycleOwner = LocalLifecycleOwner.current
+                val smallPlayerViewModel by viewModels<SmallPlayerViewModel>()
 
                 DisposableEffect(key1 = lifecycleOwner) {
                     val observer = LifecycleEventObserver { _, event ->
@@ -72,7 +74,8 @@ class MainActivity : ComponentActivity() {
                         RootNavigation(
                             navController = navController,
                             audioList = audioList.value,
-                            mainViewModel = mainViewModel
+                            mainViewModel = mainViewModel,
+                            smallPlayerViewModel = smallPlayerViewModel
                         )
                     }
                 } else {

@@ -11,6 +11,7 @@ import com.vishalag53.mp3.music.rhythmflow.data.local.model.Audio
 import com.vishalag53.mp3.music.rhythmflow.domain.core.K
 import com.vishalag53.mp3.music.rhythmflow.presentation.main.main.MainRootScreen
 import com.vishalag53.mp3.music.rhythmflow.presentation.main.other.MainViewModel
+import com.vishalag53.mp3.music.rhythmflow.presentation.main.smallplayer.SmallPlayerViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.player.player.PlayerRootScreen
 import com.vishalag53.mp3.music.rhythmflow.presentation.search.SearchRootScreen
 import kotlin.reflect.typeOf
@@ -18,33 +19,41 @@ import kotlin.reflect.typeOf
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun RootNavigation(
-    navController: NavHostController, audioList: List<Audio>, mainViewModel: MainViewModel
+    navController: NavHostController,
+    audioList: List<Audio>,
+    mainViewModel: MainViewModel,
+    smallPlayerViewModel: SmallPlayerViewModel
 ) {
     NavHost(
         navController = navController, startDestination = Screens.Main.Songs
     ) {
-        mainGraph(navController, audioList, mainViewModel)
-        playerGraph(navController, mainViewModel)
-        search(navController, mainViewModel)
+        mainGraph(navController, audioList, mainViewModel, smallPlayerViewModel)
+        playerGraph(navController, mainViewModel, smallPlayerViewModel)
+        search(navController, mainViewModel, smallPlayerViewModel)
     }
 }
 
 private fun NavGraphBuilder.mainGraph(
-    navController: NavHostController, audioList: List<Audio>, mainViewModel: MainViewModel
+    navController: NavHostController,
+    audioList: List<Audio>,
+    mainViewModel: MainViewModel,
+    smallPlayerViewModel: SmallPlayerViewModel
 ) {
     composable<Screens.Main.Songs> {
         MainRootScreen(
             tab = K.SONGS,
             navController = navController,
             audioList = audioList,
-            mainViewModel = mainViewModel
+            mainViewModel = mainViewModel,
+            smallPlayerViewModel = smallPlayerViewModel
         )
     }
 }
 
 private fun NavGraphBuilder.playerGraph(
     navController: NavHostController,
-    mainViewModel: MainViewModel
+    mainViewModel: MainViewModel,
+    smallPlayerViewModel: SmallPlayerViewModel
 ) {
     composable<Screens.Player>(
         typeMap = mapOf(
@@ -59,14 +68,16 @@ private fun NavGraphBuilder.playerGraph(
                 navController.popBackStack()
             },
             navController = navController,
-            mainViewModel = mainViewModel
+            mainViewModel = mainViewModel,
+            smallPlayerViewModel = smallPlayerViewModel
         )
     }
 }
 
 private fun NavGraphBuilder.search(
     navController: NavHostController,
-    mainViewModel: MainViewModel
+    mainViewModel: MainViewModel,
+    smallPlayerViewModel: SmallPlayerViewModel
 ) {
     composable<Screens.Search> {
         SearchRootScreen(
@@ -74,7 +85,8 @@ private fun NavGraphBuilder.search(
             navigateBack = {
                 navController.popBackStack()
             },
-            mainViewModel = mainViewModel
+            mainViewModel = mainViewModel,
+            smallPlayerViewModel = smallPlayerViewModel
         )
     }
 }

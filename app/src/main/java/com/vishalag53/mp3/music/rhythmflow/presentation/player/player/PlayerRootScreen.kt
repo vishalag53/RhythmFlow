@@ -21,6 +21,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.Saver
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -35,12 +37,13 @@ import com.vishalag53.mp3.music.rhythmflow.presentation.core.AudioProgressBar
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.AudioTitleDisplayName
 import com.vishalag53.mp3.music.rhythmflow.domain.core.stringCapitalized
 import com.vishalag53.mp3.music.rhythmflow.presentation.main.other.MainViewModel
+import com.vishalag53.mp3.music.rhythmflow.presentation.main.smallplayer.SmallPlayerViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.player.player.components.PlayerControllers
 import com.vishalag53.mp3.music.rhythmflow.presentation.player.player.components.PlayerPlaybackSpeed
 import com.vishalag53.mp3.music.rhythmflow.presentation.player.player.components.PlayerTopBar
 import com.vishalag53.mp3.music.rhythmflow.presentation.player.player.components.SelectTabBox
-import com.vishalag53.mp3.music.rhythmflow.presentation.player.playersheet.playingqueue.SongQueueListsItem
-import com.vishalag53.mp3.music.rhythmflow.presentation.player.playersheet.songinfo.SongInfoRootScreen
+import com.vishalag53.mp3.music.rhythmflow.presentation.core.playingqueue.SongQueueListsItem
+import com.vishalag53.mp3.music.rhythmflow.presentation.core.songinfo.SongInfoRootScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -48,13 +51,32 @@ fun PlayerRootScreen(
     audio: Audio,
     navigateBack: () -> Unit,
     navController: NavHostController,
-    mainViewModel: MainViewModel
+    mainViewModel: MainViewModel,
+    smallPlayerViewModel: SmallPlayerViewModel
 ) {
     val width = LocalConfiguration.current.screenWidthDp.dp
 
-    val playerUiState = remember { mutableStateOf(PlayerUiState()) }
+    val playerUiStateSaver: Saver<PlayerUiState, *> = Saver(save = {
+        listOf(
+            it.isPlayingQueue,
+            it.isSongInfo,
+            it.isMenu,
+            it.isPlayingBack
+        )
+    }, restore = {
+        PlayerUiState(
+            isPlayingQueue = it[0],
+            isSongInfo = it[1],
+            isMenu = it[2],
+            isPlayingBack = it[3]
+        )
+    })
+
+    val playerUiState = rememberSaveable(stateSaver = playerUiStateSaver) {
+        mutableStateOf(PlayerUiState())
+    }
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = false)
-    val showSheet = remember { mutableStateOf(false) }
+    val showSheet = rememberSaveable { mutableStateOf(false) }
     val sheetContent = remember { mutableStateOf<@Composable () -> Unit>({}) }
 
     LaunchedEffect(playerUiState.value) {
@@ -164,31 +186,25 @@ fun PlayerRootScreen(
     }
 
     if (showSheet.value) {
-        ModalBottomSheet(
-            modifier = Modifier.statusBarsPadding(),
-            onDismissRequest = {
-                playerUiState.value = PlayerUiState()
-                showSheet.value = false
-            },
-            sheetState = sheetState,
-            containerColor = Color(0xFF736659),
-            dragHandle = {
+        ModalBottomSheet(modifier = Modifier.statusBarsPadding(), onDismissRequest = {
+            playerUiState.value = PlayerUiState()
+            showSheet.value = false
+        }, sheetState = sheetState, containerColor = Color(0xFF736659), dragHandle = {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(20.dp),
+                contentAlignment = Alignment.Center
+            ) {
                 Box(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .height(20.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .width(40.dp)
-                            .height(4.dp)
-                            .clip(RoundedCornerShape(50))
-                            .background(Color.DarkGray)
-                    )
-                }
+                        .width(40.dp)
+                        .height(4.dp)
+                        .clip(RoundedCornerShape(50))
+                        .background(Color.DarkGray)
+                )
             }
-        ) {
+        }) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()

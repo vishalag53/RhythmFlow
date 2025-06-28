@@ -1,5 +1,6 @@
 package com.vishalag53.mp3.music.rhythmflow.presentation.main.smallplayer.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.size
@@ -16,9 +17,17 @@ import androidx.compose.ui.unit.sp
 import com.vishalag53.mp3.music.rhythmflow.R
 
 @Composable
-fun SmallPlayerQueue() {
+fun SmallPlayerQueue(
+    index: Int,
+    length: Int,
+    onClick: () -> Unit
+) {
     Column(
-        verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally
+        modifier = Modifier.clickable {
+            onClick()
+        },
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Icon(
             painter = painterResource(R.drawable.ic_playlist_queue),
@@ -28,7 +37,7 @@ fun SmallPlayerQueue() {
         )
 
         Text(
-            text = "1/1000",
+            text = "$index/$length",
             style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Light),
             color = MaterialTheme.colorScheme.primary,
             fontSize = 10.sp,
