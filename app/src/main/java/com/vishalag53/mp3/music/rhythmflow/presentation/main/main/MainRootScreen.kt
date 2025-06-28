@@ -79,26 +79,28 @@ fun MainRootScreen(
         }
     }
 
-    Scaffold(topBar = {
-        AppBarRootScreen(navController = navController)
-    }, bottomBar = {
-        if (smallPlayerViewModel.currentSelectedAudio.collectAsState().value.title != "") {
-            SmallPlayerRootScreen(
-                audio = smallPlayerViewModel.currentSelectedAudio.collectAsState().value,
-                audioList = smallPlayerViewModel.audioList.collectAsState().value,
-                progress = smallPlayerViewModel.progress.collectAsState().value,
-                progressString = smallPlayerViewModel.progressString.collectAsState().value,
-                isAudioPlaying = smallPlayerViewModel.isPlaying.collectAsState().value,
-                onStart = { smallPlayerViewModel.onSmallPlayerEvents(SmallPlayerEvents.PlayPause) },
-                onNext = { smallPlayerViewModel.onSmallPlayerEvents(SmallPlayerEvents.SeekToNextItem) },
-                onPrev = { smallPlayerViewModel.onSmallPlayerEvents(SmallPlayerEvents.SeekToPreviousItem) },
-                index = smallPlayerViewModel.currentSelectedAudioIndex.collectAsState().value + 1,
-                onClick = {
-                    mainUiState.value = mainUiState.value.copy(isPlayingQueue = true)
-                }
-            )
-        }
-    }) { innerPadding ->
+    Scaffold(
+        topBar = {
+            AppBarRootScreen(navController = navController)
+        },
+        bottomBar = {
+            if (smallPlayerViewModel.currentSelectedAudio.collectAsState().value.title != "") {
+                SmallPlayerRootScreen(
+                    audio = smallPlayerViewModel.currentSelectedAudio.collectAsState().value,
+                    audioList = smallPlayerViewModel.audioList.collectAsState().value,
+                    progress = smallPlayerViewModel.progress.collectAsState().value,
+                    progressString = smallPlayerViewModel.progressString.collectAsState().value,
+                    isAudioPlaying = smallPlayerViewModel.isPlaying.collectAsState().value,
+                    onStart = { smallPlayerViewModel.onSmallPlayerEvents(SmallPlayerEvents.PlayPause) },
+                    onNext = { smallPlayerViewModel.onSmallPlayerEvents(SmallPlayerEvents.SeekToNextItem) },
+                    onPrev = { smallPlayerViewModel.onSmallPlayerEvents(SmallPlayerEvents.SeekToPreviousItem) },
+                    index = smallPlayerViewModel.currentSelectedAudioIndex.collectAsState().value + 1,
+                    onClick = {
+                        mainUiState.value = mainUiState.value.copy(isPlayingQueue = true)
+                    }
+                )
+            }
+        }) { innerPadding ->
         Box(
             modifier = Modifier
                 .fillMaxSize()
