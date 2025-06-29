@@ -158,9 +158,6 @@ fun SearchRootScreen(
                     searchText = it
                 },
                 navigateBack = navigateBack,
-                onSearchStateChanged = {
-                    searchUiState.value = SearchUiState()
-                },
                 searchResult = { query ->
                     searchViewModel.searchQuery(query)
                 },

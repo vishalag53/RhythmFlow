@@ -34,7 +34,6 @@ fun SearchAppBar(
     searchText: String,
     onSearchTextChange: (String) -> Unit,
     navigateBack: () -> Boolean,
-    onSearchStateChanged: () -> Unit,
     searchResult: (String) -> Unit,
     onClick: () -> Unit,
     selectTabName: String
@@ -57,7 +56,6 @@ fun SearchAppBar(
             onValueChange = {
                 onSearchTextChange(it)
                 searchResult(it)
-                onSearchStateChanged()
             },
             modifier = Modifier
                 .fillMaxWidth()
@@ -98,7 +96,6 @@ fun SearchAppBar(
                     IconButton(onClick = {
                         onSearchTextChange("")
                         searchResult("")
-                        onSearchStateChanged()
                     }) {
                         Icon(
                             imageVector = Icons.Default.Clear,
