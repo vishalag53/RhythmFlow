@@ -32,7 +32,10 @@ import com.vishalag53.mp3.music.rhythmflow.domain.core.totalAudioTime
 import com.vishalag53.mp3.music.rhythmflow.presentation.main.other.MainViewModel
 
 @Composable
-internal fun SongQueueListsItem(mainViewModel: MainViewModel, navController: NavHostController) {
+internal fun SongQueueListsItem(
+    mainViewModel: MainViewModel,
+    navController: NavHostController
+) {
     val audioList = mainViewModel.audioListPlayer.collectAsState().value
     val context = LocalContext.current
 

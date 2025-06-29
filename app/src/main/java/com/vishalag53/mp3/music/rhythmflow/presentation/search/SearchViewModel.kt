@@ -1,7 +1,8 @@
-package com.vishalag53.mp3.music.rhythmflow.presentation.search.components
+package com.vishalag53.mp3.music.rhythmflow.presentation.search
 
 import androidx.lifecycle.ViewModel
 import com.vishalag53.mp3.music.rhythmflow.data.local.model.Audio
+import com.vishalag53.mp3.music.rhythmflow.domain.core.K
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -27,9 +28,16 @@ class SearchViewModel @Inject constructor() : ViewModel() {
     private val _searchPlaylistList = MutableStateFlow<List<String>>(emptyList())
     val searchPlaylistList = _searchPlaylistList.asStateFlow()
 
+    private val _selectTabName = MutableStateFlow(K.SONGS)
+    val selectTabName = _selectTabName.asStateFlow()
+
 
     fun setAudioList(audioList: List<Audio>) {
         _audioList.value = audioList
+    }
+
+    fun setSelectTabName(name: String) {
+        _selectTabName.value = name
     }
 
     fun searchQuery(query: String) {

@@ -186,25 +186,30 @@ fun PlayerRootScreen(
     }
 
     if (showSheet.value) {
-        ModalBottomSheet(modifier = Modifier.statusBarsPadding(), onDismissRequest = {
-            playerUiState.value = PlayerUiState()
-            showSheet.value = false
-        }, sheetState = sheetState, containerColor = Color(0xFF736659), dragHandle = {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(20.dp),
-                contentAlignment = Alignment.Center
-            ) {
+        ModalBottomSheet(
+            modifier = Modifier.statusBarsPadding(),
+            onDismissRequest = {
+                playerUiState.value = PlayerUiState()
+                showSheet.value = false
+            },
+            sheetState = sheetState,
+            containerColor = Color(0xFF736659),
+            dragHandle = {
                 Box(
                     modifier = Modifier
-                        .width(40.dp)
-                        .height(4.dp)
-                        .clip(RoundedCornerShape(50))
-                        .background(Color.DarkGray)
-                )
-            }
-        }) {
+                        .fillMaxWidth()
+                        .height(20.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .width(40.dp)
+                            .height(4.dp)
+                            .clip(RoundedCornerShape(50))
+                            .background(Color.DarkGray)
+                    )
+                }
+            }) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()

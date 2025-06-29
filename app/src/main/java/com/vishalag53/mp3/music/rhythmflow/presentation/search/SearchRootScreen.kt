@@ -2,7 +2,6 @@ package com.vishalag53.mp3.music.rhythmflow.presentation.search
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -26,6 +25,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -38,15 +38,16 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.vishalag53.mp3.music.rhythmflow.domain.core.K
-import com.vishalag53.mp3.music.rhythmflow.presentation.main.other.MainViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.AudioItem
+import com.vishalag53.mp3.music.rhythmflow.presentation.main.other.MainViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.playingqueue.SongQueueListsItem
 import com.vishalag53.mp3.music.rhythmflow.presentation.main.smallplayer.SmallPlayerEvents
 import com.vishalag53.mp3.music.rhythmflow.presentation.main.smallplayer.SmallPlayerRootScreen
 import com.vishalag53.mp3.music.rhythmflow.presentation.main.smallplayer.SmallPlayerViewModel
-import com.vishalag53.mp3.music.rhythmflow.presentation.search.components.SearchField
-import com.vishalag53.mp3.music.rhythmflow.presentation.search.components.SearchResult
-import com.vishalag53.mp3.music.rhythmflow.presentation.search.components.SearchViewModel
+import com.vishalag53.mp3.music.rhythmflow.presentation.search.components.SearchAppBar
+import com.vishalag53.mp3.music.rhythmflow.presentation.search.components.SelectTabSearchModalBottomSheet
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -58,22 +59,15 @@ fun SearchRootScreen(
 ) {
     val searchUiStateSaver: Saver<SearchUiState, *> = Saver(save = {
         listOf(
-            it.isExpandedSongs,
-            it.isExpandedPlaylists,
-            it.isExpandedFolders,
-            it.isExpandedArtists,
-            it.isExpandedAlbums,
-            it.isPlayingQueue
+            it.sheet::class.simpleName ?: ""
         )
     }, restore = {
-        SearchUiState(
-            isExpandedSongs = it[0],
-            isExpandedPlaylists = it[1],
-            isExpandedFolders = it[2],
-            isExpandedArtists = it[3],
-            isExpandedAlbums = it[4],
-            isPlayingQueue = it[5]
-        )
+        val sheet = when (it.firstOrNull()) {
+            SearchBottomSheetContent.PlayingQueue::class.simpleName -> SearchBottomSheetContent.PlayingQueue
+            SearchBottomSheetContent.TabSelector::class.simpleName -> SearchBottomSheetContent.TabSelector
+            else -> SearchBottomSheetContent.None
+        }
+        SearchUiState(sheet = sheet)
     })
     val searchUiState = rememberSaveable(stateSaver = searchUiStateSaver) {
         mutableStateOf(SearchUiState())
@@ -83,54 +77,98 @@ fun SearchRootScreen(
     var searchText by rememberSaveable { mutableStateOf("") }
 
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = false)
-    val showSheet = rememberSaveable { mutableStateOf(false) }
     val sheetContent = remember { mutableStateOf<@Composable () -> Unit>({}) }
+    val showSheet = rememberSaveable { mutableStateOf(false) }
+    val backgroundColor = remember { mutableStateOf(Color(0xFF736659)) }
+    val scope = rememberCoroutineScope()
+
+    val selectTabName = searchViewModel.selectTabName.collectAsStateWithLifecycle().value
+    val songs = searchViewModel.searchSongList.collectAsStateWithLifecycle().value
+    val albums = searchViewModel.searchAlbumList.collectAsStateWithLifecycle().value
+    val artists = searchViewModel.searchArtistList.collectAsStateWithLifecycle().value
+    val folders = searchViewModel.searchFolderList.collectAsStateWithLifecycle().value
+    val playlists = searchViewModel.searchPlaylistList.collectAsStateWithLifecycle().value
+
+    val tabDisplayName = when (selectTabName) {
+        K.SONGS -> K.SONGS + " (${songs.size})"
+        K.ALBUMS -> K.ALBUMS + " (${albums.size})"
+        K.ARTISTS -> K.ARTISTS + " (${artists.size})"
+        K.FOLDERS -> K.FOLDERS + " (${folders.size})"
+        K.PLAYLISTS -> K.PLAYLISTS + " (${playlists.size})"
+        else -> selectTabName
+    }
 
     LaunchedEffect(audioList) {
         searchViewModel.setAudioList(audioList)
-        if (searchText.isNotBlank()) {
-            searchViewModel.searchQuery(searchText)
-        }
     }
 
-    LaunchedEffect(searchUiState.value) {
-        showSheet.value = searchUiState.value.isPlayingQueue
-        sheetContent.value = when {
-            searchUiState.value.isPlayingQueue -> {
-                {
+    LaunchedEffect(searchText) {
+        delay(300L)
+        searchViewModel.searchQuery(searchText)
+    }
+
+    LaunchedEffect(searchUiState.value.sheet) {
+        when (searchUiState.value.sheet) {
+            SearchBottomSheetContent.PlayingQueue -> {
+                showSheet.value = true
+                backgroundColor.value = Color(0xFF736659)
+                sheetContent.value = {
                     SongQueueListsItem(
                         mainViewModel = mainViewModel,
                         navController = navController
                     )
                 }
+                scope.launch { sheetState.show() }
             }
 
-            else -> {
-                {}
+            SearchBottomSheetContent.TabSelector -> {
+                showSheet.value = true
+                sheetContent.value = {
+                    backgroundColor.value = MaterialTheme.colorScheme.primaryContainer
+                    SelectTabSearchModalBottomSheet(
+                        songsSize = songs.size,
+                        albumSize = albums.size,
+                        artistSize = artists.size,
+                        folderSize = folders.size,
+                        playlistSize = playlists.size,
+                        onClick = {
+                            searchUiState.value = SearchUiState()
+                        },
+                        onSelectClick = { selected ->
+                            searchViewModel.setSelectTabName(selected)
+                        },
+                        selectTabName = selectTabName
+                    )
+                }
+                scope.launch { sheetState.show() }
+            }
+
+            SearchBottomSheetContent.None -> {
+                showSheet.value = false
+                scope.launch { sheetState.hide() }
             }
         }
     }
 
     Scaffold(
         topBar = {
-            SearchField(
+            SearchAppBar(
                 searchText = searchText,
                 onSearchTextChange = {
                     searchText = it
                 },
                 navigateBack = navigateBack,
                 onSearchStateChanged = {
-                    searchUiState.value = searchUiState.value.copy(
-                        isExpandedSongs = false,
-                        isExpandedAlbums = false,
-                        isExpandedArtists = false,
-                        isExpandedPlaylists = false,
-                        isExpandedFolders = false
-                    )
+                    searchUiState.value = SearchUiState()
                 },
                 searchResult = { query ->
                     searchViewModel.searchQuery(query)
-                })
+                },
+                onClick = {
+                    searchUiState.value = SearchUiState(SearchBottomSheetContent.TabSelector)
+                },
+                selectTabName = tabDisplayName
+            )
         },
         bottomBar = {
             if (smallPlayerViewModel.currentSelectedAudio.collectAsState().value.title != "") {
@@ -145,8 +183,7 @@ fun SearchRootScreen(
                     onPrev = { smallPlayerViewModel.onSmallPlayerEvents(SmallPlayerEvents.SeekToPreviousItem) },
                     index = smallPlayerViewModel.currentSelectedAudioIndex.collectAsState().value + 1,
                     onClick = {
-                        searchUiState.value =
-                            searchUiState.value.copy(isPlayingQueue = true)
+                        searchUiState.value = SearchUiState(SearchBottomSheetContent.PlayingQueue)
                     }
                 )
             }
@@ -157,114 +194,50 @@ fun SearchRootScreen(
                 .padding(innerPadding)
         ) {
             LazyColumn(
-                state = rememberLazyListState(), modifier = Modifier.fillMaxSize()
+                state = rememberLazyListState(),
+                modifier = Modifier.fillMaxSize()
             ) {
-//                     Songs
-                item {
-                    SearchResult(
-                        resultText = K.SONGS,
-                        searchUiState = searchUiState.value,
-                        onExpandToggle = { isExpanded ->
-                            searchUiState.value =
-                                searchUiState.value.copy(isExpandedSongs = isExpanded)
-                        },
-                        size = searchViewModel.searchSongList.collectAsStateWithLifecycle().value.size
-                    )
-                }
-                if (searchUiState.value.isExpandedSongs) {
-                    val songs = searchViewModel.searchSongList.value
-                    itemsIndexed(songs) { index, audio ->
-                        AudioItem(
-                            audio = audio,
-                            audioList = songs,
-                            navController = navController,
-                            mainViewModel = mainViewModel,
-                            smallPlayerViewModel = smallPlayerViewModel,
-                            index = index
-                        )
+                when (selectTabName) {
+                    K.SONGS -> {
+                        itemsIndexed(songs) { index, audio ->
+                            AudioItem(
+                                audio = audio,
+                                audioList = songs,
+                                navController = navController,
+                                mainViewModel = mainViewModel,
+                                smallPlayerViewModel = smallPlayerViewModel,
+                                index = index
+                            )
+                        }
                     }
-                }
 
-//                     Playlists
-                item {
-                    SearchResult(
-                        resultText = K.PLAYLISTS,
-                        searchUiState = searchUiState.value,
-                        onExpandToggle = { isExpanded ->
-                            searchUiState.value =
-                                searchUiState.value.copy(isExpandedPlaylists = isExpanded)
-                        },
-                        size = 0
-                    )
-                }
-                if (searchUiState.value.isExpandedPlaylists) {
-                }
-
-//                     Albums
-                item {
-                    SearchResult(
-                        resultText = K.ALBUMS,
-                        searchUiState = searchUiState.value,
-                        onExpandToggle = { isExpanded ->
-                            searchUiState.value =
-                                searchUiState.value.copy(isExpandedAlbums = isExpanded)
-                        },
-                        size = searchViewModel.searchAlbumList.collectAsStateWithLifecycle().value.size
-                    )
-                }
-                if (searchUiState.value.isExpandedAlbums) {
-                    val albums = searchViewModel.searchAlbumList.value
-                    items(albums) { album ->
-                        Text(
-                            text = album, color = MaterialTheme.colorScheme.primary
-                        )
+                    K.PLAYLISTS -> {}
+                    K.ALBUMS -> {
+                        items(albums) { album ->
+                            Text(
+                                text = album,
+                                color = MaterialTheme.colorScheme.primary
+                            )
+                        }
                     }
-                }
 
-//                    ARTISTS
-                item {
-                    SearchResult(
-                        resultText = K.ARTISTS,
-                        searchUiState = searchUiState.value,
-                        onExpandToggle = { isExpanded ->
-                            searchUiState.value =
-                                searchUiState.value.copy(isExpandedArtists = isExpanded)
-                        },
-                        size = searchViewModel.searchArtistList.collectAsStateWithLifecycle().value.size
-                    )
-                }
-                if (searchUiState.value.isExpandedArtists) {
-                    val artists = searchViewModel.searchArtistList.value
-                    items(artists) { artist ->
-                        Text(
-                            text = artist, color = MaterialTheme.colorScheme.primary
-                        )
+                    K.ARTISTS -> {
+                        items(artists) { artist ->
+                            Text(
+                                text = artist,
+                                color = MaterialTheme.colorScheme.primary
+                            )
+                        }
                     }
-                }
 
-//                    Folder
-                item {
-                    SearchResult(
-                        resultText = K.FOLDERS,
-                        searchUiState = searchUiState.value,
-                        onExpandToggle = { isExpanded ->
-                            searchUiState.value =
-                                searchUiState.value.copy(isExpandedFolders = isExpanded)
-                        },
-                        size = searchViewModel.searchFolderList.collectAsStateWithLifecycle().value.size
-                    )
-                }
-                if (searchUiState.value.isExpandedFolders) {
-                    val folders = searchViewModel.searchFolderList.value
-                    items(folders) { folder ->
-                        Text(
-                            text = folder, color = MaterialTheme.colorScheme.primary
-                        )
+                    K.FOLDERS -> {
+                        items(folders) { folder ->
+                            Text(
+                                text = folder,
+                                color = MaterialTheme.colorScheme.primary
+                            )
+                        }
                     }
-                }
-
-                item {
-                    Spacer(modifier = Modifier.height(20.dp))
                 }
             }
         }
@@ -275,10 +248,10 @@ fun SearchRootScreen(
             modifier = Modifier.statusBarsPadding(),
             onDismissRequest = {
                 searchUiState.value = SearchUiState()
-                showSheet.value = false
+                scope.launch { sheetState.hide() }
             },
             sheetState = sheetState,
-            containerColor = Color(0xFF736659),
+            containerColor = backgroundColor.value,
             dragHandle = {
                 Box(
                     modifier = Modifier
@@ -299,7 +272,7 @@ fun SearchRootScreen(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(Color(0xFF736659))
+                    .background(backgroundColor.value)
             ) {
                 sheetContent.value()
             }

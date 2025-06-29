@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.sp
 import com.vishalag53.mp3.music.rhythmflow.R
 
 @Composable
-internal fun SelectTab() {
+internal fun SelectTabMain() {
     Row(
         modifier = Modifier
             .clip(RoundedCornerShape(50.dp))
