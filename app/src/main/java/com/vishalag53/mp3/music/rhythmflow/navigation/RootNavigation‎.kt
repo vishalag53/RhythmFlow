@@ -22,14 +22,15 @@ fun RootNavigation(
     navController: NavHostController,
     audioList: List<Audio>,
     mainViewModel: MainViewModel,
-    smallPlayerViewModel: SmallPlayerViewModel
+    smallPlayerViewModel: SmallPlayerViewModel,
+    startNotificationService: () -> Unit
 ) {
     NavHost(
         navController = navController, startDestination = Screens.Main.Songs
     ) {
-        mainGraph(navController, audioList, mainViewModel, smallPlayerViewModel)
+        mainGraph(navController, audioList, mainViewModel, smallPlayerViewModel,startNotificationService)
         playerGraph(navController, mainViewModel, smallPlayerViewModel)
-        search(navController, mainViewModel, smallPlayerViewModel)
+        search(navController, mainViewModel, smallPlayerViewModel, startNotificationService)
     }
 }
 
@@ -37,7 +38,8 @@ private fun NavGraphBuilder.mainGraph(
     navController: NavHostController,
     audioList: List<Audio>,
     mainViewModel: MainViewModel,
-    smallPlayerViewModel: SmallPlayerViewModel
+    smallPlayerViewModel: SmallPlayerViewModel,
+    startNotificationService: () -> Unit
 ) {
     composable<Screens.Main.Songs> {
         MainRootScreen(
@@ -45,7 +47,8 @@ private fun NavGraphBuilder.mainGraph(
             navController = navController,
             audioList = audioList,
             mainViewModel = mainViewModel,
-            smallPlayerViewModel = smallPlayerViewModel
+            smallPlayerViewModel = smallPlayerViewModel,
+            startNotificationService = startNotificationService
         )
     }
 }
@@ -77,7 +80,8 @@ private fun NavGraphBuilder.playerGraph(
 private fun NavGraphBuilder.search(
     navController: NavHostController,
     mainViewModel: MainViewModel,
-    smallPlayerViewModel: SmallPlayerViewModel
+    smallPlayerViewModel: SmallPlayerViewModel,
+    startNotificationService: () -> Unit
 ) {
     composable<Screens.Search> {
         SearchRootScreen(
@@ -86,7 +90,8 @@ private fun NavGraphBuilder.search(
                 navController.popBackStack()
             },
             mainViewModel = mainViewModel,
-            smallPlayerViewModel = smallPlayerViewModel
+            smallPlayerViewModel = smallPlayerViewModel,
+            startNotificationService = startNotificationService
         )
     }
 }

@@ -96,10 +96,17 @@ class SmallPlayerViewModel @Inject constructor(
 
     private fun setMediaItems() {
         _audioList.value.map { audio ->
-            MediaItem.Builder().setUri(audio.uri).setMediaMetadata(
-                MediaMetadata.Builder().setAlbumArtist(audio.artist)
-                    .setDisplayTitle(audio.title).setSubtitle(audio.displayName).build()
-            ).build()
+            MediaItem
+                .Builder()
+                .setUri(audio.uri)
+                .setMediaMetadata(
+                    MediaMetadata
+                        .Builder()
+                        .setAlbumArtist(audio.artist)
+                        .setTitle(audio.title)
+                        .setDisplayTitle(audio.displayName)
+                        .build()
+                ).build()
         }.also {
             rhythmFlowServiceHandler.setMediaItemList(it)
         }
@@ -113,6 +120,7 @@ class SmallPlayerViewModel @Inject constructor(
                 _progressString.value = "00:00"
                 rhythmFlowServiceHandler.onAudioEvents(SeekToNextItem)
             }
+
             SmallPlayerEvents.SeekToPreviousItem -> {
                 _progress.value = 0f
                 _progressString.value = "00:00"

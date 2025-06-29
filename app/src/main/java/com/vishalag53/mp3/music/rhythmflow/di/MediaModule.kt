@@ -13,6 +13,8 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 import androidx.media3.session.MediaSession
+import com.vishalag53.mp3.music.rhythmflow.domain.musicplayer.notification.RhythmFlowNotificationManager
+import com.vishalag53.mp3.music.rhythmflow.domain.musicplayer.service.RhythmFlowServiceHandler
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -45,4 +47,19 @@ object MediaModule {
         @ApplicationContext context: Context,
         player: ExoPlayer,
     ): MediaSession = MediaSession.Builder(context, player).build()
+
+    @Provides
+    @Singleton
+    fun provideNotificationManager(
+        @ApplicationContext context: Context,
+        player: ExoPlayer,
+    ): RhythmFlowNotificationManager = RhythmFlowNotificationManager(
+        context = context,
+        exoPlayer = player
+    )
+
+    @Provides
+    @Singleton
+    fun provideServiceHandler(exoPlayer: ExoPlayer): RhythmFlowServiceHandler =
+        RhythmFlowServiceHandler(exoPlayer)
 }

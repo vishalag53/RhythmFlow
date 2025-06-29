@@ -45,7 +45,8 @@ fun MainRootScreen(
     navController: NavHostController,
     audioList: List<Audio>,
     mainViewModel: MainViewModel,
-    smallPlayerViewModel: SmallPlayerViewModel
+    smallPlayerViewModel: SmallPlayerViewModel,
+    startNotificationService: () -> Unit
 ) {
     val mainUiStateSaver: Saver<MainUiState, *> = Saver(save = {
         listOf(it.isPlayingQueue)
@@ -118,7 +119,8 @@ fun MainRootScreen(
                     navController = navController,
                     audioList = audioList,
                     mainViewModel = mainViewModel,
-                    smallPlayerViewModel = smallPlayerViewModel
+                    smallPlayerViewModel = smallPlayerViewModel,
+                    startNotificationService = startNotificationService
                 )
             }
         }

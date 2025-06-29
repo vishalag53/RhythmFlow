@@ -34,7 +34,9 @@ fun AudioItem(
     mainViewModel: MainViewModel,
     smallPlayerViewModel: SmallPlayerViewModel,
     index: Int,
-) {
+    startNotificationService: () -> Unit,
+
+    ) {
     val context = LocalContext.current
 
     Box(
@@ -46,6 +48,7 @@ fun AudioItem(
                 smallPlayerViewModel.onSmallPlayerEvents(
                     SmallPlayerEvents.SelectedAudioChange(index)
                 )
+                startNotificationService()
                 mainViewModel.addAudioListPlayer(audioList = audioList)
 //                navController.navigate(Screens.Player(audio = audio))
 

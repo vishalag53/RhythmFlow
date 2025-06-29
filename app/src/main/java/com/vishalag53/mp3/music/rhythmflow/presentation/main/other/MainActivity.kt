@@ -1,6 +1,8 @@
 package com.vishalag53.mp3.music.rhythmflow.presentation.main.other
 
 import android.Manifest
+import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -19,6 +21,7 @@ import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
+import com.vishalag53.mp3.music.rhythmflow.domain.musicplayer.service.RhythmFlowService
 import com.vishalag53.mp3.music.rhythmflow.navigation.RootNavigation
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.Loading
 import com.vishalag53.mp3.music.rhythmflow.presentation.main.smallplayer.SmallPlayerViewModel
@@ -32,6 +35,7 @@ import kotlinx.coroutines.launch
 class MainActivity : ComponentActivity() {
 
     private val mainViewModel: MainViewModel by viewModels()
+    private var isServiceRunning = false
 
     @OptIn(ExperimentalPermissionsApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -75,13 +79,26 @@ class MainActivity : ComponentActivity() {
                             navController = navController,
                             audioList = audioList.value,
                             mainViewModel = mainViewModel,
-                            smallPlayerViewModel = smallPlayerViewModel
+                            smallPlayerViewModel = smallPlayerViewModel,
+                            startNotificationService = { startService() }
                         )
                     }
                 } else {
                     AskStoragePermission()
                 }
             }
+        }
+    }
+
+    private fun startService() {
+        if (!isServiceRunning) {
+            val intent = Intent(this, RhythmFlowService::class.java)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                startForegroundService(intent)
+            } else {
+                startService(intent)
+            }
+            isServiceRunning = true
         }
     }
 

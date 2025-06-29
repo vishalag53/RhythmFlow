@@ -55,7 +55,8 @@ fun SearchRootScreen(
     navController: NavHostController,
     navigateBack: () -> Boolean,
     mainViewModel: MainViewModel,
-    smallPlayerViewModel: SmallPlayerViewModel
+    smallPlayerViewModel: SmallPlayerViewModel,
+    startNotificationService: () -> Unit
 ) {
     val searchUiStateSaver: Saver<SearchUiState, *> = Saver(save = {
         listOf(
@@ -203,7 +204,8 @@ fun SearchRootScreen(
                                 navController = navController,
                                 mainViewModel = mainViewModel,
                                 smallPlayerViewModel = smallPlayerViewModel,
-                                index = index
+                                index = index,
+                                startNotificationService = startNotificationService
                             )
                         }
                     }
