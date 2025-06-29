@@ -108,13 +108,16 @@ class SmallPlayerViewModel @Inject constructor(
     fun onSmallPlayerEvents(smallPlayerEvents: SmallPlayerEvents) = viewModelScope.launch {
         when (smallPlayerEvents) {
             SmallPlayerEvents.PlayPause -> rhythmFlowServiceHandler.onAudioEvents(PlayPause)
-            SmallPlayerEvents.SeekToNextItem -> rhythmFlowServiceHandler.onAudioEvents(
-                SeekToNextItem
-            )
-
-            SmallPlayerEvents.SeekToPreviousItem -> rhythmFlowServiceHandler.onAudioEvents(
-                SeekToPreviousItem
-            )
+            SmallPlayerEvents.SeekToNextItem -> {
+                _progress.value = 0f
+                _progressString.value = "00:00"
+                rhythmFlowServiceHandler.onAudioEvents(SeekToNextItem)
+            }
+            SmallPlayerEvents.SeekToPreviousItem -> {
+                _progress.value = 0f
+                _progressString.value = "00:00"
+                rhythmFlowServiceHandler.onAudioEvents(SeekToPreviousItem)
+            }
 
             is SmallPlayerEvents.SelectedAudioChange -> {
                 rhythmFlowServiceHandler.onAudioEvents(

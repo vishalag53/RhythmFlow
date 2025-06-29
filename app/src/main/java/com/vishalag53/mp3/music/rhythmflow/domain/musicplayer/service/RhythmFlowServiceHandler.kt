@@ -41,8 +41,22 @@ class RhythmFlowServiceHandler @Inject constructor(
             is AudioEvent.PlayBackSpeed -> exoPlayer.setPlaybackSpeed(audioEvent.playbackSpeed)
             AudioEvent.PlayPause -> playOrPause()
             AudioEvent.SeekTo -> exoPlayer.seekTo(seekPosition)
-            AudioEvent.SeekToNextItem -> exoPlayer.seekToNextMediaItem()
-            AudioEvent.SeekToPreviousItem -> exoPlayer.seekToPreviousMediaItem()
+            AudioEvent.SeekToNextItem -> {
+                val hasNext = exoPlayer.hasNextMediaItem()
+                if (hasNext) {
+                    exoPlayer.seekToNextMediaItem()
+                    exoPlayer.prepare()
+                    _audioState.value = AudioState.CurrentPlaying(exoPlayer.currentMediaItemIndex)
+                }
+            }
+            AudioEvent.SeekToPreviousItem -> {
+                val hasPrevious = exoPlayer.hasPreviousMediaItem()
+                if (hasPrevious) {
+                    exoPlayer.seekToPreviousMediaItem()
+                    exoPlayer.prepare()
+                    _audioState.value = AudioState.CurrentPlaying(exoPlayer.currentMediaItemIndex)
+                }
+            }
             AudioEvent.SelectAudioChange -> {
                 when (selectedAudioIndex) {
                     exoPlayer.currentMediaItemIndex -> playOrPause()
