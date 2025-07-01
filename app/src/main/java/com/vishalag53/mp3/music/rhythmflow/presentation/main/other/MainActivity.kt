@@ -66,7 +66,7 @@ class MainActivity : ComponentActivity() {
                     val isLoading = mainViewModel.isLoading.collectAsStateWithLifecycle()
                     var audioList = mainViewModel.audioList.collectAsStateWithLifecycle()
 
-                    LaunchedEffect(key1 = Unit) {
+                    LaunchedEffect(Unit) {
                         if (audioList.value.isEmpty()) {
                             mainViewModel.loadAudioData()
                         }
