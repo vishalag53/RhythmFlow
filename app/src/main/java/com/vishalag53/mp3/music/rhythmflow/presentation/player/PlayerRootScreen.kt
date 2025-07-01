@@ -1,4 +1,4 @@
-package com.vishalag53.mp3.music.rhythmflow.presentation.player.player
+package com.vishalag53.mp3.music.rhythmflow.presentation.player
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -32,17 +32,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
 import com.vishalag53.mp3.music.rhythmflow.data.local.model.Audio
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.AudioProgressBar
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.AudioTitleDisplayName
 import com.vishalag53.mp3.music.rhythmflow.domain.core.stringCapitalized
-import com.vishalag53.mp3.music.rhythmflow.presentation.main.other.MainViewModel
-import com.vishalag53.mp3.music.rhythmflow.presentation.main.smallplayer.SmallPlayerViewModel
-import com.vishalag53.mp3.music.rhythmflow.presentation.player.player.components.PlayerControllers
-import com.vishalag53.mp3.music.rhythmflow.presentation.player.player.components.PlayerPlaybackSpeed
-import com.vishalag53.mp3.music.rhythmflow.presentation.player.player.components.PlayerTopBar
-import com.vishalag53.mp3.music.rhythmflow.presentation.player.player.components.SelectTabBox
+import com.vishalag53.mp3.music.rhythmflow.presentation.player.components.PlayerControllers
+import com.vishalag53.mp3.music.rhythmflow.presentation.player.components.PlayerPlaybackSpeed
+import com.vishalag53.mp3.music.rhythmflow.presentation.player.components.PlayerTopBar
+import com.vishalag53.mp3.music.rhythmflow.presentation.player.components.SelectTabBox
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.playingqueue.SongQueueListsItem
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.songinfo.SongInfoRootScreen
 import kotlinx.coroutines.launch
@@ -50,11 +47,18 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PlayerRootScreen(
-    audio: Audio,
     navigateBack: () -> Unit,
-    navController: NavHostController,
-    mainViewModel: MainViewModel,
-    smallPlayerViewModel: SmallPlayerViewModel
+    audio: Audio,
+    audioList: List<Audio>,
+    progress: Float,
+    progressString: String,
+    onProgressChange: (Float) -> Unit,
+    onPrev: () -> Unit,
+    onNext: () -> Unit,
+    onBackward: () -> Unit,
+    onForward: () -> Unit,
+    onStart: () -> Unit,
+    isAudioPlaying: Boolean,
 ) {
     val width = LocalConfiguration.current.screenWidthDp.dp
 
@@ -82,9 +86,7 @@ fun PlayerRootScreen(
             PlayerBottomSheetContent.PlayingQueue -> {
                 showSheet.value = true
                 sheetContent.value = {
-                    SongQueueListsItem(
-                        mainViewModel = mainViewModel, navController = navController
-                    )
+                    SongQueueListsItem(audioList)
                 }
                 scope.launch { sheetState.show() }
             }
@@ -149,9 +151,22 @@ fun PlayerRootScreen(
                         PlayerPlaybackSpeed()
                     }
                     Spacer(modifier = Modifier.height(10.dp))
-                    AudioProgressBar(Color(0xFF35363B), audio.duration)
+                    AudioProgressBar(
+                        inactiveColor = Color(0xFF35363B),
+                        audioDuration = audio.duration,
+                        progress = progress,
+                        progressString = progressString,
+                        onProgressChange = onProgressChange
+                    )
                     Spacer(modifier = Modifier.height(10.dp))
-                    PlayerControllers()
+                    PlayerControllers(
+                        onPrev = onPrev,
+                        onNext = onNext,
+                        onBackward = onBackward,
+                        onForward = onForward,
+                        onStart = onStart,
+                        isAudioPlaying = isAudioPlaying
+                    )
                 }
 
                 Spacer(modifier = Modifier.height(20.dp))
@@ -167,7 +182,8 @@ fun PlayerRootScreen(
                         topStart = 0.dp,
                         topEnd = 8.dp,
                         onClick = {
-                            playerUiState.value = PlayerUiState(PlayerBottomSheetContent.PlayingQueue)
+                            playerUiState.value =
+                                PlayerUiState(PlayerBottomSheetContent.PlayingQueue)
                         })
 
                     Spacer(modifier = Modifier.width(0.185.dp))

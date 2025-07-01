@@ -17,7 +17,13 @@ import androidx.compose.ui.unit.sp
 import com.vishalag53.mp3.music.rhythmflow.domain.core.formatDuration
 
 @Composable
-fun AudioProgressBar(inactiveColor: Color, audioDuration: Long) {
+fun AudioProgressBar(
+    inactiveColor: Color,
+    audioDuration: Long,
+    progress: Float,
+    progressString: String,
+    onProgressChange: (Float) -> Unit
+) {
     val context = LocalContext.current
     Column(
         modifier = Modifier
@@ -25,7 +31,11 @@ fun AudioProgressBar(inactiveColor: Color, audioDuration: Long) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        AudioSlider(inactiveColor)
+        AudioSlider(
+            inactiveColor = inactiveColor,
+            progress = progress,
+            onProgressChange = onProgressChange,
+        )
 
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -33,7 +43,7 @@ fun AudioProgressBar(inactiveColor: Color, audioDuration: Long) {
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = "00:00",
+                text = progressString,
                 style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Medium),
                 color = Color(0xFFFDCF9E),
                 fontSize = 12.sp,

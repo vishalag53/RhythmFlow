@@ -1,14 +1,12 @@
-package com.vishalag53.mp3.music.rhythmflow.presentation.main.smallplayer
+package com.vishalag53.mp3.music.rhythmflow.presentation.player
 
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.media3.common.MediaItem
-import androidx.media3.common.MediaMetadata
 import com.vishalag53.mp3.music.rhythmflow.data.local.model.Audio
 import com.vishalag53.mp3.music.rhythmflow.domain.core.calculateProgressValue
 import com.vishalag53.mp3.music.rhythmflow.domain.core.dummyAudio
-import com.vishalag53.mp3.music.rhythmflow.domain.musicplayer.service.AudioEvent.*
+import com.vishalag53.mp3.music.rhythmflow.domain.musicplayer.service.AudioEvent
 import com.vishalag53.mp3.music.rhythmflow.domain.musicplayer.service.AudioState
 import com.vishalag53.mp3.music.rhythmflow.domain.musicplayer.service.RhythmFlowServiceHandler
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,7 +18,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SmallPlayerViewModel @Inject constructor(
+class PlayerViewModel @Inject constructor(
     private val rhythmFlowServiceHandler: RhythmFlowServiceHandler,
     @ApplicationContext context: Context
 ) : ViewModel() {
@@ -45,15 +43,14 @@ class SmallPlayerViewModel @Inject constructor(
     private val _currentSelectedAudioIndex = MutableStateFlow(0)
     val currentSelectedAudioIndex = _currentSelectedAudioIndex.asStateFlow()
 
-    private val _smallPlayerState: MutableStateFlow<SmallPlayerState> =
-        MutableStateFlow(SmallPlayerState.Initial)
-    val smallPlayerState = _smallPlayerState.asStateFlow()
+    private val _playerState: MutableStateFlow<PlayerState> = MutableStateFlow(PlayerState.Initial)
+    val playerState = _playerState.asStateFlow()
 
     init {
         viewModelScope.launch {
             rhythmFlowServiceHandler.audioState.collectLatest { mediaState ->
                 when (mediaState) {
-                    AudioState.Initial -> _smallPlayerState.value = SmallPlayerState.Initial
+                    AudioState.Initial -> _playerState.value = PlayerState.Initial
                     is AudioState.Buffering -> {
                         val (newProgress, newProgressString) = calculateProgressValue(
                             mediaState.progress,
@@ -86,7 +83,7 @@ class SmallPlayerViewModel @Inject constructor(
 
                     is AudioState.Ready -> {
                         _duration.value = mediaState.duration
-                        _smallPlayerState.value = SmallPlayerState.Ready
+                        _playerState.value = PlayerState.Ready
                     }
                 }
             }
@@ -95,66 +92,58 @@ class SmallPlayerViewModel @Inject constructor(
 
     fun setAudioList(audioList: List<Audio>) {
         _audioList.value = audioList
-        setMediaItems()
     }
 
-    private fun setMediaItems() {
-        _audioList.value.map { audio ->
-            MediaItem
-                .Builder()
-                .setUri(audio.uri)
-                .setMediaMetadata(
-                    MediaMetadata
-                        .Builder()
-                        .setAlbumArtist(audio.artist)
-                        .setTitle(audio.title)
-                        .setDisplayTitle(audio.displayName)
-                        .build()
-                ).build()
-        }.also {
-            rhythmFlowServiceHandler.setMediaItemList(it)
-        }
-    }
-
-    fun onSmallPlayerEvents(smallPlayerEvents: SmallPlayerEvents) = viewModelScope.launch {
-        when (smallPlayerEvents) {
-            SmallPlayerEvents.PlayPause -> rhythmFlowServiceHandler.onAudioEvents(PlayPause)
-            SmallPlayerEvents.SeekToNextItem -> {
-                _progress.value = 0f
-                _progressString.value = "00:00"
-                rhythmFlowServiceHandler.onAudioEvents(SeekToNextItem)
-            }
-
-            SmallPlayerEvents.SeekToPreviousItem -> {
-                _progress.value = 0f
-                _progressString.value = "00:00"
-                rhythmFlowServiceHandler.onAudioEvents(SeekToPreviousItem)
-            }
-
-            is SmallPlayerEvents.SelectedAudioChange -> {
-                rhythmFlowServiceHandler.onAudioEvents(
-                    SelectAudioChange, selectedAudioIndex = smallPlayerEvents.index
+    fun onPlayerEvents(playerEvents: PlayerEvents) = viewModelScope.launch {
+        when (playerEvents) {
+            PlayerEvents.Backward -> rhythmFlowServiceHandler.onAudioEvents(AudioEvent.Backward)
+            PlayerEvents.Forward -> rhythmFlowServiceHandler.onAudioEvents(AudioEvent.Forward)
+            is PlayerEvents.PlayBackSpeed -> rhythmFlowServiceHandler.onAudioEvents(
+                AudioEvent.PlayBackSpeed(
+                    playerEvents.playbackSpeed
                 )
-                _currentSelectedAudio.value = _audioList.value[smallPlayerEvents.index]
-                _currentSelectedAudioIndex.value = smallPlayerEvents.index
-            }
+            )
 
-            is SmallPlayerEvents.UpdateProgress -> {
+            PlayerEvents.PlayPause -> rhythmFlowServiceHandler.onAudioEvents(AudioEvent.PlayPause)
+            PlayerEvents.SeekToNextItem -> rhythmFlowServiceHandler.onAudioEvents(AudioEvent.SeekToNextItem)
+            PlayerEvents.SeekToPreviousItem -> rhythmFlowServiceHandler.onAudioEvents(AudioEvent.SeekToPreviousItem)
+            is PlayerEvents.SelectedAudioChange -> {
                 rhythmFlowServiceHandler.onAudioEvents(
-                    UpdateProgress(smallPlayerEvents.newProgress),
+                    AudioEvent.SelectAudioChange, selectedAudioIndex = playerEvents.index
                 )
-                _progress.value = smallPlayerEvents.newProgress
+                _currentSelectedAudio.value = _audioList.value[playerEvents.index]
+                _currentSelectedAudioIndex.value = playerEvents.index
             }
 
-            SmallPlayerEvents.ClearMediaItems -> rhythmFlowServiceHandler.onAudioEvents(
-                ClearMediaItems
+            is PlayerEvents.SetRepeatMode -> rhythmFlowServiceHandler.onAudioEvents(
+                AudioEvent.SetRepeatMode(
+                    playerEvents.repeatMode
+                )
+            )
+
+            is PlayerEvents.SetShuffle -> rhythmFlowServiceHandler.onAudioEvents(
+                AudioEvent.SetShuffle(
+                    playerEvents.shuffleModeEnabled
+                )
+            )
+
+            is PlayerEvents.SetVolume -> rhythmFlowServiceHandler.onAudioEvents(
+                AudioEvent.SetVolume(
+                    playerEvents.volume
+                )
+            )
+
+            is PlayerEvents.UpdateProgress -> rhythmFlowServiceHandler.onAudioEvents(
+                AudioEvent.UpdateProgress(
+                    playerEvents.newProgress
+                )
             )
         }
     }
 
     override fun onCleared() {
         viewModelScope.launch {
-            rhythmFlowServiceHandler.onAudioEvents(Stop)
+            rhythmFlowServiceHandler.onAudioEvents(AudioEvent.Stop)
         }
         super.onCleared()
     }

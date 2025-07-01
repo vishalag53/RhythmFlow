@@ -1,5 +1,6 @@
-package com.vishalag53.mp3.music.rhythmflow.presentation.player.player.components
+package com.vishalag53.mp3.music.rhythmflow.presentation.player.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -15,7 +16,14 @@ import androidx.compose.ui.unit.dp
 import com.vishalag53.mp3.music.rhythmflow.R
 
 @Composable
-fun PlayerControllers() {
+fun PlayerControllers(
+    onPrev: () -> Unit,
+    onNext: () -> Unit,
+    onBackward: () -> Unit,
+    onForward: () -> Unit,
+    onStart: () -> Unit,
+    isAudioPlaying: Boolean
+) {
     Box(
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -29,35 +37,56 @@ fun PlayerControllers() {
                 painter = painterResource(R.drawable.ic_player_previous),
                 contentDescription = null,
                 tint = Color(0xFFFDCF9E),
-                modifier = Modifier.size(24.dp)
+                modifier = Modifier
+                    .size(24.dp)
+                    .clickable {
+                        onPrev()
+                    }
             )
 
             Icon(
                 painter = painterResource(R.drawable.ic_rewind_10_second_back),
                 contentDescription = null,
                 tint = Color(0xFFFDCF9E),
-                modifier = Modifier.size(36.dp)
+                modifier = Modifier
+                    .size(36.dp)
+                    .clickable {
+                        onBackward()
+                    }
             )
 
             Icon(
-                painter = painterResource(R.drawable.ic_play),
+                painter = if (isAudioPlaying) painterResource(R.drawable.ic_pause)
+                else painterResource(R.drawable.ic_play),
                 contentDescription = "Music play previous",
                 tint = Color(0xFFFDCF9E),
-                modifier = Modifier.size(52.dp)
+                modifier = Modifier
+                    .size(52.dp)
+                    .clickable {
+                        onStart()
+                    }
             )
 
             Icon(
                 painter = painterResource(R.drawable.ic_rewind_10_second_forward),
                 contentDescription = "Music play previous",
                 tint = Color(0xFFFDCF9E),
-                modifier = Modifier.size(36.dp)
+                modifier = Modifier
+                    .size(36.dp)
+                    .clickable {
+                        onForward()
+                    }
             )
 
             Icon(
                 painter = painterResource(R.drawable.ic_player_next),
                 contentDescription = "Music play previous",
                 tint = Color(0xFFFDCF9E),
-                modifier = Modifier.size(24.dp)
+                modifier = Modifier
+                    .size(24.dp)
+                    .clickable {
+                        onNext()
+                    }
             )
         }
     }

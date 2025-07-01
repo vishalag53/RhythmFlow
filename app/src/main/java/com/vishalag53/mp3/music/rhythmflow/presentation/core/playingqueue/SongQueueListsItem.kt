@@ -17,7 +17,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -26,17 +25,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
 import com.vishalag53.mp3.music.rhythmflow.R
+import com.vishalag53.mp3.music.rhythmflow.data.local.model.Audio
 import com.vishalag53.mp3.music.rhythmflow.domain.core.totalAudioTime
-import com.vishalag53.mp3.music.rhythmflow.presentation.main.other.MainViewModel
 
 @Composable
-internal fun SongQueueListsItem(
-    mainViewModel: MainViewModel,
-    navController: NavHostController
-) {
-    val audioList = mainViewModel.audioListPlayer.collectAsState().value
+internal fun SongQueueListsItem(audioList: List<Audio>) {
     val context = LocalContext.current
 
     Column(
@@ -106,10 +100,7 @@ internal fun SongQueueListsItem(
         ) {
             items(audioList) { audio ->
                 SongQueueItem(
-                    audio = audio,
-                    audioList = audioList,
-                    mainViewModel = mainViewModel,
-                    navController = navController
+                    audio = audio
                 )
             }
         }

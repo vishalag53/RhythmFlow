@@ -124,4 +124,9 @@ class RhythmFlowServiceHandler @Inject constructor(
         job?.cancel()
         _audioState.value = AudioState.Playing(isPlaying = false)
     }
+
+    override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
+        val currentIndex = exoPlayer.currentMediaItemIndex
+        _audioState.value = AudioState.CurrentPlaying(currentIndex)
+    }
 }

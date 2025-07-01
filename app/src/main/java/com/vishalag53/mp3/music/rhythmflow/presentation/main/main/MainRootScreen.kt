@@ -27,16 +27,18 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.vishalag53.mp3.music.rhythmflow.data.local.model.Audio
 import com.vishalag53.mp3.music.rhythmflow.domain.core.K
+import com.vishalag53.mp3.music.rhythmflow.navigation.Screens
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.playingqueue.SongQueueListsItem
 import com.vishalag53.mp3.music.rhythmflow.presentation.main.appbar.AppBarRootScreen
-import com.vishalag53.mp3.music.rhythmflow.presentation.main.other.MainViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.main.smallplayer.SmallPlayerEvents
 import com.vishalag53.mp3.music.rhythmflow.presentation.main.smallplayer.SmallPlayerRootScreen
 import com.vishalag53.mp3.music.rhythmflow.presentation.main.smallplayer.SmallPlayerViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.main.songs.SongsRootScreen
+import com.vishalag53.mp3.music.rhythmflow.presentation.player.PlayerViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -44,9 +46,9 @@ fun MainRootScreen(
     tab: String,
     navController: NavHostController,
     audioList: List<Audio>,
-    mainViewModel: MainViewModel,
     smallPlayerViewModel: SmallPlayerViewModel,
-    startNotificationService: () -> Unit
+    startNotificationService: () -> Unit,
+    playerViewModel: PlayerViewModel
 ) {
     val mainUiStateSaver: Saver<MainUiState, *> = Saver(save = {
         listOf(it.isPlayingQueue)
@@ -68,8 +70,7 @@ fun MainRootScreen(
             mainUiState.value.isPlayingQueue -> {
                 {
                     SongQueueListsItem(
-                        mainViewModel = mainViewModel,
-                        navController = navController
+                        audioList = smallPlayerViewModel.audioList.collectAsStateWithLifecycle().value
                     )
                 }
             }
@@ -98,6 +99,9 @@ fun MainRootScreen(
                     index = smallPlayerViewModel.currentSelectedAudioIndex.collectAsState().value + 1,
                     onClick = {
                         mainUiState.value = mainUiState.value.copy(isPlayingQueue = true)
+                    },
+                    onOpenPlayer = {
+                        navController.navigate(Screens.Player)
                     }
                 )
             }
@@ -118,9 +122,9 @@ fun MainRootScreen(
                 K.SONGS -> SongsRootScreen(
                     navController = navController,
                     audioList = audioList,
-                    mainViewModel = mainViewModel,
                     smallPlayerViewModel = smallPlayerViewModel,
-                    startNotificationService = startNotificationService
+                    startNotificationService = startNotificationService,
+                    playerViewModel = playerViewModel
                 )
             }
         }

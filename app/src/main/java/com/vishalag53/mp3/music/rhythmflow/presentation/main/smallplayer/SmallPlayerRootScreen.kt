@@ -1,6 +1,7 @@
 package com.vishalag53.mp3.music.rhythmflow.presentation.main.smallplayer
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -41,7 +42,8 @@ fun SmallPlayerRootScreen(
     onPrev: () -> Unit,
     audioList: List<Audio>,
     index: Int,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    onOpenPlayer: () -> Unit
 ) {
     val context = LocalContext.current
 
@@ -56,6 +58,9 @@ fun SmallPlayerRootScreen(
                     )
                 )
             )
+            .clickable {
+                onOpenPlayer()
+            }
     ) {
         LinearProgressIndicator(
             progress = { progress },

@@ -38,12 +38,14 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.vishalag53.mp3.music.rhythmflow.domain.core.K
+import com.vishalag53.mp3.music.rhythmflow.navigation.Screens
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.AudioItem
 import com.vishalag53.mp3.music.rhythmflow.presentation.main.other.MainViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.playingqueue.SongQueueListsItem
 import com.vishalag53.mp3.music.rhythmflow.presentation.main.smallplayer.SmallPlayerEvents
 import com.vishalag53.mp3.music.rhythmflow.presentation.main.smallplayer.SmallPlayerRootScreen
 import com.vishalag53.mp3.music.rhythmflow.presentation.main.smallplayer.SmallPlayerViewModel
+import com.vishalag53.mp3.music.rhythmflow.presentation.player.PlayerViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.search.components.SearchAppBar
 import com.vishalag53.mp3.music.rhythmflow.presentation.search.components.SelectTabSearchModalBottomSheet
 import kotlinx.coroutines.delay
@@ -56,7 +58,8 @@ fun SearchRootScreen(
     navigateBack: () -> Boolean,
     mainViewModel: MainViewModel,
     smallPlayerViewModel: SmallPlayerViewModel,
-    startNotificationService: () -> Unit
+    startNotificationService: () -> Unit,
+    playerViewModel: PlayerViewModel
 ) {
     val searchUiStateSaver: Saver<SearchUiState, *> = Saver(save = {
         listOf(
@@ -115,8 +118,7 @@ fun SearchRootScreen(
                 backgroundColor.value = Color(0xFF736659)
                 sheetContent.value = {
                     SongQueueListsItem(
-                        mainViewModel = mainViewModel,
-                        navController = navController
+                        audioList = searchViewModel.audioList.collectAsStateWithLifecycle().value
                     )
                 }
                 scope.launch { sheetState.show() }
@@ -172,18 +174,20 @@ fun SearchRootScreen(
             if (smallPlayerViewModel.currentSelectedAudio.collectAsState().value.title != "") {
                 SmallPlayerRootScreen(
                     audio = smallPlayerViewModel.currentSelectedAudio.collectAsState().value,
-                    audioList = smallPlayerViewModel.audioList.collectAsState().value,
                     progress = smallPlayerViewModel.progress.collectAsState().value,
                     progressString = smallPlayerViewModel.progressString.collectAsState().value,
                     isAudioPlaying = smallPlayerViewModel.isPlaying.collectAsState().value,
                     onStart = { smallPlayerViewModel.onSmallPlayerEvents(SmallPlayerEvents.PlayPause) },
                     onNext = { smallPlayerViewModel.onSmallPlayerEvents(SmallPlayerEvents.SeekToNextItem) },
                     onPrev = { smallPlayerViewModel.onSmallPlayerEvents(SmallPlayerEvents.SeekToPreviousItem) },
+                    audioList = smallPlayerViewModel.audioList.collectAsState().value,
                     index = smallPlayerViewModel.currentSelectedAudioIndex.collectAsState().value + 1,
                     onClick = {
                         searchUiState.value = SearchUiState(SearchBottomSheetContent.PlayingQueue)
                     }
-                )
+                ) {
+                    navController.navigate(Screens.Player)
+                }
             }
         }) { innerPadding ->
         Box(
@@ -202,10 +206,10 @@ fun SearchRootScreen(
                                 audio = audio,
                                 audioList = songs,
                                 navController = navController,
-                                mainViewModel = mainViewModel,
                                 smallPlayerViewModel = smallPlayerViewModel,
                                 index = index,
-                                startNotificationService = startNotificationService
+                                startNotificationService = startNotificationService,
+                                playerViewModel = playerViewModel
                             )
                         }
                     }
