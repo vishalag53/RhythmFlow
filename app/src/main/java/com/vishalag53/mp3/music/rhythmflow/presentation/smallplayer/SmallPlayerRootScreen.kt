@@ -1,4 +1,4 @@
-package com.vishalag53.mp3.music.rhythmflow.presentation.main.smallplayer
+package com.vishalag53.mp3.music.rhythmflow.presentation.smallplayer
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -27,9 +27,9 @@ import com.vishalag53.mp3.music.rhythmflow.data.local.model.Audio
 import com.vishalag53.mp3.music.rhythmflow.domain.core.formatDuration
 import com.vishalag53.mp3.music.rhythmflow.domain.core.stringCapitalized
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.AudioTitleDisplayName
-import com.vishalag53.mp3.music.rhythmflow.presentation.main.smallplayer.components.SmallPlayerController
-import com.vishalag53.mp3.music.rhythmflow.presentation.main.smallplayer.components.SmallPlayerQueue
-import com.vishalag53.mp3.music.rhythmflow.presentation.main.smallplayer.components.SmallPlayerTime
+import com.vishalag53.mp3.music.rhythmflow.presentation.smallplayer.components.SmallPlayerController
+import com.vishalag53.mp3.music.rhythmflow.presentation.smallplayer.components.SmallPlayerQueue
+import com.vishalag53.mp3.music.rhythmflow.presentation.smallplayer.components.SmallPlayerTime
 
 @Composable
 fun SmallPlayerRootScreen(

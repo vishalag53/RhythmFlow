@@ -1,4 +1,4 @@
-package com.vishalag53.mp3.music.rhythmflow.presentation.main.smallplayer
+package com.vishalag53.mp3.music.rhythmflow.presentation.smallplayer
 
 sealed class SmallPlayerEvents {
     object PlayPause : SmallPlayerEvents()

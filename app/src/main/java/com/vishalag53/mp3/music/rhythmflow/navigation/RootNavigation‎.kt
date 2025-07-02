@@ -9,9 +9,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.vishalag53.mp3.music.rhythmflow.data.local.model.Audio
 import com.vishalag53.mp3.music.rhythmflow.domain.core.K
-import com.vishalag53.mp3.music.rhythmflow.presentation.main.main.MainRootScreen
-import com.vishalag53.mp3.music.rhythmflow.presentation.main.other.MainViewModel
-import com.vishalag53.mp3.music.rhythmflow.presentation.main.smallplayer.SmallPlayerViewModel
+import com.vishalag53.mp3.music.rhythmflow.presentation.main.MainRootScreen
+import com.vishalag53.mp3.music.rhythmflow.presentation.mainactivity.MainViewModel
+import com.vishalag53.mp3.music.rhythmflow.presentation.smallplayer.SmallPlayerViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.player.PlayerEvents
 import com.vishalag53.mp3.music.rhythmflow.presentation.player.PlayerRootScreen
 import com.vishalag53.mp3.music.rhythmflow.presentation.player.PlayerViewModel

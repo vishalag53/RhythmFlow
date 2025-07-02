@@ -1,4 +1,4 @@
-package com.vishalag53.mp3.music.rhythmflow.presentation.main.appbar.components
+package com.vishalag53.mp3.music.rhythmflow.presentation.main.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement

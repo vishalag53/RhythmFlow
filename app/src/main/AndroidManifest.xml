@@ -9,7 +9,7 @@
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <application
-        android:name=".presentation.main.other.RhythmFlowApplication"
+        android:name=".presentation.mainactivity.RhythmFlowApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -20,7 +20,7 @@
         android:theme="@style/Theme.RhythmFlow"
         tools:targetApi="31">
         <activity
-            android:name=".presentation.main.other.MainActivity"
+            android:name=".presentation.mainactivity.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.RhythmFlow.Starting">
             <intent-filter>

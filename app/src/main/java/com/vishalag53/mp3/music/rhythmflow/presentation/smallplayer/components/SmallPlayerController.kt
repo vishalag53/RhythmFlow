@@ -1,4 +1,4 @@
-package com.vishalag53.mp3.music.rhythmflow.presentation.main.smallplayer.components
+package com.vishalag53.mp3.music.rhythmflow.presentation.smallplayer.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row

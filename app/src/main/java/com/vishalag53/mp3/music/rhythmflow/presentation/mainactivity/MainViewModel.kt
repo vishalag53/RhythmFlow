@@ -1,4 +1,4 @@
-package com.vishalag53.mp3.music.rhythmflow.presentation.main.other
+package com.vishalag53.mp3.music.rhythmflow.presentation.mainactivity
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

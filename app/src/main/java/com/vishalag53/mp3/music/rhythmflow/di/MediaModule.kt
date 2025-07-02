@@ -17,7 +17,7 @@ import javax.inject.Singleton
 import androidx.media3.session.MediaSession
 import com.vishalag53.mp3.music.rhythmflow.domain.musicplayer.notification.RhythmFlowNotificationManager
 import com.vishalag53.mp3.music.rhythmflow.domain.musicplayer.service.RhythmFlowServiceHandler
-import com.vishalag53.mp3.music.rhythmflow.presentation.main.other.MainActivity
+import com.vishalag53.mp3.music.rhythmflow.presentation.mainactivity.MainActivity
 
 @Module
 @InstallIn(SingletonComponent::class)

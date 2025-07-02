@@ -1,4 +1,4 @@
-package com.vishalag53.mp3.music.rhythmflow.presentation.main.other
+package com.vishalag53.mp3.music.rhythmflow.presentation.mainactivity
 
 import android.Manifest
 import android.content.Intent
@@ -24,7 +24,7 @@ import com.google.accompanist.permissions.rememberPermissionState
 import com.vishalag53.mp3.music.rhythmflow.domain.musicplayer.service.RhythmFlowService
 import com.vishalag53.mp3.music.rhythmflow.navigation.RootNavigation
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.Loading
-import com.vishalag53.mp3.music.rhythmflow.presentation.main.smallplayer.SmallPlayerViewModel
+import com.vishalag53.mp3.music.rhythmflow.presentation.smallplayer.SmallPlayerViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.player.PlayerViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.storagepermission.AskStoragePermission
 import com.vishalag53.mp3.music.rhythmflow.presentation.theme.RhythmFlowTheme

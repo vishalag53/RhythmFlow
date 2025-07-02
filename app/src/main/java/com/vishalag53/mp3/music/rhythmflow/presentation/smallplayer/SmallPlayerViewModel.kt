@@ -1,4 +1,4 @@
-package com.vishalag53.mp3.music.rhythmflow.presentation.main.smallplayer
+package com.vishalag53.mp3.music.rhythmflow.presentation.smallplayer
 
 import android.content.Context
 import androidx.lifecycle.ViewModel

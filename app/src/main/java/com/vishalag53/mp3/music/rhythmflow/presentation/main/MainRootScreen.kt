@@ -1,4 +1,4 @@
-package com.vishalag53.mp3.music.rhythmflow.presentation.main.main
+package com.vishalag53.mp3.music.rhythmflow.presentation.main
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -33,11 +33,11 @@ import com.vishalag53.mp3.music.rhythmflow.data.local.model.Audio
 import com.vishalag53.mp3.music.rhythmflow.domain.core.K
 import com.vishalag53.mp3.music.rhythmflow.navigation.Screens
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.playingqueue.SongQueueListsItem
-import com.vishalag53.mp3.music.rhythmflow.presentation.main.appbar.AppBarRootScreen
-import com.vishalag53.mp3.music.rhythmflow.presentation.main.smallplayer.SmallPlayerEvents
-import com.vishalag53.mp3.music.rhythmflow.presentation.main.smallplayer.SmallPlayerRootScreen
-import com.vishalag53.mp3.music.rhythmflow.presentation.main.smallplayer.SmallPlayerViewModel
-import com.vishalag53.mp3.music.rhythmflow.presentation.main.songs.SongsRootScreen
+import com.vishalag53.mp3.music.rhythmflow.presentation.main.components.AppBarRootScreen
+import com.vishalag53.mp3.music.rhythmflow.presentation.smallplayer.SmallPlayerEvents
+import com.vishalag53.mp3.music.rhythmflow.presentation.smallplayer.SmallPlayerRootScreen
+import com.vishalag53.mp3.music.rhythmflow.presentation.smallplayer.SmallPlayerViewModel
+import com.vishalag53.mp3.music.rhythmflow.presentation.songs.SongsRootScreen
 import com.vishalag53.mp3.music.rhythmflow.presentation.player.PlayerViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
