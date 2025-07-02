@@ -40,12 +40,11 @@ import androidx.navigation.NavHostController
 import com.vishalag53.mp3.music.rhythmflow.domain.core.K
 import com.vishalag53.mp3.music.rhythmflow.navigation.Screens
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.AudioItem
+import com.vishalag53.mp3.music.rhythmflow.presentation.core.baseplayer.BasePlayerEvents
+import com.vishalag53.mp3.music.rhythmflow.presentation.core.baseplayer.BasePlayerViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.mainactivity.MainViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.playingqueue.SongQueueListsItem
-import com.vishalag53.mp3.music.rhythmflow.presentation.smallplayer.SmallPlayerEvents
 import com.vishalag53.mp3.music.rhythmflow.presentation.smallplayer.SmallPlayerRootScreen
-import com.vishalag53.mp3.music.rhythmflow.presentation.smallplayer.SmallPlayerViewModel
-import com.vishalag53.mp3.music.rhythmflow.presentation.player.PlayerViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.search.components.SearchAppBar
 import com.vishalag53.mp3.music.rhythmflow.presentation.search.components.SelectTabSearchModalBottomSheet
 import kotlinx.coroutines.delay
@@ -57,9 +56,8 @@ fun SearchRootScreen(
     navController: NavHostController,
     navigateBack: () -> Boolean,
     mainViewModel: MainViewModel,
-    smallPlayerViewModel: SmallPlayerViewModel,
     startNotificationService: () -> Unit,
-    playerViewModel: PlayerViewModel
+    basePlayerViewModel: BasePlayerViewModel
 ) {
     val searchUiStateSaver: Saver<SearchUiState, *> = Saver(save = {
         listOf(
@@ -171,17 +169,17 @@ fun SearchRootScreen(
             )
         },
         bottomBar = {
-            if (smallPlayerViewModel.currentSelectedAudio.collectAsState().value.title != "") {
+            if (basePlayerViewModel.currentSelectedAudio.collectAsState().value.title != "") {
                 SmallPlayerRootScreen(
-                    audio = smallPlayerViewModel.currentSelectedAudio.collectAsState().value,
-                    progress = smallPlayerViewModel.progress.collectAsState().value,
-                    progressString = smallPlayerViewModel.progressString.collectAsState().value,
-                    isAudioPlaying = smallPlayerViewModel.isPlaying.collectAsState().value,
-                    onStart = { smallPlayerViewModel.onSmallPlayerEvents(SmallPlayerEvents.PlayPause) },
-                    onNext = { smallPlayerViewModel.onSmallPlayerEvents(SmallPlayerEvents.SeekToNextItem) },
-                    onPrev = { smallPlayerViewModel.onSmallPlayerEvents(SmallPlayerEvents.SeekToPreviousItem) },
-                    audioList = smallPlayerViewModel.audioList.collectAsState().value,
-                    index = smallPlayerViewModel.currentSelectedAudioIndex.collectAsState().value + 1,
+                    audio = basePlayerViewModel.currentSelectedAudio.collectAsState().value,
+                    progress = basePlayerViewModel.progress.collectAsState().value,
+                    progressString = basePlayerViewModel.progressString.collectAsState().value,
+                    isAudioPlaying = basePlayerViewModel.isPlaying.collectAsState().value,
+                    onStart = { basePlayerViewModel.onBasePlayerEvents(BasePlayerEvents.PlayPause) },
+                    onNext = { basePlayerViewModel.onBasePlayerEvents(BasePlayerEvents.SeekToNextItem) },
+                    onPrev = { basePlayerViewModel.onBasePlayerEvents(BasePlayerEvents.SeekToPreviousItem) },
+                    audioList = basePlayerViewModel.audioList.collectAsState().value,
+                    index = basePlayerViewModel.currentSelectedAudioIndex.collectAsState().value + 1,
                     onClick = {
                         searchUiState.value = SearchUiState(SearchBottomSheetContent.PlayingQueue)
                     }
@@ -206,10 +204,9 @@ fun SearchRootScreen(
                                 audio = audio,
                                 audioList = songs,
                                 navController = navController,
-                                smallPlayerViewModel = smallPlayerViewModel,
+                                basePlayerViewModel = basePlayerViewModel,
                                 index = index,
-                                startNotificationService = startNotificationService,
-                                playerViewModel = playerViewModel
+                                startNotificationService = startNotificationService
                             )
                         }
                     }

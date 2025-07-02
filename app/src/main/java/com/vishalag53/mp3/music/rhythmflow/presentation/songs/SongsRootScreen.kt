@@ -12,17 +12,15 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import com.vishalag53.mp3.music.rhythmflow.data.local.model.Audio
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.AudioItem
-import com.vishalag53.mp3.music.rhythmflow.presentation.smallplayer.SmallPlayerViewModel
+import com.vishalag53.mp3.music.rhythmflow.presentation.core.baseplayer.BasePlayerViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.songs.components.SongsTopBar
-import com.vishalag53.mp3.music.rhythmflow.presentation.player.PlayerViewModel
 
 @Composable
 fun SongsRootScreen(
     navController: NavHostController,
     audioList: List<Audio>,
-    smallPlayerViewModel: SmallPlayerViewModel,
     startNotificationService: () -> Unit,
-    playerViewModel: PlayerViewModel
+    basePlayerViewModel: BasePlayerViewModel
 ) {
     Scaffold(
         topBar = { SongsTopBar(audioList) },
@@ -41,10 +39,9 @@ fun SongsRootScreen(
                         audio = audio,
                         audioList = audioList,
                         navController = navController,
-                        smallPlayerViewModel = smallPlayerViewModel,
+                        basePlayerViewModel = basePlayerViewModel,
                         index = index,
-                        startNotificationService = startNotificationService,
-                        playerViewModel = playerViewModel
+                        startNotificationService = startNotificationService
                     )
                 }
             }

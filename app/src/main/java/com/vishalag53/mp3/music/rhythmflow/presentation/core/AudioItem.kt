@@ -23,19 +23,17 @@ import com.vishalag53.mp3.music.rhythmflow.data.local.model.Audio
 import com.vishalag53.mp3.music.rhythmflow.domain.core.formatDuration
 import com.vishalag53.mp3.music.rhythmflow.domain.core.stringCapitalized
 import com.vishalag53.mp3.music.rhythmflow.navigation.Screens
-import com.vishalag53.mp3.music.rhythmflow.presentation.smallplayer.SmallPlayerEvents
-import com.vishalag53.mp3.music.rhythmflow.presentation.smallplayer.SmallPlayerViewModel
-import com.vishalag53.mp3.music.rhythmflow.presentation.player.PlayerViewModel
+import com.vishalag53.mp3.music.rhythmflow.presentation.core.baseplayer.BasePlayerEvents
+import com.vishalag53.mp3.music.rhythmflow.presentation.core.baseplayer.BasePlayerViewModel
 
 @Composable
 fun AudioItem(
     audio: Audio,
     audioList: List<Audio>,
     navController: NavHostController,
-    smallPlayerViewModel: SmallPlayerViewModel,
     index: Int,
     startNotificationService: () -> Unit,
-    playerViewModel: PlayerViewModel
+    basePlayerViewModel: BasePlayerViewModel
 ) {
     val context = LocalContext.current
 
@@ -43,10 +41,9 @@ fun AudioItem(
         modifier = Modifier
             .fillMaxWidth()
             .clickable {
-                smallPlayerViewModel.onSmallPlayerEvents(SmallPlayerEvents.ClearMediaItems)
-                smallPlayerViewModel.setAudioList(audioList)
-                smallPlayerViewModel.onSmallPlayerEvents(SmallPlayerEvents.SelectedAudioChange(index))
-                playerViewModel.setAudioList(audioList)
+                basePlayerViewModel.onBasePlayerEvents(BasePlayerEvents.ClearMediaItems)
+                basePlayerViewModel.setAudioList(audioList)
+                basePlayerViewModel.onBasePlayerEvents(BasePlayerEvents.SelectedAudioChange(index))
                 navController.navigate(Screens.Player)
                 startNotificationService()
             },

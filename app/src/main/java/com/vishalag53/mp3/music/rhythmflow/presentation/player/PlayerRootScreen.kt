@@ -32,10 +32,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.vishalag53.mp3.music.rhythmflow.data.local.model.Audio
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.AudioProgressBar
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.AudioTitleDisplayName
 import com.vishalag53.mp3.music.rhythmflow.domain.core.stringCapitalized
+import com.vishalag53.mp3.music.rhythmflow.presentation.core.baseplayer.BasePlayerEvents
+import com.vishalag53.mp3.music.rhythmflow.presentation.core.baseplayer.BasePlayerViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.player.components.PlayerControllers
 import com.vishalag53.mp3.music.rhythmflow.presentation.player.components.PlayerPlaybackSpeed
 import com.vishalag53.mp3.music.rhythmflow.presentation.player.components.PlayerTopBar
@@ -48,19 +50,10 @@ import kotlinx.coroutines.launch
 @Composable
 fun PlayerRootScreen(
     navigateBack: () -> Unit,
-    audio: Audio,
-    audioList: List<Audio>,
-    progress: Float,
-    progressString: String,
-    onProgressChange: (Float) -> Unit,
-    onPrev: () -> Unit,
-    onNext: () -> Unit,
-    onBackward: () -> Unit,
-    onForward: () -> Unit,
-    onStart: () -> Unit,
-    isAudioPlaying: Boolean,
+    basePlayerViewModel: BasePlayerViewModel
 ) {
     val width = LocalConfiguration.current.screenWidthDp.dp
+    val audio = basePlayerViewModel.currentSelectedAudio.collectAsStateWithLifecycle().value
 
     val playerUiStateSaver: Saver<PlayerUiState, *> = Saver(save = {
         listOf(it.sheet::class.simpleName ?: "")
@@ -86,7 +79,7 @@ fun PlayerRootScreen(
             PlayerBottomSheetContent.PlayingQueue -> {
                 showSheet.value = true
                 sheetContent.value = {
-                    SongQueueListsItem(audioList)
+                    SongQueueListsItem(audioList = basePlayerViewModel.audioList.collectAsStateWithLifecycle().value)
                 }
                 scope.launch { sheetState.show() }
             }
@@ -154,18 +147,34 @@ fun PlayerRootScreen(
                     AudioProgressBar(
                         inactiveColor = Color(0xFF35363B),
                         audioDuration = audio.duration,
-                        progress = progress,
-                        progressString = progressString,
-                        onProgressChange = onProgressChange
+                        progress = basePlayerViewModel.progress.collectAsStateWithLifecycle().value,
+                        progressString = basePlayerViewModel.progressString.collectAsStateWithLifecycle().value,
+                        onProgressChange = { progress ->
+                            basePlayerViewModel.onBasePlayerEvents(
+                                BasePlayerEvents.UpdateProgress(
+                                    progress
+                                )
+                            )
+                        }
                     )
                     Spacer(modifier = Modifier.height(10.dp))
                     PlayerControllers(
-                        onPrev = onPrev,
-                        onNext = onNext,
-                        onBackward = onBackward,
-                        onForward = onForward,
-                        onStart = onStart,
-                        isAudioPlaying = isAudioPlaying
+                        onPrev = {
+                            basePlayerViewModel.onBasePlayerEvents(BasePlayerEvents.SeekToPreviousItem)
+                        },
+                        onNext = {
+                            basePlayerViewModel.onBasePlayerEvents(BasePlayerEvents.SeekToNextItem)
+                        },
+                        onBackward = {
+                            basePlayerViewModel.onBasePlayerEvents(BasePlayerEvents.Backward)
+                        },
+                        onForward = {
+                            basePlayerViewModel.onBasePlayerEvents(BasePlayerEvents.Forward)
+                        },
+                        onStart = {
+                            basePlayerViewModel.onBasePlayerEvents(BasePlayerEvents.PlayPause)
+                        },
+                        isAudioPlaying = basePlayerViewModel.isPlaying.collectAsStateWithLifecycle().value
                     )
                 }
 

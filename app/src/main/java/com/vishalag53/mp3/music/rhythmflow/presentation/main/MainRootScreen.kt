@@ -32,13 +32,12 @@ import androidx.navigation.NavHostController
 import com.vishalag53.mp3.music.rhythmflow.data.local.model.Audio
 import com.vishalag53.mp3.music.rhythmflow.domain.core.K
 import com.vishalag53.mp3.music.rhythmflow.navigation.Screens
+import com.vishalag53.mp3.music.rhythmflow.presentation.core.baseplayer.BasePlayerEvents
+import com.vishalag53.mp3.music.rhythmflow.presentation.core.baseplayer.BasePlayerViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.playingqueue.SongQueueListsItem
 import com.vishalag53.mp3.music.rhythmflow.presentation.main.components.AppBarRootScreen
-import com.vishalag53.mp3.music.rhythmflow.presentation.smallplayer.SmallPlayerEvents
 import com.vishalag53.mp3.music.rhythmflow.presentation.smallplayer.SmallPlayerRootScreen
-import com.vishalag53.mp3.music.rhythmflow.presentation.smallplayer.SmallPlayerViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.songs.SongsRootScreen
-import com.vishalag53.mp3.music.rhythmflow.presentation.player.PlayerViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -46,9 +45,8 @@ fun MainRootScreen(
     tab: String,
     navController: NavHostController,
     audioList: List<Audio>,
-    smallPlayerViewModel: SmallPlayerViewModel,
     startNotificationService: () -> Unit,
-    playerViewModel: PlayerViewModel
+    basePlayerViewModel: BasePlayerViewModel
 ) {
     val mainUiStateSaver: Saver<MainUiState, *> = Saver(save = {
         listOf(it.isPlayingQueue)
@@ -70,7 +68,7 @@ fun MainRootScreen(
             mainUiState.value.isPlayingQueue -> {
                 {
                     SongQueueListsItem(
-                        audioList = smallPlayerViewModel.audioList.collectAsStateWithLifecycle().value
+                        audioList = basePlayerViewModel.audioList.collectAsStateWithLifecycle().value
                     )
                 }
             }
@@ -86,17 +84,17 @@ fun MainRootScreen(
             AppBarRootScreen(navController = navController)
         },
         bottomBar = {
-            if (smallPlayerViewModel.currentSelectedAudio.collectAsState().value.title != "") {
+            if (basePlayerViewModel.currentSelectedAudio.collectAsState().value.title != "") {
                 SmallPlayerRootScreen(
-                    audio = smallPlayerViewModel.currentSelectedAudio.collectAsState().value,
-                    audioList = smallPlayerViewModel.audioList.collectAsState().value,
-                    progress = smallPlayerViewModel.progress.collectAsState().value,
-                    progressString = smallPlayerViewModel.progressString.collectAsState().value,
-                    isAudioPlaying = smallPlayerViewModel.isPlaying.collectAsState().value,
-                    onStart = { smallPlayerViewModel.onSmallPlayerEvents(SmallPlayerEvents.PlayPause) },
-                    onNext = { smallPlayerViewModel.onSmallPlayerEvents(SmallPlayerEvents.SeekToNextItem) },
-                    onPrev = { smallPlayerViewModel.onSmallPlayerEvents(SmallPlayerEvents.SeekToPreviousItem) },
-                    index = smallPlayerViewModel.currentSelectedAudioIndex.collectAsState().value + 1,
+                    audio = basePlayerViewModel.currentSelectedAudio.collectAsState().value,
+                    audioList = basePlayerViewModel.audioList.collectAsState().value,
+                    progress = basePlayerViewModel.progress.collectAsState().value,
+                    progressString = basePlayerViewModel.progressString.collectAsState().value,
+                    isAudioPlaying = basePlayerViewModel.isPlaying.collectAsState().value,
+                    onStart = { basePlayerViewModel.onBasePlayerEvents(BasePlayerEvents.PlayPause) },
+                    onNext = { basePlayerViewModel.onBasePlayerEvents(BasePlayerEvents.SeekToNextItem) },
+                    onPrev = { basePlayerViewModel.onBasePlayerEvents(BasePlayerEvents.SeekToPreviousItem) },
+                    index = basePlayerViewModel.currentSelectedAudioIndex.collectAsState().value + 1,
                     onClick = {
                         mainUiState.value = mainUiState.value.copy(isPlayingQueue = true)
                     },
@@ -122,9 +120,8 @@ fun MainRootScreen(
                 K.SONGS -> SongsRootScreen(
                     navController = navController,
                     audioList = audioList,
-                    smallPlayerViewModel = smallPlayerViewModel,
-                    startNotificationService = startNotificationService,
-                    playerViewModel = playerViewModel
+                    basePlayerViewModel = basePlayerViewModel,
+                    startNotificationService = startNotificationService
                 )
             }
         }

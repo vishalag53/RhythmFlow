@@ -24,8 +24,7 @@ import com.google.accompanist.permissions.rememberPermissionState
 import com.vishalag53.mp3.music.rhythmflow.domain.musicplayer.service.RhythmFlowService
 import com.vishalag53.mp3.music.rhythmflow.navigation.RootNavigation
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.Loading
-import com.vishalag53.mp3.music.rhythmflow.presentation.smallplayer.SmallPlayerViewModel
-import com.vishalag53.mp3.music.rhythmflow.presentation.player.PlayerViewModel
+import com.vishalag53.mp3.music.rhythmflow.presentation.core.baseplayer.BasePlayerViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.storagepermission.AskStoragePermission
 import com.vishalag53.mp3.music.rhythmflow.presentation.theme.RhythmFlowTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -50,8 +49,7 @@ class MainActivity : ComponentActivity() {
                     permission = Manifest.permission.READ_EXTERNAL_STORAGE
                 )
                 val lifecycleOwner = LocalLifecycleOwner.current
-                val smallPlayerViewModel by viewModels<SmallPlayerViewModel>()
-                val playerViewModel by viewModels<PlayerViewModel>()
+                val basePlayerViewModel by viewModels<BasePlayerViewModel>()
 
                 DisposableEffect(key1 = lifecycleOwner) {
                     val observer = LifecycleEventObserver { _, event ->
@@ -81,8 +79,7 @@ class MainActivity : ComponentActivity() {
                             navController = navController,
                             audioList = audioList.value,
                             mainViewModel = mainViewModel,
-                            smallPlayerViewModel = smallPlayerViewModel,
-                            playerViewModel = playerViewModel,
+                            basePlayerViewModel = basePlayerViewModel,
                             startNotificationService = { startService() }
                         )
                     }
