@@ -108,11 +108,16 @@ fun SearchAppBar(
             singleLine = true,
             shape = RoundedCornerShape(24.dp),
             colors = TextFieldDefaults.colors(
-                MaterialTheme.colorScheme.primary,
+                focusedTextColor = MaterialTheme.colorScheme.primary,
+                unfocusedTextColor = MaterialTheme.colorScheme.primary,
                 focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent,
                 disabledIndicatorColor = Color.Transparent,
-                errorIndicatorColor = Color.Transparent
+                errorIndicatorColor = Color.Transparent,
+                cursorColor = MaterialTheme.colorScheme.primary,
+                focusedContainerColor = Color.White,
+                unfocusedContainerColor = Color.White,
+                disabledContainerColor = Color.White
             )
         )
 

@@ -1,5 +1,6 @@
 package com.vishalag53.mp3.music.rhythmflow.presentation.player.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -18,9 +19,13 @@ import androidx.compose.ui.unit.sp
 import com.vishalag53.mp3.music.rhythmflow.R
 
 @Composable
-internal fun PlayerPlaybackSpeed() {
+internal fun PlayerPlaybackSpeed(onOpen: () -> Unit, playbackSpeed: Float) {
     Column(
-        modifier = Modifier.width(48.dp),
+        modifier = Modifier
+            .width(48.dp)
+            .clickable {
+                onOpen()
+            },
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -42,7 +47,7 @@ internal fun PlayerPlaybackSpeed() {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "1.0x",
+                text = "${playbackSpeed}x",
                 color = Color(0xFFFDCF9E),
                 fontSize = 18.sp
             )

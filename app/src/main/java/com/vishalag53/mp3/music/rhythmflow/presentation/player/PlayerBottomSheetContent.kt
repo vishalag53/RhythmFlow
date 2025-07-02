@@ -4,4 +4,5 @@ sealed class PlayerBottomSheetContent {
     object None : PlayerBottomSheetContent()
     object PlayingQueue : PlayerBottomSheetContent()
     object SongInfo : PlayerBottomSheetContent()
+    object PlaybackSpeed : PlayerBottomSheetContent()
 }

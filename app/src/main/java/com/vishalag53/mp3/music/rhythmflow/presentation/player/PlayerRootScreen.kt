@@ -19,6 +19,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -38,6 +39,7 @@ import com.vishalag53.mp3.music.rhythmflow.presentation.core.AudioTitleDisplayNa
 import com.vishalag53.mp3.music.rhythmflow.domain.core.stringCapitalized
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.baseplayer.BasePlayerEvents
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.baseplayer.BasePlayerViewModel
+import com.vishalag53.mp3.music.rhythmflow.presentation.core.playbackspeed.PlaybackSpeed
 import com.vishalag53.mp3.music.rhythmflow.presentation.player.components.PlayerControllers
 import com.vishalag53.mp3.music.rhythmflow.presentation.player.components.PlayerPlaybackSpeed
 import com.vishalag53.mp3.music.rhythmflow.presentation.player.components.PlayerTopBar
@@ -74,6 +76,8 @@ fun PlayerRootScreen(
     val sheetContent = remember { mutableStateOf<@Composable () -> Unit>({}) }
     val scope = rememberCoroutineScope()
 
+    val playbackSpeed = remember { mutableFloatStateOf(1.0F) }
+
     LaunchedEffect(playerUiState.value.sheet) {
         when (playerUiState.value.sheet) {
             PlayerBottomSheetContent.PlayingQueue -> {
@@ -88,6 +92,25 @@ fun PlayerRootScreen(
                 showSheet.value = true
                 sheetContent.value = {
                     SongInfoRootScreen(audio = audio)
+                }
+                scope.launch { sheetState.show() }
+            }
+
+            PlayerBottomSheetContent.PlaybackSpeed -> {
+                showSheet.value = true
+                sheetContent.value = {
+                    PlaybackSpeed(
+                        onClose = {
+                            playerUiState.value = PlayerUiState(PlayerBottomSheetContent.None)
+                        },
+                        playbackSpeed = playbackSpeed.floatValue,
+                        onPlaybackSpeedChange = { speed ->
+                            playbackSpeed.floatValue = speed
+                        },
+                        onPlaybackSpeedChangeBasePlayer = { speed ->
+                            basePlayerViewModel.onBasePlayerEvents(BasePlayerEvents.PlayBackSpeed(speed))
+                        }
+                    )
                 }
                 scope.launch { sheetState.show() }
             }
@@ -141,7 +164,12 @@ fun PlayerRootScreen(
                                 .weight(1f)
                         )
                         Spacer(modifier = Modifier.width(6.dp))
-                        PlayerPlaybackSpeed()
+                        PlayerPlaybackSpeed(
+                            onOpen = {
+                                playerUiState.value = PlayerUiState(PlayerBottomSheetContent.PlaybackSpeed)
+                            },
+                            playbackSpeed = playbackSpeed.floatValue
+                        )
                     }
                     Spacer(modifier = Modifier.height(10.dp))
                     AudioProgressBar(
