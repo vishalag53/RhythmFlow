@@ -19,6 +19,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
@@ -38,6 +39,7 @@ import com.vishalag53.mp3.music.rhythmflow.presentation.core.playingqueue.SongQu
 import com.vishalag53.mp3.music.rhythmflow.presentation.main.components.AppBarRootScreen
 import com.vishalag53.mp3.music.rhythmflow.presentation.smallplayer.SmallPlayerRootScreen
 import com.vishalag53.mp3.music.rhythmflow.presentation.songs.SongsRootScreen
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -49,11 +51,13 @@ fun MainRootScreen(
     basePlayerViewModel: BasePlayerViewModel
 ) {
     val mainUiStateSaver: Saver<MainUiState, *> = Saver(save = {
-        listOf(it.isPlayingQueue)
+        listOf(it.sheet::class.simpleName ?: "")
     }, restore = {
-        MainUiState(
-            isPlayingQueue = it[0]
-        )
+        val sheet = when (it.firstOrNull()) {
+            MainBottomSheetContent.PlayingQueue::class.simpleName -> MainBottomSheetContent.PlayingQueue
+            else -> MainBottomSheetContent.None
+        }
+        MainUiState(sheet = sheet)
     })
     val mainUiState = rememberSaveable(stateSaver = mainUiStateSaver) {
         mutableStateOf(MainUiState())
@@ -61,20 +65,23 @@ fun MainRootScreen(
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = false)
     val showSheet = rememberSaveable { mutableStateOf(false) }
     val sheetContent = remember { mutableStateOf<@Composable () -> Unit>({}) }
+    val scope = rememberCoroutineScope()
 
-    LaunchedEffect(mainUiState.value) {
-        showSheet.value = mainUiState.value.isPlayingQueue
-        sheetContent.value = when {
-            mainUiState.value.isPlayingQueue -> {
-                {
+    LaunchedEffect(mainUiState.value.sheet) {
+        when (mainUiState.value.sheet) {
+            MainBottomSheetContent.PlayingQueue -> {
+                showSheet.value = true
+                sheetContent.value = {
                     SongQueueListsItem(
                         audioList = basePlayerViewModel.audioList.collectAsStateWithLifecycle().value
                     )
                 }
+                scope.launch { sheetState.show() }
             }
 
-            else -> {
-                {}
+            MainBottomSheetContent.None -> {
+                showSheet.value = false
+                scope.launch { sheetState.hide() }
             }
         }
     }
@@ -96,7 +103,7 @@ fun MainRootScreen(
                     onPrev = { basePlayerViewModel.onBasePlayerEvents(BasePlayerEvents.SeekToPreviousItem) },
                     index = basePlayerViewModel.currentSelectedAudioIndex.collectAsState().value + 1,
                     onClick = {
-                        mainUiState.value = mainUiState.value.copy(isPlayingQueue = true)
+                        mainUiState.value = MainUiState(MainBottomSheetContent.PlayingQueue)
                     },
                     onOpenPlayer = {
                         navController.navigate(Screens.Player)
@@ -132,7 +139,7 @@ fun MainRootScreen(
             modifier = Modifier.statusBarsPadding(),
             onDismissRequest = {
                 mainUiState.value = MainUiState()
-                showSheet.value = false
+                scope.launch { sheetState.hide() }
             },
             sheetState = sheetState,
             containerColor = Color(0xFF736659),
