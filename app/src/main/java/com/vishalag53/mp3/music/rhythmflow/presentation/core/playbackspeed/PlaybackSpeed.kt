@@ -1,5 +1,6 @@
 package com.vishalag53.mp3.music.rhythmflow.presentation.core.playbackspeed
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -16,14 +17,18 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -45,6 +50,9 @@ fun PlaybackSpeed(
     val playbackSpeedList2 = listOf<Float>(
         1.75F, 2.0F, 2.25F, 2.50F
     )
+
+    val context = LocalContext.current
+    val playbackSpeedText = remember { mutableStateOf(playbackSpeed.toString()) }
 
     Box(
         modifier = Modifier
@@ -102,12 +110,12 @@ fun PlaybackSpeed(
                 horizontalArrangement = Arrangement.Absolute.Center
             ) {
                 TextField(
-                    value = playbackSpeed.toString(),
+                    value = playbackSpeedText.value,
                     onValueChange = {
-                        onPlaybackSpeedChange(it.toFloat())
+                        playbackSpeedText.value = it
                     },
                     modifier = Modifier
-                        .width(72.dp)
+                        .width(132.dp)
                         .height(56.dp)
                         .clip(RoundedCornerShape(12.dp)),
                     textStyle = MaterialTheme.typography.labelMedium.copy(
@@ -128,7 +136,36 @@ fun PlaybackSpeed(
                         focusedContainerColor = Color.White,
                         unfocusedContainerColor = Color.White,
                         disabledContainerColor = Color.White
-                    )
+                    ),
+                    trailingIcon = {
+                        TextButton(
+                            onClick = {
+                                val speed = playbackSpeedText.value.toFloatOrNull()
+                                if (speed != null) {
+                                    if (speed in 0.1f..5.0f) {
+                                        onPlaybackSpeedChange(speed)
+                                        onPlaybackSpeedChangeBasePlayer(speed)
+                                        onClose()
+                                    } else {
+                                        Toast.makeText(
+                                            context, "Please enter a speed between 0.1x and 5.0x.",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    }
+                                } else {
+                                    Toast.makeText(
+                                        context, " Invalid speed, Please enter a number.",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
+                            }
+                        ) {
+                            Text(
+                                text = "SET",
+                                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
+                            )
+                        }
+                    }
                 )
             }
 

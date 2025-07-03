@@ -76,11 +76,14 @@ fun PlayerRootScreen(
     val sheetContent = remember { mutableStateOf<@Composable () -> Unit>({}) }
     val scope = rememberCoroutineScope()
 
+    val modalBottomSheetBackgroundColor = remember { mutableStateOf(Color(0xFF736659)) }
+
     val playbackSpeed = remember { mutableFloatStateOf(1.0F) }
 
     LaunchedEffect(playerUiState.value.sheet) {
         when (playerUiState.value.sheet) {
             PlayerBottomSheetContent.PlayingQueue -> {
+                modalBottomSheetBackgroundColor.value = Color(0xFF736659)
                 showSheet.value = true
                 sheetContent.value = {
                     SongQueueListsItem(audioList = basePlayerViewModel.audioList.collectAsStateWithLifecycle().value)
@@ -89,6 +92,7 @@ fun PlayerRootScreen(
             }
 
             PlayerBottomSheetContent.SongInfo -> {
+                modalBottomSheetBackgroundColor.value = Color(0xFF736659)
                 showSheet.value = true
                 sheetContent.value = {
                     SongInfoRootScreen(audio = audio)
@@ -98,6 +102,7 @@ fun PlayerRootScreen(
 
             PlayerBottomSheetContent.PlaybackSpeed -> {
                 showSheet.value = true
+                modalBottomSheetBackgroundColor.value = Color(0xFFFDCF9E)
                 sheetContent.value = {
                     PlaybackSpeed(
                         onClose = {
@@ -108,7 +113,11 @@ fun PlayerRootScreen(
                             playbackSpeed.floatValue = speed
                         },
                         onPlaybackSpeedChangeBasePlayer = { speed ->
-                            basePlayerViewModel.onBasePlayerEvents(BasePlayerEvents.PlayBackSpeed(speed))
+                            basePlayerViewModel.onBasePlayerEvents(
+                                BasePlayerEvents.PlayBackSpeed(
+                                    speed
+                                )
+                            )
                         }
                     )
                 }
@@ -166,7 +175,8 @@ fun PlayerRootScreen(
                         Spacer(modifier = Modifier.width(6.dp))
                         PlayerPlaybackSpeed(
                             onOpen = {
-                                playerUiState.value = PlayerUiState(PlayerBottomSheetContent.PlaybackSpeed)
+                                playerUiState.value =
+                                    PlayerUiState(PlayerBottomSheetContent.PlaybackSpeed)
                             },
                             playbackSpeed = playbackSpeed.floatValue
                         )
@@ -246,7 +256,7 @@ fun PlayerRootScreen(
                 scope.launch { sheetState.hide() }
             },
             sheetState = sheetState,
-            containerColor = Color(0xFF736659),
+            containerColor = modalBottomSheetBackgroundColor.value,
             dragHandle = {
                 Box(
                     modifier = Modifier
