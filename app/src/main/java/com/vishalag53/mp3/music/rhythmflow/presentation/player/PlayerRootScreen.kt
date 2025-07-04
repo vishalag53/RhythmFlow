@@ -41,6 +41,7 @@ import com.vishalag53.mp3.music.rhythmflow.domain.core.stringCapitalized
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.PlayerQueue
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.baseplayer.BasePlayerEvents
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.baseplayer.BasePlayerViewModel
+import com.vishalag53.mp3.music.rhythmflow.presentation.core.menu.Menu
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.playbackspeed.PlaybackSpeed
 import com.vishalag53.mp3.music.rhythmflow.presentation.player.components.PlayerControllers
 import com.vishalag53.mp3.music.rhythmflow.presentation.player.components.PlayerPlaybackSpeed
@@ -129,6 +130,12 @@ fun PlayerRootScreen(
                 showSheet.value = true
                 modalBottomSheetBackgroundColor.value = Color(0xFFFDCF9E)
                 sheetContent.value = {
+                    Menu(
+                        audio = audio,
+                        onInfoClick = {
+                            playerUiState.value = PlayerUiState(PlayerBottomSheetContent.SongInfo)
+                        }
+                    )
                 }
                 scope.launch { sheetState.show() }
             }
@@ -165,80 +172,82 @@ fun PlayerRootScreen(
                 .padding(innerPadding)
         ) {
             Column(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 8.dp),
                 verticalArrangement = Arrangement.Bottom,
             ) {
-                Column(
-                    modifier = Modifier.padding(horizontal = 8.dp),
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Absolute.Center
                 ) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.Absolute.Center
-                    ) {
-                        AudioTitleDisplayName(
-                            title = stringCapitalized(audio.title),
-                            display = stringCapitalized(audio.displayName),
-                            color = Color(0xFFFDCF9E),
-                            softWrap = true,
-                            overflow = TextOverflow.Ellipsis,
-                            modifierColumn = Modifier
-                                .fillMaxWidth()
-                                .weight(1f)
-                        )
-                        Spacer(modifier = Modifier.width(4.dp))
-                        PlayerPlaybackSpeed(
-                            onOpen = {
-                                playerUiState.value =
-                                    PlayerUiState(PlayerBottomSheetContent.PlaybackSpeed)
-                            },
-                            playbackSpeed = playbackSpeed.floatValue
-                        )
-                        Spacer(modifier = Modifier.width(4.dp))
-                        PlayerQueue(
-                            index = basePlayerViewModel.currentSelectedAudioIndex.collectAsStateWithLifecycle().value + 1,
-                            length = basePlayerViewModel.audioList.collectAsStateWithLifecycle().value.size,
-                            onClick = {
-                                playerUiState.value =
-                                    PlayerUiState(PlayerBottomSheetContent.PlayerQueue)
-                            },
-                            color = Color(0xFFFDCF9E)
-                        )
-                    }
-                    Spacer(modifier = Modifier.height(10.dp))
-                    AudioProgressBar(
-                        inactiveColor = Color(0xFF35363B),
-                        audioDuration = audio.duration,
-                        progress = basePlayerViewModel.progress.collectAsStateWithLifecycle().value,
-                        progressString = basePlayerViewModel.progressString.collectAsStateWithLifecycle().value,
-                        onProgressChange = { progress ->
-                            basePlayerViewModel.onBasePlayerEvents(
-                                BasePlayerEvents.UpdateProgress(
-                                    progress
-                                )
-                            )
-                        }
+                    AudioTitleDisplayName(
+                        title = stringCapitalized(audio.title),
+                        display = stringCapitalized(audio.displayName),
+                        color = Color(0xFFFDCF9E),
+                        softWrap = true,
+                        overflow = TextOverflow.Ellipsis,
+                        modifierColumn = Modifier
+                            .fillMaxWidth()
+                            .weight(1f)
                     )
-                    Spacer(modifier = Modifier.height(10.dp))
-                    PlayerControllers(
-                        onPrev = {
-                            basePlayerViewModel.onBasePlayerEvents(BasePlayerEvents.SeekToPreviousItem)
+                    Spacer(modifier = Modifier.width(4.dp))
+                    PlayerPlaybackSpeed(
+                        onOpen = {
+                            playerUiState.value =
+                                PlayerUiState(PlayerBottomSheetContent.PlaybackSpeed)
                         },
-                        onNext = {
-                            basePlayerViewModel.onBasePlayerEvents(BasePlayerEvents.SeekToNextItem)
+                        playbackSpeed = playbackSpeed.floatValue
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
+                    PlayerQueue(
+                        index = basePlayerViewModel.currentSelectedAudioIndex.collectAsStateWithLifecycle().value + 1,
+                        length = basePlayerViewModel.audioList.collectAsStateWithLifecycle().value.size,
+                        onClick = {
+                            playerUiState.value =
+                                PlayerUiState(PlayerBottomSheetContent.PlayerQueue)
                         },
-                        onBackward = {
-                            basePlayerViewModel.onBasePlayerEvents(BasePlayerEvents.Backward)
-                        },
-                        onForward = {
-                            basePlayerViewModel.onBasePlayerEvents(BasePlayerEvents.Forward)
-                        },
-                        onStart = {
-                            basePlayerViewModel.onBasePlayerEvents(BasePlayerEvents.PlayPause)
-                        },
-                        isAudioPlaying = basePlayerViewModel.isPlaying.collectAsStateWithLifecycle().value
+                        color = Color(0xFFFDCF9E)
                     )
                 }
+
+                Spacer(modifier = Modifier.height(10.dp))
+
+                AudioProgressBar(
+                    inactiveColor = Color(0xFF35363B),
+                    audioDuration = audio.duration,
+                    progress = basePlayerViewModel.progress.collectAsStateWithLifecycle().value,
+                    progressString = basePlayerViewModel.progressString.collectAsStateWithLifecycle().value,
+                    onProgressChange = { progress ->
+                        basePlayerViewModel.onBasePlayerEvents(
+                            BasePlayerEvents.UpdateProgress(
+                                progress
+                            )
+                        )
+                    }
+                )
+
+                Spacer(modifier = Modifier.height(10.dp))
+
+                PlayerControllers(
+                    onPrev = {
+                        basePlayerViewModel.onBasePlayerEvents(BasePlayerEvents.SeekToPreviousItem)
+                    },
+                    onNext = {
+                        basePlayerViewModel.onBasePlayerEvents(BasePlayerEvents.SeekToNextItem)
+                    },
+                    onBackward = {
+                        basePlayerViewModel.onBasePlayerEvents(BasePlayerEvents.Backward)
+                    },
+                    onForward = {
+                        basePlayerViewModel.onBasePlayerEvents(BasePlayerEvents.Forward)
+                    },
+                    onStart = {
+                        basePlayerViewModel.onBasePlayerEvents(BasePlayerEvents.PlayPause)
+                    },
+                    isAudioPlaying = basePlayerViewModel.isPlaying.collectAsStateWithLifecycle().value
+                )
 
                 Spacer(modifier = Modifier.height(10.dp))
             }
@@ -273,7 +282,7 @@ fun PlayerRootScreen(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .heightIn(max = screenHeight * 0.6F)
+                    .heightIn(max = screenHeight * 0.7F)
                     .background(Color(0xFF736659))
             ) {
                 sheetContent.value()
