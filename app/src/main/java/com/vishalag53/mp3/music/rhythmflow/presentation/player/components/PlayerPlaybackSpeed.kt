@@ -3,11 +3,10 @@ package com.vishalag53.mp3.music.rhythmflow.presentation.player.components
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -29,28 +28,17 @@ internal fun PlayerPlaybackSpeed(onOpen: () -> Unit, playbackSpeed: Float) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Absolute.Center,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(
-                painter = painterResource(R.drawable.ic_playback_speed),
-                contentDescription = "Playback Speed",
-                tint = Color(0xFFFDCF9E),
-                modifier = Modifier.size(24.dp)
-            )
-        }
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Absolute.Center,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = "${playbackSpeed}x",
-                color = Color(0xFFFDCF9E),
-                fontSize = 18.sp
-            )
-        }
+        Icon(
+            painter = painterResource(R.drawable.ic_playback_speed),
+            contentDescription = null,
+            tint = Color(0xFFFDCF9E),
+            modifier = Modifier.size(24.dp)
+        )
+        Text(
+            text = "${playbackSpeed}x",
+            style = MaterialTheme.typography.labelSmall,
+            color = Color(0xFFFDCF9E),
+            fontSize = 18.sp
+        )
     }
 }

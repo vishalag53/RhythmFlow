@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
@@ -37,13 +38,13 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.AudioProgressBar
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.AudioTitleDisplayName
 import com.vishalag53.mp3.music.rhythmflow.domain.core.stringCapitalized
+import com.vishalag53.mp3.music.rhythmflow.presentation.core.PlayerQueue
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.baseplayer.BasePlayerEvents
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.baseplayer.BasePlayerViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.playbackspeed.PlaybackSpeed
 import com.vishalag53.mp3.music.rhythmflow.presentation.player.components.PlayerControllers
 import com.vishalag53.mp3.music.rhythmflow.presentation.player.components.PlayerPlaybackSpeed
 import com.vishalag53.mp3.music.rhythmflow.presentation.player.components.PlayerTopBar
-import com.vishalag53.mp3.music.rhythmflow.presentation.player.components.SelectTabBox
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.playingqueue.SongQueueListsItem
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.songinfo.SongInfoRootScreen
 import kotlinx.coroutines.launch
@@ -54,14 +55,14 @@ fun PlayerRootScreen(
     navigateBack: () -> Unit,
     basePlayerViewModel: BasePlayerViewModel
 ) {
-    val width = LocalConfiguration.current.screenWidthDp.dp
+    val screenHeight = LocalConfiguration.current.screenHeightDp.dp
     val audio = basePlayerViewModel.currentSelectedAudio.collectAsStateWithLifecycle().value
 
     val playerUiStateSaver: Saver<PlayerUiState, *> = Saver(save = {
         listOf(it.sheet::class.simpleName ?: "")
     }, restore = {
         val sheet = when (it.firstOrNull()) {
-            PlayerBottomSheetContent.PlayingQueue::class.simpleName -> PlayerBottomSheetContent.PlayingQueue
+            PlayerBottomSheetContent.PlayerQueue::class.simpleName -> PlayerBottomSheetContent.PlayerQueue
             PlayerBottomSheetContent.SongInfo::class.simpleName -> PlayerBottomSheetContent.SongInfo
             else -> PlayerBottomSheetContent.None
         }
@@ -71,7 +72,7 @@ fun PlayerRootScreen(
     val playerUiState = rememberSaveable(stateSaver = playerUiStateSaver) {
         mutableStateOf(PlayerUiState())
     }
-    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = false)
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val showSheet = rememberSaveable { mutableStateOf(false) }
     val sheetContent = remember { mutableStateOf<@Composable () -> Unit>({}) }
     val scope = rememberCoroutineScope()
@@ -82,7 +83,7 @@ fun PlayerRootScreen(
 
     LaunchedEffect(playerUiState.value.sheet) {
         when (playerUiState.value.sheet) {
-            PlayerBottomSheetContent.PlayingQueue -> {
+            PlayerBottomSheetContent.PlayerQueue -> {
                 modalBottomSheetBackgroundColor.value = Color(0xFF736659)
                 showSheet.value = true
                 sheetContent.value = {
@@ -124,6 +125,14 @@ fun PlayerRootScreen(
                 scope.launch { sheetState.show() }
             }
 
+            PlayerBottomSheetContent.PlayingMenu -> {
+                showSheet.value = true
+                modalBottomSheetBackgroundColor.value = Color(0xFFFDCF9E)
+                sheetContent.value = {
+                }
+                scope.launch { sheetState.show() }
+            }
+
             PlayerBottomSheetContent.None -> {
                 showSheet.value = false
                 scope.launch { sheetState.hide() }
@@ -133,7 +142,12 @@ fun PlayerRootScreen(
 
     Scaffold(
         topBar = {
-            PlayerTopBar(navigateBack)
+            PlayerTopBar(
+                navigateBack = navigateBack,
+                onMenuClick = {
+                    playerUiState.value = PlayerUiState(PlayerBottomSheetContent.PlayingMenu)
+                }
+            )
         },
     ) { innerPadding ->
         Box(
@@ -160,7 +174,7 @@ fun PlayerRootScreen(
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween
+                        horizontalArrangement = Arrangement.Absolute.Center
                     ) {
                         AudioTitleDisplayName(
                             title = stringCapitalized(audio.title),
@@ -172,13 +186,23 @@ fun PlayerRootScreen(
                                 .fillMaxWidth()
                                 .weight(1f)
                         )
-                        Spacer(modifier = Modifier.width(6.dp))
+                        Spacer(modifier = Modifier.width(4.dp))
                         PlayerPlaybackSpeed(
                             onOpen = {
                                 playerUiState.value =
                                     PlayerUiState(PlayerBottomSheetContent.PlaybackSpeed)
                             },
                             playbackSpeed = playbackSpeed.floatValue
+                        )
+                        Spacer(modifier = Modifier.width(4.dp))
+                        PlayerQueue(
+                            index = basePlayerViewModel.currentSelectedAudioIndex.collectAsStateWithLifecycle().value + 1,
+                            length = basePlayerViewModel.audioList.collectAsStateWithLifecycle().value.size,
+                            onClick = {
+                                playerUiState.value =
+                                    PlayerUiState(PlayerBottomSheetContent.PlayerQueue)
+                            },
+                            color = Color(0xFFFDCF9E)
                         )
                     }
                     Spacer(modifier = Modifier.height(10.dp))
@@ -216,34 +240,7 @@ fun PlayerRootScreen(
                     )
                 }
 
-                Spacer(modifier = Modifier.height(20.dp))
-
-                Row(
-                    modifier = Modifier
-                        .height(30.dp)
-                        .fillMaxWidth()
-                ) {
-                    SelectTabBox(
-                        text = "Playing Queue",
-                        width = width,
-                        topStart = 0.dp,
-                        topEnd = 8.dp,
-                        onClick = {
-                            playerUiState.value =
-                                PlayerUiState(PlayerBottomSheetContent.PlayingQueue)
-                        })
-
-                    Spacer(modifier = Modifier.width(0.185.dp))
-
-                    SelectTabBox(
-                        text = "Song Info",
-                        width = width,
-                        topEnd = 0.dp,
-                        topStart = 8.dp,
-                        onClick = {
-                            playerUiState.value = PlayerUiState(PlayerBottomSheetContent.SongInfo)
-                        })
-                }
+                Spacer(modifier = Modifier.height(10.dp))
             }
         }
     }
@@ -276,6 +273,7 @@ fun PlayerRootScreen(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .heightIn(max = screenHeight * 0.6F)
                     .background(Color(0xFF736659))
             ) {
                 sheetContent.value()

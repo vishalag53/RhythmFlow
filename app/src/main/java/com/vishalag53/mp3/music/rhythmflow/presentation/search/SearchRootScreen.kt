@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
@@ -33,6 +34,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -59,6 +61,8 @@ fun SearchRootScreen(
     startNotificationService: () -> Unit,
     basePlayerViewModel: BasePlayerViewModel
 ) {
+    val screenHeight = LocalConfiguration.current.screenHeightDp.dp
+
     val searchUiStateSaver: Saver<SearchUiState, *> = Saver(save = {
         listOf(
             it.sheet::class.simpleName ?: ""
@@ -78,7 +82,7 @@ fun SearchRootScreen(
     val audioList = mainViewModel.audioList.collectAsStateWithLifecycle().value
     var searchText by rememberSaveable { mutableStateOf("") }
 
-    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = false)
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val sheetContent = remember { mutableStateOf<@Composable () -> Unit>({}) }
     val showSheet = rememberSaveable { mutableStateOf(false) }
     val backgroundColor = remember { mutableStateOf(Color(0xFF736659)) }
@@ -272,6 +276,7 @@ fun SearchRootScreen(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .heightIn(max = screenHeight * 0.6F)
                     .background(backgroundColor.value)
             ) {
                 sheetContent.value()

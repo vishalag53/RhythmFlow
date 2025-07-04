@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
@@ -27,6 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
@@ -50,6 +52,8 @@ fun MainRootScreen(
     startNotificationService: () -> Unit,
     basePlayerViewModel: BasePlayerViewModel
 ) {
+    val screenHeight = LocalConfiguration.current.screenHeightDp.dp
+
     val mainUiStateSaver: Saver<MainUiState, *> = Saver(save = {
         listOf(it.sheet::class.simpleName ?: "")
     }, restore = {
@@ -62,7 +66,7 @@ fun MainRootScreen(
     val mainUiState = rememberSaveable(stateSaver = mainUiStateSaver) {
         mutableStateOf(MainUiState())
     }
-    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = false)
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val showSheet = rememberSaveable { mutableStateOf(false) }
     val sheetContent = remember { mutableStateOf<@Composable () -> Unit>({}) }
     val scope = rememberCoroutineScope()
@@ -163,6 +167,7 @@ fun MainRootScreen(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .heightIn(max = screenHeight * 0.6F)
                     .background(Color(0xFF736659))
             ) {
                 sheetContent.value()

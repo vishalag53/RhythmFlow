@@ -27,8 +27,8 @@ import com.vishalag53.mp3.music.rhythmflow.data.local.model.Audio
 import com.vishalag53.mp3.music.rhythmflow.domain.core.formatDuration
 import com.vishalag53.mp3.music.rhythmflow.domain.core.stringCapitalized
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.AudioTitleDisplayName
+import com.vishalag53.mp3.music.rhythmflow.presentation.core.PlayerQueue
 import com.vishalag53.mp3.music.rhythmflow.presentation.smallplayer.components.SmallPlayerController
-import com.vishalag53.mp3.music.rhythmflow.presentation.smallplayer.components.SmallPlayerQueue
 import com.vishalag53.mp3.music.rhythmflow.presentation.smallplayer.components.SmallPlayerTime
 
 @Composable
@@ -110,10 +110,11 @@ fun SmallPlayerRootScreen(
                         isAudioPlaying = isAudioPlaying
                     )
                     Spacer(modifier = Modifier.width(12.dp))
-                    SmallPlayerQueue(
+                    PlayerQueue(
                         index = index,
                         length = audioList.size,
-                        onClick = onClick
+                        onClick = onClick,
+                        color = MaterialTheme.colorScheme.primary
                     )
                 }
             }

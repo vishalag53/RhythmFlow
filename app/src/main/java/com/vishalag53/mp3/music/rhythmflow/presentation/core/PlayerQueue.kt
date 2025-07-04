@@ -1,47 +1,50 @@
-package com.vishalag53.mp3.music.rhythmflow.presentation.smallplayer.components
+package com.vishalag53.mp3.music.rhythmflow.presentation.core
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.vishalag53.mp3.music.rhythmflow.R
 
 @Composable
-fun SmallPlayerQueue(
+fun PlayerQueue(
     index: Int,
     length: Int,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    color: Color
 ) {
     Column(
-        modifier = Modifier.clickable {
-            onClick()
-        },
+        modifier = Modifier
+            .width(48.dp)
+            .clickable {
+                onClick()
+            },
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Icon(
             painter = painterResource(R.drawable.ic_playlist_queue),
             contentDescription = null,
-            tint = MaterialTheme.colorScheme.primary,
+            tint = color,
             modifier = Modifier.size(24.dp)
         )
 
         Text(
             text = "$index/$length",
-            style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Light),
-            color = MaterialTheme.colorScheme.primary,
+            style = MaterialTheme.typography.labelSmall,
+            color = color,
             fontSize = 10.sp,
-            lineHeight = 22.sp
         )
     }
 }
