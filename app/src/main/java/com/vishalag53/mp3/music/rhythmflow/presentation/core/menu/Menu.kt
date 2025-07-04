@@ -29,7 +29,9 @@ import com.vishalag53.mp3.music.rhythmflow.presentation.core.AudioTitleDisplayNa
 
 @Composable
 fun Menu(
-    audio: Audio, onInfoClick: () -> Unit
+    audio: Audio,
+    onInfoClick: () -> Unit,
+    onRepeatClick: () -> Unit
 ) {
     Box(
         modifier = Modifier.fillMaxWidth()
@@ -91,91 +93,104 @@ fun Menu(
                     painter = R.drawable.ic_equalizer,
                     color = Color(0xFF35363B),
                     text = "Equalizer",
-                    textColor = Color(0xFF35363B)
+                    textColor = Color(0xFF35363B),
+                    onClick = {}
                 )
 
                 MenuComponent(
-                    painter = R.drawable.ic_repeat_and_stop,
+                    painter = R.drawable.ic_repeat,
                     color = Color(0xFF35363B),
-                    text = "Repeat and Stop",
-                    textColor = Color(0xFF35363B)
+                    text = "Repeat",
+                    textColor = Color(0xFF35363B),
+                    onClick = onRepeatClick
                 )
 
                 MenuComponent(
                     painter = R.drawable.ic_shuffle,
                     color = Color(0xFF35363B),
                     text = "Shuffle",
-                    textColor = Color(0xFF35363B)
+                    textColor = Color(0xFF35363B),
+                    onClick = { }
                 )
 
                 MenuComponent(
                     painter = R.drawable.ic_volume,
                     color = Color(0xFF35363B),
                     text = "Volume",
-                    textColor = Color(0xFF35363B)
+                    textColor = Color(0xFF35363B),
+                    onClick = { }
                 )
 
                 MenuComponent(
                     painter = R.drawable.ic_add_to_playlist,
                     color = Color(0xFF35363B),
                     text = "Add to playlist",
-                    textColor = Color(0xFF35363B)
+                    textColor = Color(0xFF35363B),
+                    onClick = { }
                 )
 
                 MenuComponent(
                     painter = R.drawable.ic_share,
                     color = Color(0xFF35363B),
                     text = "Share",
-                    textColor = Color(0xFF35363B)
+                    textColor = Color(0xFF35363B),
+                    onClick = { }
                 )
 
                 MenuComponent(
                     painter = R.drawable.ic_ringtone,
                     color = Color(0xFF35363B),
                     text = "Use As a Ringtone",
-                    textColor = Color(0xFF35363B)
+                    textColor = Color(0xFF35363B),
+                    onClick = { }
                 )
 
                 MenuComponent(
                     painter = R.drawable.ic_bluetooth,
                     color = Color(0xFF35363B),
                     text = "Bluetooth",
-                    textColor = Color(0xFF35363B)
+                    textColor = Color(0xFF35363B),
+                    onClick = { }
                 )
 
                 MenuComponent(
                     painter = R.drawable.ic_sleep_timer,
                     color = Color(0xFF35363B),
                     text = "Sleep Timer",
-                    textColor = Color(0xFF35363B)
+                    textColor = Color(0xFF35363B),
+                    onClick = { }
                 )
 
                 MenuComponent(
                     painter = R.drawable.ic_drive_mode,
                     color = Color(0xFF35363B),
                     text = "Drive Mode",
-                    textColor = Color(0xFF35363B)
+                    textColor = Color(0xFF35363B),
+                    onClick = { }
                 )
 
                 MenuComponent(
                     painter = R.drawable.ic_round_lyrics,
                     color = Color(0xFF35363B),
                     text = "Lyrics",
-                    textColor = Color(0xFF35363B)
+                    textColor = Color(0xFF35363B),
+                    onClick = { }
                 )
 
                 MenuComponent(
                     painter = R.drawable.ic_go_to,
                     color = Color(0xFF35363B),
                     text = "Go To",
-                    textColor = Color(0xFF35363B)
+                    textColor = Color(0xFF35363B),
+                    onClick = {}
                 )
 
                 MenuComponent(
                     painter = R.drawable.ic_edit_audio,
                     color = Color(0xFF35363B),
                     text = "Edit audio",
-                    textColor = Color(0xFF35363B)
+                    textColor = Color(0xFF35363B),
+                    onClick = { }
                 )
 
                 Spacer(modifier = Modifier.height(12.dp))

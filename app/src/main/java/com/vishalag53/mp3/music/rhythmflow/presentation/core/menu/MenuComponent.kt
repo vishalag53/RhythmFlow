@@ -1,5 +1,6 @@
 package com.vishalag53.mp3.music.rhythmflow.presentation.core.menu
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -18,15 +19,19 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun MenuComponent(
-    painter : Int,
+    painter: Int,
     color: Color,
-    text : String,
-    textColor: Color
+    text: String,
+    textColor: Color,
+    onClick: () -> Unit
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .height(30.dp),
+            .height(30.dp)
+            .clickable {
+                onClick()
+            },
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Start
     ) {
@@ -34,14 +39,22 @@ fun MenuComponent(
             painter = painterResource(painter),
             contentDescription = null,
             tint = color,
-            modifier = Modifier.size(16.dp)
+            modifier = Modifier
+                .size(16.dp)
+                .clickable {
+                    onClick()
+                }
         )
 
         Spacer(modifier = Modifier.width(12.dp))
 
         Text(
             text = text,
-            color = textColor
+            color = textColor,
+            modifier = Modifier
+                .clickable {
+                    onClick()
+                }
         )
     }
 }

@@ -6,4 +6,5 @@ sealed class PlayerBottomSheetContent {
     object SongInfo : PlayerBottomSheetContent()
     object PlaybackSpeed : PlayerBottomSheetContent()
     object PlayingMenu : PlayerBottomSheetContent()
+    object Repeat : PlayerBottomSheetContent()
 }

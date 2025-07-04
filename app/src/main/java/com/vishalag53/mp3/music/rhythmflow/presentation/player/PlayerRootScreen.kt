@@ -47,6 +47,7 @@ import com.vishalag53.mp3.music.rhythmflow.presentation.player.components.Player
 import com.vishalag53.mp3.music.rhythmflow.presentation.player.components.PlayerPlaybackSpeed
 import com.vishalag53.mp3.music.rhythmflow.presentation.player.components.PlayerTopBar
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.playingqueue.SongQueueListsItem
+import com.vishalag53.mp3.music.rhythmflow.presentation.core.repeat.Repeat
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.songinfo.SongInfoRootScreen
 import kotlinx.coroutines.launch
 
@@ -81,6 +82,7 @@ fun PlayerRootScreen(
     val modalBottomSheetBackgroundColor = remember { mutableStateOf(Color(0xFF736659)) }
 
     val playbackSpeed = remember { mutableFloatStateOf(1.0F) }
+    val repeatMode = remember { mutableStateOf( "Repeat Off") }
 
     LaunchedEffect(playerUiState.value.sheet) {
         when (playerUiState.value.sheet) {
@@ -134,6 +136,29 @@ fun PlayerRootScreen(
                         audio = audio,
                         onInfoClick = {
                             playerUiState.value = PlayerUiState(PlayerBottomSheetContent.SongInfo)
+                        },
+                        onRepeatClick = {
+                            playerUiState.value = PlayerUiState(PlayerBottomSheetContent.Repeat)
+                        }
+                    )
+                }
+                scope.launch { sheetState.show() }
+            }
+
+            PlayerBottomSheetContent.Repeat -> {
+                showSheet.value = true
+                modalBottomSheetBackgroundColor.value = Color(0xFFFDCF9E)
+                sheetContent.value = {
+                    Repeat(
+                        repeatMode = repeatMode.value,
+                        onClose = {
+                            playerUiState.value = PlayerUiState(PlayerBottomSheetContent.None)
+                        },
+                        onRepeatChange = {  repeat ->
+                            repeatMode.value = repeat
+                        },
+                        onRepeatChangeBasePlayer = {
+                            basePlayerViewModel.onBasePlayerEvents(BasePlayerEvents.SetRepeatMode(it))
                         }
                     )
                 }
