@@ -42,6 +42,7 @@ import com.vishalag53.mp3.music.rhythmflow.presentation.core.PlayerQueue
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.baseplayer.BasePlayerEvents
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.baseplayer.BasePlayerViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.menu.Menu
+import com.vishalag53.mp3.music.rhythmflow.presentation.core.menu.MenuViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.playbackspeed.PlaybackSpeed
 import com.vishalag53.mp3.music.rhythmflow.presentation.player.components.PlayerControllers
 import com.vishalag53.mp3.music.rhythmflow.presentation.player.components.PlayerPlaybackSpeed
@@ -55,7 +56,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun PlayerRootScreen(
     navigateBack: () -> Unit,
-    basePlayerViewModel: BasePlayerViewModel
+    basePlayerViewModel: BasePlayerViewModel,
+    menuViewModel: MenuViewModel
 ) {
     val screenHeight = LocalConfiguration.current.screenHeightDp.dp
     val audio = basePlayerViewModel.currentSelectedAudio.collectAsStateWithLifecycle().value
@@ -66,6 +68,9 @@ fun PlayerRootScreen(
         val sheet = when (it.firstOrNull()) {
             PlayerBottomSheetContent.PlayerQueue::class.simpleName -> PlayerBottomSheetContent.PlayerQueue
             PlayerBottomSheetContent.SongInfo::class.simpleName -> PlayerBottomSheetContent.SongInfo
+            PlayerBottomSheetContent.Repeat::class.simpleName -> PlayerBottomSheetContent.Repeat
+            PlayerBottomSheetContent.PlaybackSpeed::class.simpleName -> PlayerBottomSheetContent.PlaybackSpeed
+            PlayerBottomSheetContent.PlayingMenu::class.simpleName -> PlayerBottomSheetContent.PlayingMenu
             else -> PlayerBottomSheetContent.None
         }
         PlayerUiState(sheet = sheet)
@@ -82,13 +87,11 @@ fun PlayerRootScreen(
     val modalBottomSheetBackgroundColor = remember { mutableStateOf(Color(0xFF736659)) }
 
     val playbackSpeed = remember { mutableFloatStateOf(1.0F) }
-    val repeatMode = remember { mutableStateOf( "Repeat Off") }
-    val shuffleText = remember { mutableStateOf( "Shuffle Off") }
 
     LaunchedEffect(playerUiState.value.sheet) {
         when (playerUiState.value.sheet) {
             PlayerBottomSheetContent.PlayerQueue -> {
-                modalBottomSheetBackgroundColor.value = Color(0xFF736659)
+                modalBottomSheetBackgroundColor.value = Color(0xFFFDCF9E)
                 showSheet.value = true
                 sheetContent.value = {
                     SongQueueListsItem(audioList = basePlayerViewModel.audioList.collectAsStateWithLifecycle().value)
@@ -141,17 +144,13 @@ fun PlayerRootScreen(
                         onRepeatClick = {
                             playerUiState.value = PlayerUiState(PlayerBottomSheetContent.Repeat)
                         },
-                        repeatText  = repeatMode.value,
-                        shuffleText = shuffleText.value,
                         onShuffleClick = {
                             basePlayerViewModel.onBasePlayerEvents(BasePlayerEvents.SetShuffle(it))
                         },
                         onClose = {
                             playerUiState.value = PlayerUiState(PlayerBottomSheetContent.None)
                         },
-                        onShuffleChange = { shuffle ->
-                            shuffleText.value = shuffle
-                        }
+                        menuViewModel = menuViewModel
                     )
                 }
                 scope.launch { sheetState.show() }
@@ -162,12 +161,12 @@ fun PlayerRootScreen(
                 modalBottomSheetBackgroundColor.value = Color(0xFFFDCF9E)
                 sheetContent.value = {
                     Repeat(
-                        repeatMode = repeatMode.value,
+                        repeatMode = menuViewModel.repeatMode.collectAsStateWithLifecycle().value,
                         onClose = {
                             playerUiState.value = PlayerUiState(PlayerBottomSheetContent.None)
                         },
                         onRepeatChange = {  repeat ->
-                            repeatMode.value = repeat
+                            menuViewModel.setRepeatMode(repeat)
                         },
                         onRepeatChangeBasePlayer = {
                             basePlayerViewModel.onBasePlayerEvents(BasePlayerEvents.SetRepeatMode(it))

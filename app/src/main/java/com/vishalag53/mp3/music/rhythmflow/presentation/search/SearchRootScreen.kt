@@ -44,6 +44,7 @@ import com.vishalag53.mp3.music.rhythmflow.navigation.Screens
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.AudioItem
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.baseplayer.BasePlayerEvents
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.baseplayer.BasePlayerViewModel
+import com.vishalag53.mp3.music.rhythmflow.presentation.core.menu.MenuViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.mainactivity.MainViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.playingqueue.SongQueueListsItem
 import com.vishalag53.mp3.music.rhythmflow.presentation.smallplayer.SmallPlayerRootScreen
@@ -59,7 +60,8 @@ fun SearchRootScreen(
     navigateBack: () -> Boolean,
     mainViewModel: MainViewModel,
     startNotificationService: () -> Unit,
-    basePlayerViewModel: BasePlayerViewModel
+    basePlayerViewModel: BasePlayerViewModel,
+    menuViewModel: MenuViewModel
 ) {
     val screenHeight = LocalConfiguration.current.screenHeightDp.dp
 
@@ -208,9 +210,10 @@ fun SearchRootScreen(
                                 audio = audio,
                                 audioList = songs,
                                 navController = navController,
-                                basePlayerViewModel = basePlayerViewModel,
                                 index = index,
-                                startNotificationService = startNotificationService
+                                startNotificationService = startNotificationService,
+                                basePlayerViewModel = basePlayerViewModel,
+                                onMenuClick = {}
                             )
                         }
                     }

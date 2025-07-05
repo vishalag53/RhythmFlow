@@ -33,7 +33,8 @@ fun AudioItem(
     navController: NavHostController,
     index: Int,
     startNotificationService: () -> Unit,
-    basePlayerViewModel: BasePlayerViewModel
+    basePlayerViewModel: BasePlayerViewModel,
+    onMenuClick: () -> Unit
 ) {
     val context = LocalContext.current
 
@@ -82,6 +83,9 @@ fun AudioItem(
                     painter = painterResource(R.drawable.ic_menu),
                     contentDescription = null,
                     tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.clickable {
+                        onMenuClick()
+                    }
                 )
             }
         }

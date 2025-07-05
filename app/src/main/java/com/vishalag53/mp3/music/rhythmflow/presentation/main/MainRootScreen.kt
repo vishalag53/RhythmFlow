@@ -37,7 +37,11 @@ import com.vishalag53.mp3.music.rhythmflow.domain.core.K
 import com.vishalag53.mp3.music.rhythmflow.navigation.Screens
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.baseplayer.BasePlayerEvents
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.baseplayer.BasePlayerViewModel
+import com.vishalag53.mp3.music.rhythmflow.presentation.core.menu.Menu
+import com.vishalag53.mp3.music.rhythmflow.presentation.core.menu.MenuViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.playingqueue.SongQueueListsItem
+import com.vishalag53.mp3.music.rhythmflow.presentation.core.repeat.Repeat
+import com.vishalag53.mp3.music.rhythmflow.presentation.core.songinfo.SongInfoRootScreen
 import com.vishalag53.mp3.music.rhythmflow.presentation.main.components.AppBarRootScreen
 import com.vishalag53.mp3.music.rhythmflow.presentation.smallplayer.SmallPlayerRootScreen
 import com.vishalag53.mp3.music.rhythmflow.presentation.songs.SongsRootScreen
@@ -50,7 +54,8 @@ fun MainRootScreen(
     navController: NavHostController,
     audioList: List<Audio>,
     startNotificationService: () -> Unit,
-    basePlayerViewModel: BasePlayerViewModel
+    basePlayerViewModel: BasePlayerViewModel,
+    menuViewModel: MenuViewModel
 ) {
     val screenHeight = LocalConfiguration.current.screenHeightDp.dp
 
@@ -59,6 +64,9 @@ fun MainRootScreen(
     }, restore = {
         val sheet = when (it.firstOrNull()) {
             MainBottomSheetContent.PlayingQueue::class.simpleName -> MainBottomSheetContent.PlayingQueue
+            MainBottomSheetContent.SongInfo::class.simpleName -> MainBottomSheetContent.SongInfo
+            MainBottomSheetContent.Menu::class.simpleName -> MainBottomSheetContent.Menu
+            MainBottomSheetContent.Repeat::class.simpleName -> MainBottomSheetContent.Repeat
             else -> MainBottomSheetContent.None
         }
         MainUiState(sheet = sheet)
@@ -78,6 +86,56 @@ fun MainRootScreen(
                 sheetContent.value = {
                     SongQueueListsItem(
                         audioList = basePlayerViewModel.audioList.collectAsStateWithLifecycle().value
+                    )
+                }
+                scope.launch { sheetState.show() }
+            }
+
+            MainBottomSheetContent.SongInfo -> {
+                showSheet.value = true
+                sheetContent.value = {
+                    SongInfoRootScreen(audio = basePlayerViewModel.currentSelectedAudio.collectAsStateWithLifecycle().value)
+                }
+                scope.launch { sheetState.show() }
+            }
+
+            MainBottomSheetContent.Menu -> {
+                showSheet.value = true
+                sheetContent.value = {
+                    Menu(
+                        onInfoClick = {
+                            mainUiState.value = MainUiState(MainBottomSheetContent.SongInfo)
+                        },
+                        onRepeatClick = {
+                            mainUiState.value = MainUiState(MainBottomSheetContent.Repeat)
+                        },
+                        onShuffleClick = {
+                            basePlayerViewModel.onBasePlayerEvents(BasePlayerEvents.SetShuffle(it))
+                        },
+                        onClose = {
+                            mainUiState.value = MainUiState(MainBottomSheetContent.None)
+                        },
+                        basePlayerViewModel = basePlayerViewModel,
+                        menuViewModel = menuViewModel
+                    )
+                }
+                scope.launch { sheetState.show() }
+            }
+
+            MainBottomSheetContent.Repeat -> {
+                showSheet.value = true
+                sheetContent.value = {
+                    Repeat(
+                        repeatMode = menuViewModel.repeatMode.collectAsStateWithLifecycle().value,
+                        onClose = {
+                            mainUiState.value = MainUiState(MainBottomSheetContent.None)
+                        },
+                        onRepeatChange = {
+                            menuViewModel.setRepeatMode(it)
+                        },
+                        onRepeatChangeBasePlayer = {
+                            basePlayerViewModel.onBasePlayerEvents(BasePlayerEvents.SetRepeatMode(it))
+                        }
                     )
                 }
                 scope.launch { sheetState.show() }
@@ -132,7 +190,10 @@ fun MainRootScreen(
                     navController = navController,
                     audioList = audioList,
                     basePlayerViewModel = basePlayerViewModel,
-                    startNotificationService = startNotificationService
+                    startNotificationService = startNotificationService,
+                    onMenuClick = {
+                        mainUiState.value = MainUiState(MainBottomSheetContent.Menu)
+                    }
                 )
             }
         }

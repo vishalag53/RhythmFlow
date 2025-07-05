@@ -32,12 +32,10 @@ import com.vishalag53.mp3.music.rhythmflow.presentation.core.baseplayer.BasePlay
 fun Menu(
     onInfoClick: () -> Unit,
     onRepeatClick: () -> Unit,
-    repeatText: String,
-    shuffleText: String,
     onShuffleClick: (Boolean) -> Unit,
     onClose: () -> Unit,
-    onShuffleChange: (String) -> Unit,
-    basePlayerViewModel: BasePlayerViewModel
+    basePlayerViewModel: BasePlayerViewModel,
+    menuViewModel: MenuViewModel
 ) {
     val audio = basePlayerViewModel.currentSelectedAudio.collectAsStateWithLifecycle().value
 
@@ -108,7 +106,7 @@ fun Menu(
                 MenuComponent(
                     painter = R.drawable.ic_repeat,
                     color = Color(0xFF35363B),
-                    text = repeatText,
+                    text = menuViewModel.repeatMode.collectAsStateWithLifecycle().value,
                     textColor = Color(0xFF35363B),
                     onClick = onRepeatClick
                 )
@@ -116,14 +114,14 @@ fun Menu(
                 MenuComponent(
                     painter = R.drawable.ic_shuffle,
                     color = Color(0xFF35363B),
-                    text = shuffleText,
+                    text = menuViewModel.shuffleText.collectAsStateWithLifecycle().value,
                     textColor = Color(0xFF35363B),
                     onClick = {
-                        if (shuffleText == "Shuffle Off") {
-                            onShuffleChange("Shuffle On")
+                        if (menuViewModel.shuffleText.value == "Shuffle Off") {
+                            menuViewModel.setShuffle("Shuffle On")
                             onShuffleClick(true)
                         } else {
-                            onShuffleChange("Shuffle Off")
+                            menuViewModel.setShuffle("Shuffle Off")
                             onShuffleClick(false)
                         }
                         onClose()

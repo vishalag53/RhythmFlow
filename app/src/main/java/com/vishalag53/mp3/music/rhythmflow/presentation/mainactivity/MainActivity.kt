@@ -25,6 +25,7 @@ import com.vishalag53.mp3.music.rhythmflow.domain.musicplayer.service.RhythmFlow
 import com.vishalag53.mp3.music.rhythmflow.navigation.RootNavigation
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.Loading
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.baseplayer.BasePlayerViewModel
+import com.vishalag53.mp3.music.rhythmflow.presentation.core.menu.MenuViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.storagepermission.AskStoragePermission
 import com.vishalag53.mp3.music.rhythmflow.presentation.theme.RhythmFlowTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -50,6 +51,7 @@ class MainActivity : ComponentActivity() {
                 )
                 val lifecycleOwner = LocalLifecycleOwner.current
                 val basePlayerViewModel by viewModels<BasePlayerViewModel>()
+                val menuViewModel by viewModels<MenuViewModel>()
 
                 DisposableEffect(key1 = lifecycleOwner) {
                     val observer = LifecycleEventObserver { _, event ->
@@ -80,6 +82,7 @@ class MainActivity : ComponentActivity() {
                             audioList = audioList.value,
                             mainViewModel = mainViewModel,
                             basePlayerViewModel = basePlayerViewModel,
+                            menuViewModel = menuViewModel,
                             startNotificationService = { startService() }
                         )
                     }

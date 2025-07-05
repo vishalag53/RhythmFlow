@@ -9,6 +9,7 @@ import androidx.navigation.compose.composable
 import com.vishalag53.mp3.music.rhythmflow.data.local.model.Audio
 import com.vishalag53.mp3.music.rhythmflow.domain.core.K
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.baseplayer.BasePlayerViewModel
+import com.vishalag53.mp3.music.rhythmflow.presentation.core.menu.MenuViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.main.MainRootScreen
 import com.vishalag53.mp3.music.rhythmflow.presentation.mainactivity.MainViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.player.PlayerRootScreen
@@ -23,6 +24,7 @@ fun RootNavigation(
     mainViewModel: MainViewModel,
     startNotificationService: () -> Unit,
     basePlayerViewModel: BasePlayerViewModel,
+    menuViewModel: MenuViewModel,
 ) {
     NavHost(
         navController = navController, startDestination = Screens.Main.Songs
@@ -31,19 +33,22 @@ fun RootNavigation(
             navController = navController,
             audioList = audioList,
             startNotificationService = startNotificationService,
-            basePlayerViewModel = basePlayerViewModel
+            basePlayerViewModel = basePlayerViewModel,
+            menuViewModel = menuViewModel
         )
 
         playerGraph(
             navController = navController,
-            basePlayerViewModel = basePlayerViewModel
+            basePlayerViewModel = basePlayerViewModel,
+            menuViewModel = menuViewModel
         )
 
         search(
             navController = navController,
             mainViewModel = mainViewModel,
             startNotificationService = startNotificationService,
-            basePlayerViewModel = basePlayerViewModel
+            basePlayerViewModel = basePlayerViewModel,
+            menuViewModel = menuViewModel
         )
     }
 }
@@ -53,6 +58,7 @@ private fun NavGraphBuilder.mainGraph(
     audioList: List<Audio>,
     startNotificationService: () -> Unit,
     basePlayerViewModel: BasePlayerViewModel,
+    menuViewModel: MenuViewModel,
 ) {
     composable<Screens.Main.Songs> {
         MainRootScreen(
@@ -60,7 +66,8 @@ private fun NavGraphBuilder.mainGraph(
             navController = navController,
             audioList = audioList,
             basePlayerViewModel = basePlayerViewModel,
-            startNotificationService = startNotificationService
+            startNotificationService = startNotificationService,
+            menuViewModel = menuViewModel
         )
     }
 }
@@ -68,6 +75,7 @@ private fun NavGraphBuilder.mainGraph(
 private fun NavGraphBuilder.playerGraph(
     navController: NavHostController,
     basePlayerViewModel: BasePlayerViewModel,
+    menuViewModel: MenuViewModel,
 ) {
     composable<Screens.Player>(
         typeMap = mapOf(
@@ -78,7 +86,8 @@ private fun NavGraphBuilder.playerGraph(
             navigateBack = {
                 navController.popBackStack()
             },
-            basePlayerViewModel = basePlayerViewModel
+            basePlayerViewModel = basePlayerViewModel,
+            menuViewModel = menuViewModel
         )
     }
 }
@@ -88,6 +97,7 @@ private fun NavGraphBuilder.search(
     mainViewModel: MainViewModel,
     startNotificationService: () -> Unit,
     basePlayerViewModel: BasePlayerViewModel,
+    menuViewModel: MenuViewModel,
 ) {
     composable<Screens.Search> {
         SearchRootScreen(
@@ -97,7 +107,8 @@ private fun NavGraphBuilder.search(
             },
             mainViewModel = mainViewModel,
             basePlayerViewModel = basePlayerViewModel,
-            startNotificationService = startNotificationService
+            startNotificationService = startNotificationService,
+            menuViewModel = menuViewModel
         )
     }
 }

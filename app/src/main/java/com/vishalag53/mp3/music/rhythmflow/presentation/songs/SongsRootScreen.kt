@@ -20,7 +20,8 @@ fun SongsRootScreen(
     navController: NavHostController,
     audioList: List<Audio>,
     startNotificationService: () -> Unit,
-    basePlayerViewModel: BasePlayerViewModel
+    basePlayerViewModel: BasePlayerViewModel,
+    onMenuClick: () -> Unit
 ) {
     Scaffold(
         topBar = { SongsTopBar(audioList) },
@@ -41,7 +42,8 @@ fun SongsRootScreen(
                         navController = navController,
                         basePlayerViewModel = basePlayerViewModel,
                         index = index,
-                        startNotificationService = startNotificationService
+                        startNotificationService = startNotificationService,
+                        onMenuClick = onMenuClick
                     )
                 }
             }
