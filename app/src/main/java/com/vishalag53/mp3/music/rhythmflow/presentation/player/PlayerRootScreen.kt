@@ -83,6 +83,7 @@ fun PlayerRootScreen(
 
     val playbackSpeed = remember { mutableFloatStateOf(1.0F) }
     val repeatMode = remember { mutableStateOf( "Repeat Off") }
+    val shuffleText = remember { mutableStateOf( "Shuffle Off") }
 
     LaunchedEffect(playerUiState.value.sheet) {
         when (playerUiState.value.sheet) {
@@ -133,12 +134,23 @@ fun PlayerRootScreen(
                 modalBottomSheetBackgroundColor.value = Color(0xFFFDCF9E)
                 sheetContent.value = {
                     Menu(
-                        audio = audio,
+                        basePlayerViewModel = basePlayerViewModel,
                         onInfoClick = {
                             playerUiState.value = PlayerUiState(PlayerBottomSheetContent.SongInfo)
                         },
                         onRepeatClick = {
                             playerUiState.value = PlayerUiState(PlayerBottomSheetContent.Repeat)
+                        },
+                        repeatText  = repeatMode.value,
+                        shuffleText = shuffleText.value,
+                        onShuffleClick = {
+                            basePlayerViewModel.onBasePlayerEvents(BasePlayerEvents.SetShuffle(it))
+                        },
+                        onClose = {
+                            playerUiState.value = PlayerUiState(PlayerBottomSheetContent.None)
+                        },
+                        onShuffleChange = { shuffle ->
+                            shuffleText.value = shuffle
                         }
                     )
                 }

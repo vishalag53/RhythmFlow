@@ -22,17 +22,25 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.vishalag53.mp3.music.rhythmflow.R
-import com.vishalag53.mp3.music.rhythmflow.data.local.model.Audio
 import com.vishalag53.mp3.music.rhythmflow.domain.core.stringCapitalized
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.AudioTitleDisplayName
+import com.vishalag53.mp3.music.rhythmflow.presentation.core.baseplayer.BasePlayerViewModel
 
 @Composable
 fun Menu(
-    audio: Audio,
     onInfoClick: () -> Unit,
-    onRepeatClick: () -> Unit
+    onRepeatClick: () -> Unit,
+    repeatText: String,
+    shuffleText: String,
+    onShuffleClick: (Boolean) -> Unit,
+    onClose: () -> Unit,
+    onShuffleChange: (String) -> Unit,
+    basePlayerViewModel: BasePlayerViewModel
 ) {
+    val audio = basePlayerViewModel.currentSelectedAudio.collectAsStateWithLifecycle().value
+
     Box(
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -100,7 +108,7 @@ fun Menu(
                 MenuComponent(
                     painter = R.drawable.ic_repeat,
                     color = Color(0xFF35363B),
-                    text = "Repeat",
+                    text = repeatText,
                     textColor = Color(0xFF35363B),
                     onClick = onRepeatClick
                 )
@@ -108,9 +116,18 @@ fun Menu(
                 MenuComponent(
                     painter = R.drawable.ic_shuffle,
                     color = Color(0xFF35363B),
-                    text = "Shuffle",
+                    text = shuffleText,
                     textColor = Color(0xFF35363B),
-                    onClick = { }
+                    onClick = {
+                        if (shuffleText == "Shuffle Off") {
+                            onShuffleChange("Shuffle On")
+                            onShuffleClick(true)
+                        } else {
+                            onShuffleChange("Shuffle Off")
+                            onShuffleClick(false)
+                        }
+                        onClose()
+                    }
                 )
 
                 MenuComponent(
