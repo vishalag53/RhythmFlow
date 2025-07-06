@@ -78,10 +78,12 @@ fun MainRootScreen(
     val showSheet = rememberSaveable { mutableStateOf(false) }
     val sheetContent = remember { mutableStateOf<@Composable () -> Unit>({}) }
     val scope = rememberCoroutineScope()
+    val modalBottomSheetBackgroundColor = remember { mutableStateOf(Color(0xFF736659)) }
 
     LaunchedEffect(mainUiState.value.sheet) {
         when (mainUiState.value.sheet) {
             MainBottomSheetContent.PlayingQueue -> {
+                modalBottomSheetBackgroundColor.value = Color(0xFFFDCF9E)
                 showSheet.value = true
                 sheetContent.value = {
                     SongQueueListsItem(
@@ -92,6 +94,7 @@ fun MainRootScreen(
             }
 
             MainBottomSheetContent.SongInfo -> {
+                modalBottomSheetBackgroundColor.value = Color(0xFF736659)
                 showSheet.value = true
                 sheetContent.value = {
                     SongInfoRootScreen(audio = basePlayerViewModel.currentSelectedAudio.collectAsStateWithLifecycle().value)
@@ -100,6 +103,7 @@ fun MainRootScreen(
             }
 
             MainBottomSheetContent.Menu -> {
+                modalBottomSheetBackgroundColor.value = Color(0xFFFDCF9E)
                 showSheet.value = true
                 sheetContent.value = {
                     Menu(
@@ -123,6 +127,7 @@ fun MainRootScreen(
             }
 
             MainBottomSheetContent.Repeat -> {
+                modalBottomSheetBackgroundColor.value = Color(0xFFFDCF9E)
                 showSheet.value = true
                 sheetContent.value = {
                     Repeat(
@@ -207,7 +212,7 @@ fun MainRootScreen(
                 scope.launch { sheetState.hide() }
             },
             sheetState = sheetState,
-            containerColor = Color(0xFF736659),
+            containerColor = modalBottomSheetBackgroundColor.value,
             dragHandle = {
                 Box(
                     modifier = Modifier
@@ -229,7 +234,7 @@ fun MainRootScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .heightIn(max = screenHeight * 0.6F)
-                    .background(Color(0xFF736659))
+                    .background(modalBottomSheetBackgroundColor.value)
             ) {
                 sheetContent.value()
             }

@@ -83,7 +83,6 @@ fun PlayerRootScreen(
     val showSheet = rememberSaveable { mutableStateOf(false) }
     val sheetContent = remember { mutableStateOf<@Composable () -> Unit>({}) }
     val scope = rememberCoroutineScope()
-
     val modalBottomSheetBackgroundColor = remember { mutableStateOf(Color(0xFF736659)) }
 
     val playbackSpeed = remember { mutableFloatStateOf(1.0F) }
@@ -319,7 +318,7 @@ fun PlayerRootScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .heightIn(max = screenHeight * 0.7F)
-                    .background(Color(0xFF736659))
+                    .background(modalBottomSheetBackgroundColor.value)
             ) {
                 sheetContent.value()
             }

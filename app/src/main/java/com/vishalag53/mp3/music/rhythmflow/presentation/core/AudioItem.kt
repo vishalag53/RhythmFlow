@@ -41,6 +41,7 @@ fun AudioItem(
     Box(
         modifier = Modifier
             .fillMaxWidth()
+            .padding(horizontal = 4.dp)
             .clickable {
                 basePlayerViewModel.onBasePlayerEvents(BasePlayerEvents.ClearMediaItems)
                 basePlayerViewModel.setAudioList(audioList)

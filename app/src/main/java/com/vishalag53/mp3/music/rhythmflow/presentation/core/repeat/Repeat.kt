@@ -1,6 +1,5 @@
 package com.vishalag53.mp3.music.rhythmflow.presentation.core.repeat
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -42,9 +41,7 @@ fun Repeat(
     )
 
     Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(Color(0xFFFDCF9E)),
+        modifier = Modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.Center
     ) {
         for (repeat in repeatModeList) {

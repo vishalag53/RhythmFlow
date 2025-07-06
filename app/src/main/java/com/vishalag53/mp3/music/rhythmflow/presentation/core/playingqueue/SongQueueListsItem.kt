@@ -96,7 +96,7 @@ internal fun SongQueueListsItem(audioList: List<Audio>) {
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = 8.dp, vertical = 6.dp)
+                .padding(vertical = 6.dp)
         ) {
             items(audioList) { audio ->
                 SongQueueItem(

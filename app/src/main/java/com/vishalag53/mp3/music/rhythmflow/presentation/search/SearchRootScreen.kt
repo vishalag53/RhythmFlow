@@ -87,8 +87,8 @@ fun SearchRootScreen(
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val sheetContent = remember { mutableStateOf<@Composable () -> Unit>({}) }
     val showSheet = rememberSaveable { mutableStateOf(false) }
-    val backgroundColor = remember { mutableStateOf(Color(0xFF736659)) }
     val scope = rememberCoroutineScope()
+    val modalBottomSheetBackgroundColor = remember { mutableStateOf(Color(0xFF736659)) }
 
     val selectTabName = searchViewModel.selectTabName.collectAsStateWithLifecycle().value
     val songs = searchViewModel.searchSongList.collectAsStateWithLifecycle().value
@@ -118,8 +118,8 @@ fun SearchRootScreen(
     LaunchedEffect(searchUiState.value.sheet) {
         when (searchUiState.value.sheet) {
             SearchBottomSheetContent.PlayingQueue -> {
+                modalBottomSheetBackgroundColor.value = Color(0xFFFDCF9E)
                 showSheet.value = true
-                backgroundColor.value = Color(0xFF736659)
                 sheetContent.value = {
                     SongQueueListsItem(
                         audioList = searchViewModel.audioList.collectAsStateWithLifecycle().value
@@ -131,7 +131,7 @@ fun SearchRootScreen(
             SearchBottomSheetContent.TabSelector -> {
                 showSheet.value = true
                 sheetContent.value = {
-                    backgroundColor.value = MaterialTheme.colorScheme.primaryContainer
+                    modalBottomSheetBackgroundColor.value = MaterialTheme.colorScheme.primaryContainer
                     SelectTabSearchModalBottomSheet(
                         songsSize = songs.size,
                         albumSize = albums.size,
@@ -258,7 +258,7 @@ fun SearchRootScreen(
                 scope.launch { sheetState.hide() }
             },
             sheetState = sheetState,
-            containerColor = backgroundColor.value,
+            containerColor = modalBottomSheetBackgroundColor.value,
             dragHandle = {
                 Box(
                     modifier = Modifier
@@ -280,7 +280,7 @@ fun SearchRootScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .heightIn(max = screenHeight * 0.6F)
-                    .background(backgroundColor.value)
+                    .background(modalBottomSheetBackgroundColor.value)
             ) {
                 sheetContent.value()
             }
