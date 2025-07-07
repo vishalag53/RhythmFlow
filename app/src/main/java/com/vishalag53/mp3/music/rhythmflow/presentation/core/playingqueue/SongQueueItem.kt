@@ -53,7 +53,7 @@ fun SongQueueItem(
             ) {
                 Icon(
                     painter = painterResource(R.drawable.ic_draggable),
-                    contentDescription = "Draggable",
+                    contentDescription = null,
                     tint = Color(0xFF35363B),
                     modifier = Modifier.size(26.dp)
                 )
@@ -89,7 +89,7 @@ fun SongQueueItem(
 
                 Icon(
                     painter = painterResource(R.drawable.ic_clear),
-                    contentDescription = "Draggable",
+                    contentDescription = null,
                     tint = Color(0xFF35363B),
                     modifier = Modifier.size(24.dp)
                 )

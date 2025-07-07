@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -26,7 +25,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
@@ -97,7 +95,7 @@ fun MainRootScreen(
                 modalBottomSheetBackgroundColor.value = Color(0xFF736659)
                 showSheet.value = true
                 sheetContent.value = {
-                    SongInfoRootScreen(audio = basePlayerViewModel.currentSelectedAudio.collectAsStateWithLifecycle().value)
+                    SongInfoRootScreen(audio = menuViewModel.audio.collectAsStateWithLifecycle().value)
                 }
                 scope.launch { sheetState.show() }
             }
@@ -119,7 +117,6 @@ fun MainRootScreen(
                         onClose = {
                             mainUiState.value = MainUiState(MainBottomSheetContent.None)
                         },
-                        basePlayerViewModel = basePlayerViewModel,
                         menuViewModel = menuViewModel
                     )
                 }
@@ -182,13 +179,6 @@ fun MainRootScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .background(
-                    brush = Brush.verticalGradient(
-                        colors = listOf(
-                            MaterialTheme.colorScheme.background, Color(0xFF3078AB)
-                        )
-                    )
-                )
         ) {
             when (tab) {
                 K.SONGS -> SongsRootScreen(
@@ -198,7 +188,8 @@ fun MainRootScreen(
                     startNotificationService = startNotificationService,
                     onMenuClick = {
                         mainUiState.value = MainUiState(MainBottomSheetContent.Menu)
-                    }
+                    },
+                    menuViewModel = menuViewModel
                 )
             }
         }

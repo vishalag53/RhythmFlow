@@ -213,7 +213,8 @@ fun SearchRootScreen(
                                 index = index,
                                 startNotificationService = startNotificationService,
                                 basePlayerViewModel = basePlayerViewModel,
-                                onMenuClick = {}
+                                onMenuClick = {},
+                                menuViewModel = menuViewModel
                             )
                         }
                     }

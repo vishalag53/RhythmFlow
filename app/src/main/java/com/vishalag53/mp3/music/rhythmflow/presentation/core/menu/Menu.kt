@@ -26,7 +26,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.vishalag53.mp3.music.rhythmflow.R
 import com.vishalag53.mp3.music.rhythmflow.domain.core.stringCapitalized
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.AudioTitleDisplayName
-import com.vishalag53.mp3.music.rhythmflow.presentation.core.baseplayer.BasePlayerViewModel
 
 @Composable
 fun Menu(
@@ -34,10 +33,9 @@ fun Menu(
     onRepeatClick: () -> Unit,
     onShuffleClick: (Boolean) -> Unit,
     onClose: () -> Unit,
-    basePlayerViewModel: BasePlayerViewModel,
     menuViewModel: MenuViewModel
 ) {
-    val audio = basePlayerViewModel.currentSelectedAudio.collectAsStateWithLifecycle().value
+    val audio = menuViewModel.audio.collectAsStateWithLifecycle().value
 
     Box(
         modifier = Modifier.fillMaxWidth()

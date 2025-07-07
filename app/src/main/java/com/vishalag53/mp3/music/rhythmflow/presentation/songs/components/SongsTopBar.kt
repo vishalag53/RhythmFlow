@@ -83,22 +83,14 @@ fun SongsTopBar(audioList: List<Audio>) {
             Spacer(modifier = Modifier.width(8.dp))
 
             Row(
+                modifier = Modifier.padding(end = 6.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
-                    painter = painterResource(R.drawable.ic_sort),
-                    contentDescription = "Music Sort",
+                    painter = painterResource(R.drawable.ic_rotate_menu),
+                    contentDescription = null,
                     tint = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.size(20.dp)
-                )
-
-                Spacer(modifier = Modifier.width(8.dp))
-
-                Icon(
-                    painter = painterResource(R.drawable.ic_shuffle),
-                    contentDescription = "Music Shuffle",
-                    tint = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.size(24.dp)
                 )
             }
         }

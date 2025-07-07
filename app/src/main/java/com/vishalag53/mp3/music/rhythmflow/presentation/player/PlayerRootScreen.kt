@@ -87,6 +87,10 @@ fun PlayerRootScreen(
 
     val playbackSpeed = remember { mutableFloatStateOf(1.0F) }
 
+    LaunchedEffect(audio) {
+        menuViewModel.setAudio(audio)
+    }
+
     LaunchedEffect(playerUiState.value.sheet) {
         when (playerUiState.value.sheet) {
             PlayerBottomSheetContent.PlayerQueue -> {
@@ -102,7 +106,7 @@ fun PlayerRootScreen(
                 modalBottomSheetBackgroundColor.value = Color(0xFF736659)
                 showSheet.value = true
                 sheetContent.value = {
-                    SongInfoRootScreen(audio = audio)
+                    SongInfoRootScreen(audio = menuViewModel.audio.collectAsStateWithLifecycle().value)
                 }
                 scope.launch { sheetState.show() }
             }
@@ -136,7 +140,6 @@ fun PlayerRootScreen(
                 modalBottomSheetBackgroundColor.value = Color(0xFFFDCF9E)
                 sheetContent.value = {
                     Menu(
-                        basePlayerViewModel = basePlayerViewModel,
                         onInfoClick = {
                             playerUiState.value = PlayerUiState(PlayerBottomSheetContent.SongInfo)
                         },
@@ -164,7 +167,7 @@ fun PlayerRootScreen(
                         onClose = {
                             playerUiState.value = PlayerUiState(PlayerBottomSheetContent.None)
                         },
-                        onRepeatChange = {  repeat ->
+                        onRepeatChange = { repeat ->
                             menuViewModel.setRepeatMode(repeat)
                         },
                         onRepeatChangeBasePlayer = {

@@ -25,6 +25,7 @@ import com.vishalag53.mp3.music.rhythmflow.domain.core.stringCapitalized
 import com.vishalag53.mp3.music.rhythmflow.navigation.Screens
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.baseplayer.BasePlayerEvents
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.baseplayer.BasePlayerViewModel
+import com.vishalag53.mp3.music.rhythmflow.presentation.core.menu.MenuViewModel
 
 @Composable
 fun AudioItem(
@@ -34,7 +35,8 @@ fun AudioItem(
     index: Int,
     startNotificationService: () -> Unit,
     basePlayerViewModel: BasePlayerViewModel,
-    onMenuClick: () -> Unit
+    onMenuClick: () -> Unit,
+    menuViewModel: MenuViewModel
 ) {
     val context = LocalContext.current
 
@@ -85,6 +87,7 @@ fun AudioItem(
                     contentDescription = null,
                     tint = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.clickable {
+                        menuViewModel.setAudio(audio)
                         onMenuClick()
                     }
                 )

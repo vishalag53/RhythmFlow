@@ -13,6 +13,7 @@ import androidx.navigation.NavHostController
 import com.vishalag53.mp3.music.rhythmflow.data.local.model.Audio
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.AudioItem
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.baseplayer.BasePlayerViewModel
+import com.vishalag53.mp3.music.rhythmflow.presentation.core.menu.MenuViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.songs.components.SongsTopBar
 
 @Composable
@@ -21,7 +22,8 @@ fun SongsRootScreen(
     audioList: List<Audio>,
     startNotificationService: () -> Unit,
     basePlayerViewModel: BasePlayerViewModel,
-    onMenuClick: () -> Unit
+    onMenuClick: () -> Unit,
+    menuViewModel: MenuViewModel
 ) {
     Scaffold(
         topBar = { SongsTopBar(audioList) },
@@ -43,7 +45,8 @@ fun SongsRootScreen(
                         basePlayerViewModel = basePlayerViewModel,
                         index = index,
                         startNotificationService = startNotificationService,
-                        onMenuClick = onMenuClick
+                        onMenuClick = onMenuClick,
+                        menuViewModel = menuViewModel
                     )
                 }
             }
