@@ -2,10 +2,8 @@ package com.vishalag53.mp3.music.rhythmflow.presentation.songs.components
 
 import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -26,73 +24,57 @@ import androidx.compose.ui.unit.sp
 import com.vishalag53.mp3.music.rhythmflow.R
 import com.vishalag53.mp3.music.rhythmflow.domain.core.totalAudioTime
 import com.vishalag53.mp3.music.rhythmflow.data.local.model.Audio
+import com.vishalag53.mp3.music.rhythmflow.presentation.songs.songallmenu.SongAllMenu
 
 @Composable
 fun SongsTopBar(audioList: List<Audio>) {
     val context = LocalContext.current
 
-    Box(
+    Row(
         modifier = Modifier
             .fillMaxWidth()
             .height(36.dp)
+            .padding(horizontal = 6.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Absolute.SpaceBetween
     ) {
+
         Row(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 6.dp),
+            modifier = Modifier.weight(1f),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.Absolute.Center
         ) {
-
-            Row(
-                modifier = Modifier.weight(1f),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Absolute.Center
-            ) {
-                Icon(
-                    painter = painterResource(R.drawable.ic_play),
-                    contentDescription = "Play Icon",
-                    tint = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.size(24.dp)
-                )
-
-                Spacer(modifier = Modifier.width(8.dp))
-
-                Text(
-                    text = "Play All",
-                    style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.SemiBold),
-                    color = MaterialTheme.colorScheme.primary,
-                    fontSize = 20.sp
-                )
-
-                Spacer(modifier = Modifier.width(2.dp))
-
-                Text(
-                    text = "(${audioList.size})${totalAudioTime(audioList, context)}",
-                    style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Medium),
-                    color = MaterialTheme.colorScheme.secondary,
-                    maxLines = 1,
-                    softWrap = false,
-                    overflow = TextOverflow.Visible,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .basicMarquee()
-                )
-            }
+            Icon(
+                painter = painterResource(R.drawable.ic_play),
+                contentDescription = "Play Icon",
+                tint = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.size(24.dp)
+            )
 
             Spacer(modifier = Modifier.width(8.dp))
 
-            Row(
-                modifier = Modifier.padding(end = 6.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    painter = painterResource(R.drawable.ic_rotate_menu),
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.size(20.dp)
-                )
-            }
+            Text(
+                text = "Play All",
+                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.SemiBold),
+                color = MaterialTheme.colorScheme.primary,
+                fontSize = 20.sp
+            )
+
+            Spacer(modifier = Modifier.width(2.dp))
+
+            Text(
+                text = "(${audioList.size})${totalAudioTime(audioList, context)}",
+                style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Medium),
+                color = MaterialTheme.colorScheme.secondary,
+                maxLines = 1,
+                softWrap = false,
+                overflow = TextOverflow.Visible,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .basicMarquee()
+            )
         }
+
+        SongAllMenu()
     }
 }
