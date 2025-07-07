@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -117,7 +118,12 @@ fun MainRootScreen(
                         onClose = {
                             mainUiState.value = MainUiState(MainBottomSheetContent.None)
                         },
-                        menuViewModel = menuViewModel
+                        menuViewModel = menuViewModel,
+                        backgroundColor = MaterialTheme.colorScheme.background,
+                        backgroundIconColor = MaterialTheme.colorScheme.secondary,
+                        iconColor = MaterialTheme.colorScheme.primary,
+                        textColor = MaterialTheme.colorScheme.primary,
+                        isSongMenu = true
                     )
                 }
                 scope.launch { sheetState.show() }

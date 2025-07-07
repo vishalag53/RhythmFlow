@@ -152,7 +152,12 @@ fun PlayerRootScreen(
                         onClose = {
                             playerUiState.value = PlayerUiState(PlayerBottomSheetContent.None)
                         },
-                        menuViewModel = menuViewModel
+                        menuViewModel = menuViewModel,
+                        backgroundColor = Color(0xFF736659),
+                        backgroundIconColor = Color(0xFF35363B),
+                        iconColor = Color(0xFFFDCF9E),
+                        textColor = Color(0xFF35363B),
+                        isSongMenu = false
                     )
                 }
                 scope.launch { sheetState.show() }
