@@ -8,6 +8,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -26,7 +27,7 @@ import com.vishalag53.mp3.music.rhythmflow.navigation.RootNavigation
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.Loading
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.baseplayer.BasePlayerViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.menu.MenuViewModel
-import com.vishalag53.mp3.music.rhythmflow.presentation.storagepermission.AskStoragePermission
+import com.vishalag53.mp3.music.rhythmflow.presentation.permission.AskStoragePermission
 import com.vishalag53.mp3.music.rhythmflow.presentation.theme.RhythmFlowTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -38,6 +39,7 @@ class MainActivity : ComponentActivity() {
     private val mainViewModel: MainViewModel by viewModels()
     private var isServiceRunning = false
 
+    @RequiresApi(Build.VERSION_CODES.Q)
     @OptIn(ExperimentalPermissionsApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -83,7 +85,10 @@ class MainActivity : ComponentActivity() {
                             mainViewModel = mainViewModel,
                             basePlayerViewModel = basePlayerViewModel,
                             menuViewModel = menuViewModel,
-                            startNotificationService = { startService() }
+                            startNotificationService = { startService() },
+                            updateDisplayName = { audioId, newDisplayName ->
+                                mainViewModel.updateDisplayName(audioId, newDisplayName)
+                            },
                         )
                     }
                 } else {

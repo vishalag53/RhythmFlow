@@ -115,7 +115,11 @@ fun Menu(
                             backgroundIconColor = backgroundIconColor,
                             iconColor = iconColor,
                             textColor = textColor,
-                            onClick = {})
+                            onClick = {
+                                menuViewModel.setRenameBox(true)
+                                onClose()
+                            }
+                        )
 
                         MenuComponent(
                             width = width,

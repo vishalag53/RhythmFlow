@@ -1,4 +1,4 @@
-package com.vishalag53.mp3.music.rhythmflow.presentation.storagepermission
+package com.vishalag53.mp3.music.rhythmflow.presentation.permission
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -27,7 +27,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.vishalag53.mp3.music.rhythmflow.R
-import com.vishalag53.mp3.music.rhythmflow.domain.storagepermission.openAppSettings
+import com.vishalag53.mp3.music.rhythmflow.domain.permission.openAppSettings
 
 @Composable
 fun AskStoragePermission() {

@@ -1,5 +1,7 @@
 package com.vishalag53.mp3.music.rhythmflow.navigation
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavGraphBuilder
@@ -16,6 +18,7 @@ import com.vishalag53.mp3.music.rhythmflow.presentation.player.PlayerRootScreen
 import com.vishalag53.mp3.music.rhythmflow.presentation.search.SearchRootScreen
 import kotlin.reflect.typeOf
 
+@RequiresApi(Build.VERSION_CODES.Q)
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun RootNavigation(
@@ -25,6 +28,7 @@ fun RootNavigation(
     startNotificationService: () -> Unit,
     basePlayerViewModel: BasePlayerViewModel,
     menuViewModel: MenuViewModel,
+    updateDisplayName: (String,String) -> Unit
 ) {
     NavHost(
         navController = navController, startDestination = Screens.Main.Songs
@@ -34,7 +38,8 @@ fun RootNavigation(
             audioList = audioList,
             startNotificationService = startNotificationService,
             basePlayerViewModel = basePlayerViewModel,
-            menuViewModel = menuViewModel
+            menuViewModel = menuViewModel,
+            updateDisplayName= updateDisplayName
         )
 
         playerGraph(
@@ -53,12 +58,14 @@ fun RootNavigation(
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.Q)
 private fun NavGraphBuilder.mainGraph(
     navController: NavHostController,
     audioList: List<Audio>,
     startNotificationService: () -> Unit,
     basePlayerViewModel: BasePlayerViewModel,
     menuViewModel: MenuViewModel,
+    updateDisplayName: (String, String) -> Unit,
 ) {
     composable<Screens.Main.Songs> {
         MainRootScreen(
@@ -67,7 +74,8 @@ private fun NavGraphBuilder.mainGraph(
             audioList = audioList,
             basePlayerViewModel = basePlayerViewModel,
             startNotificationService = startNotificationService,
-            menuViewModel = menuViewModel
+            menuViewModel = menuViewModel,
+            updateDisplayName = updateDisplayName
         )
     }
 }

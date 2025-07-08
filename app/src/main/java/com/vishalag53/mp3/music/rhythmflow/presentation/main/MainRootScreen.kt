@@ -1,5 +1,12 @@
 package com.vishalag53.mp3.music.rhythmflow.presentation.main
 
+import android.app.Activity
+import android.os.Build
+import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.IntentSenderRequest
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -28,17 +35,22 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.vishalag53.mp3.music.rhythmflow.data.local.model.Audio
 import com.vishalag53.mp3.music.rhythmflow.domain.core.K
+import com.vishalag53.mp3.music.rhythmflow.domain.core.renameDisplayName
+import com.vishalag53.mp3.music.rhythmflow.domain.core.requestRenamePermission
 import com.vishalag53.mp3.music.rhythmflow.navigation.Screens
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.baseplayer.BasePlayerEvents
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.baseplayer.BasePlayerViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.menu.Menu
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.menu.MenuViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.playingqueue.SongQueueListsItem
+import com.vishalag53.mp3.music.rhythmflow.presentation.core.rename.Rename
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.repeat.Repeat
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.songinfo.SongInfoRootScreen
 import com.vishalag53.mp3.music.rhythmflow.presentation.main.components.AppBarRootScreen
@@ -46,7 +58,8 @@ import com.vishalag53.mp3.music.rhythmflow.presentation.smallplayer.SmallPlayerR
 import com.vishalag53.mp3.music.rhythmflow.presentation.songs.SongsRootScreen
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
+@RequiresApi(Build.VERSION_CODES.Q)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalPermissionsApi::class)
 @Composable
 fun MainRootScreen(
     tab: String,
@@ -54,9 +67,25 @@ fun MainRootScreen(
     audioList: List<Audio>,
     startNotificationService: () -> Unit,
     basePlayerViewModel: BasePlayerViewModel,
-    menuViewModel: MenuViewModel
+    menuViewModel: MenuViewModel,
+    updateDisplayName: (String, String) -> Unit
 ) {
     val screenHeight = LocalConfiguration.current.screenHeightDp.dp
+    val context = LocalContext.current
+    val pendingRename = remember { mutableStateOf<Pair<String, Audio>?>(null) }
+
+    val renameLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartIntentSenderForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            pendingRename.value?.let { (newName, audio) ->
+                renameDisplayName(newName, audio, context)
+                updateDisplayName(audio.id, newName)
+                Toast.makeText(context, "Renamed to $newName", Toast.LENGTH_SHORT).show()
+                pendingRename.value = null
+            }
+        }
+    }
 
     val mainUiStateSaver: Saver<MainUiState, *> = Saver(save = {
         listOf(it.sheet::class.simpleName ?: "")
@@ -180,7 +209,8 @@ fun MainRootScreen(
                     }
                 )
             }
-        }) { innerPadding ->
+        }
+    ) { innerPadding ->
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -196,6 +226,53 @@ fun MainRootScreen(
                         mainUiState.value = MainUiState(MainBottomSheetContent.Menu)
                     },
                     menuViewModel = menuViewModel
+                )
+            }
+
+            if (menuViewModel.showRenameBox.collectAsStateWithLifecycle().value) {
+                var currentNameWithExtension =
+                    menuViewModel.audio.collectAsStateWithLifecycle().value.displayName
+
+                val currentName = if (currentNameWithExtension.contains(".")) {
+                    currentNameWithExtension.substringBeforeLast(".")
+                } else {
+                    currentNameWithExtension
+                }
+
+                var extension = if (currentNameWithExtension.contains(".")) {
+                    currentNameWithExtension.substringAfterLast(".")
+                } else {
+                    ""
+                }
+
+                Rename(
+                    currentNameWithExtension = currentNameWithExtension,
+                    currentName = currentName,
+                    onDismiss = {
+                        menuViewModel.setRenameBox(false)
+                    },
+                    onRename = { editDisplayName ->
+                        val newDisplayName =
+                            editDisplayName.trim() + if (extension.isNotEmpty()) ".$extension" else ""
+                        val audio = menuViewModel.audio.value
+
+                        requestRenamePermission(
+                            newDisplayName = newDisplayName,
+                            audio = audio,
+                            context = context,
+                            onPermissionGranted = { intentSender ->
+                                pendingRename.value = newDisplayName to audio
+                                renameLauncher.launch(
+                                    IntentSenderRequest.Builder(intentSender).build()
+                                )
+                            },
+                            onRenameSuccess = {
+                                renameDisplayName(newDisplayName, audio, context)
+                                Toast.makeText(context, "Renamed to $newDisplayName", Toast.LENGTH_SHORT).show()
+                            }
+                        )
+                    },
+                    screenHeight = screenHeight / 4
                 )
             }
         }

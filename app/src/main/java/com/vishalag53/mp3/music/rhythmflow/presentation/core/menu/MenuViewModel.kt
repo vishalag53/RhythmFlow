@@ -19,6 +19,9 @@ class MenuViewModel @Inject constructor() : ViewModel() {
     private val _audio = MutableStateFlow<Audio>(dummyAudio)
     val audio = _audio.asStateFlow()
 
+    private val _showRenameBox = MutableStateFlow(false)
+    val showRenameBox = _showRenameBox.asStateFlow()
+
     fun setRepeatMode(repeat: String) {
         _repeatMode.value = repeat
     }
@@ -29,5 +32,9 @@ class MenuViewModel @Inject constructor() : ViewModel() {
 
     fun setAudio(audio: Audio) {
         _audio.value = audio
+    }
+
+    fun setRenameBox(show: Boolean) {
+        _showRenameBox.value = show
     }
 }

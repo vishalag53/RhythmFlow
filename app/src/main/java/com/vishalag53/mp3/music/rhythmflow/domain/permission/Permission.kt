@@ -1,4 +1,4 @@
-package com.vishalag53.mp3.music.rhythmflow.domain.storagepermission
+package com.vishalag53.mp3.music.rhythmflow.domain.permission
 
 import android.content.Context
 import android.content.Intent

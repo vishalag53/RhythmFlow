@@ -1,6 +1,12 @@
 package com.vishalag53.mp3.music.rhythmflow.domain.core
 
+import android.app.RecoverableSecurityException
+import android.content.ContentValues
 import android.content.Context
+import android.content.IntentSender
+import android.os.Build
+import android.provider.MediaStore
+import androidx.annotation.RequiresApi
 import com.vishalag53.mp3.music.rhythmflow.R
 import com.vishalag53.mp3.music.rhythmflow.data.local.model.Audio
 import java.text.SimpleDateFormat
@@ -64,4 +70,35 @@ fun calculateProgressValue(
         else 0f
     val progressString = formatDuration(currentProgress, context)
     return Pair(progress, progressString)
+}
+
+@RequiresApi(Build.VERSION_CODES.Q)
+fun requestRenamePermission(
+    newDisplayName: String,
+    audio: Audio,
+    context: Context,
+    onPermissionGranted: (IntentSender) -> Unit,
+    onRenameSuccess: () -> Unit
+) {
+    val contentValues = ContentValues().apply {
+        put(MediaStore.MediaColumns.DISPLAY_NAME, newDisplayName)
+    }
+
+    try {
+        val rowsUpdated = context.contentResolver.update(audio.uri, contentValues, null, null)
+        if (rowsUpdated > 0) onRenameSuccess()
+    } catch (e: RecoverableSecurityException) {
+        onPermissionGranted(e.userAction.actionIntent.intentSender)
+    } catch (e: SecurityException) {
+        e.printStackTrace()
+    }
+}
+
+@RequiresApi(Build.VERSION_CODES.Q)
+fun renameDisplayName(editDisplayName: String, audio: Audio, context: Context) {
+    val contentValues = ContentValues().apply {
+        put(MediaStore.MediaColumns.DISPLAY_NAME, editDisplayName)
+    }
+
+    context.contentResolver.update(audio.uri, contentValues, null, null)
 }
