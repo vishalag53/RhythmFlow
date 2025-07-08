@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.dp
 import com.vishalag53.mp3.music.rhythmflow.R
 
 @Composable
-fun SongAllMenu() {
+fun SongAllMenu(refreshAudioList: () -> Unit) {
     var expanded by remember { mutableStateOf(false) }
 
     Box {
@@ -57,7 +57,10 @@ fun SongAllMenu() {
                         color = Color(0xFF324E82)
                     )
                 },
-                onClick = {}
+                onClick = {
+                    refreshAudioList()
+                    expanded = false
+                }
             )
             DropdownMenuItem(
                 leadingIcon = {

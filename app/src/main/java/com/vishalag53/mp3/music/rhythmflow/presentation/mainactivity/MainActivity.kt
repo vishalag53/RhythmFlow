@@ -9,6 +9,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -77,7 +78,9 @@ class MainActivity : ComponentActivity() {
                     }
 
                     if (isLoading.value) {
-                        Loading()
+                        Loading(
+                            backgroundColor = MaterialTheme.colorScheme.background
+                        )
                     } else {
                         RootNavigation(
                             navController = navController,
@@ -89,6 +92,8 @@ class MainActivity : ComponentActivity() {
                             updateDisplayName = { audioId, newDisplayName ->
                                 mainViewModel.updateDisplayName(audioId, newDisplayName)
                             },
+                            refreshAudioList = { mainViewModel.refreshAudioList() },
+                            isRefresh = mainViewModel.isRefresh.collectAsStateWithLifecycle().value
                         )
                     }
                 } else {

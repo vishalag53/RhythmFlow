@@ -27,7 +27,10 @@ import com.vishalag53.mp3.music.rhythmflow.data.local.model.Audio
 import com.vishalag53.mp3.music.rhythmflow.presentation.songs.songallmenu.SongAllMenu
 
 @Composable
-fun SongsTopBar(audioList: List<Audio>) {
+fun SongsTopBar(
+    audioList: List<Audio>,
+    refreshAudioList: () -> Unit
+) {
     val context = LocalContext.current
 
     Row(
@@ -75,6 +78,6 @@ fun SongsTopBar(audioList: List<Audio>) {
             )
         }
 
-        SongAllMenu()
+        SongAllMenu(refreshAudioList = refreshAudioList)
     }
 }

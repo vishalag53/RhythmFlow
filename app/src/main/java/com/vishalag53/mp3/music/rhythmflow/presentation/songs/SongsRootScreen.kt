@@ -23,10 +23,16 @@ fun SongsRootScreen(
     startNotificationService: () -> Unit,
     basePlayerViewModel: BasePlayerViewModel,
     onMenuClick: () -> Unit,
-    menuViewModel: MenuViewModel
+    menuViewModel: MenuViewModel,
+    refreshAudioList: () -> Unit
 ) {
     Scaffold(
-        topBar = { SongsTopBar(audioList) },
+        topBar = {
+            SongsTopBar(
+                audioList = audioList,
+                refreshAudioList = refreshAudioList
+            )
+        },
     ) { innerPadding ->
         Box(
             modifier = Modifier

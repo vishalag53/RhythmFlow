@@ -28,7 +28,9 @@ fun RootNavigation(
     startNotificationService: () -> Unit,
     basePlayerViewModel: BasePlayerViewModel,
     menuViewModel: MenuViewModel,
-    updateDisplayName: (String,String) -> Unit
+    updateDisplayName: (String, String) -> Unit,
+    refreshAudioList: () -> Unit,
+    isRefresh: Boolean
 ) {
     NavHost(
         navController = navController, startDestination = Screens.Main.Songs
@@ -39,7 +41,9 @@ fun RootNavigation(
             startNotificationService = startNotificationService,
             basePlayerViewModel = basePlayerViewModel,
             menuViewModel = menuViewModel,
-            updateDisplayName= updateDisplayName
+            updateDisplayName= updateDisplayName,
+            refreshAudioList = refreshAudioList,
+            isRefresh = isRefresh
         )
 
         playerGraph(
@@ -66,6 +70,8 @@ private fun NavGraphBuilder.mainGraph(
     basePlayerViewModel: BasePlayerViewModel,
     menuViewModel: MenuViewModel,
     updateDisplayName: (String, String) -> Unit,
+    refreshAudioList: () -> Unit,
+    isRefresh: Boolean,
 ) {
     composable<Screens.Main.Songs> {
         MainRootScreen(
@@ -75,7 +81,9 @@ private fun NavGraphBuilder.mainGraph(
             basePlayerViewModel = basePlayerViewModel,
             startNotificationService = startNotificationService,
             menuViewModel = menuViewModel,
-            updateDisplayName = updateDisplayName
+            updateDisplayName = updateDisplayName,
+            refreshAudioList = refreshAudioList,
+            isRefresh = isRefresh
         )
     }
 }

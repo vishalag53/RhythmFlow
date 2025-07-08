@@ -22,6 +22,9 @@ class MainViewModel @Inject constructor(
     private val _isLoading = MutableStateFlow(false)
     val isLoading = _isLoading.asStateFlow()
 
+    private val _isRefresh = MutableStateFlow(false)
+    val isRefresh = _isRefresh.asStateFlow()
+
     private val _audioList = MutableStateFlow<List<Audio>>(emptyList())
     val audioList = _audioList.asStateFlow()
 
@@ -56,5 +59,14 @@ class MainViewModel @Inject constructor(
 
     fun sortAudioListByDisplayName() {
         _audioList.value = _audioList.value.sortedBy { it.displayName.lowercase() }
+    }
+
+    fun refreshAudioList() {
+        viewModelScope.launch {
+            _isRefresh.value = true
+            _audioList.value = repository.getAudioData()
+            delay(1000L)
+            _isRefresh.value = false
+        }
     }
 }

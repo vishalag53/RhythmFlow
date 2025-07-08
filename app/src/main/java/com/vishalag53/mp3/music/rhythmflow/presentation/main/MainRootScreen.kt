@@ -45,6 +45,7 @@ import com.vishalag53.mp3.music.rhythmflow.domain.core.K
 import com.vishalag53.mp3.music.rhythmflow.domain.core.renameDisplayName
 import com.vishalag53.mp3.music.rhythmflow.domain.core.requestRenamePermission
 import com.vishalag53.mp3.music.rhythmflow.navigation.Screens
+import com.vishalag53.mp3.music.rhythmflow.presentation.core.Loading
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.baseplayer.BasePlayerEvents
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.baseplayer.BasePlayerViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.menu.Menu
@@ -68,7 +69,9 @@ fun MainRootScreen(
     startNotificationService: () -> Unit,
     basePlayerViewModel: BasePlayerViewModel,
     menuViewModel: MenuViewModel,
-    updateDisplayName: (String, String) -> Unit
+    updateDisplayName: (String, String) -> Unit,
+    refreshAudioList: () -> Unit,
+    isRefresh: Boolean
 ) {
     val screenHeight = LocalConfiguration.current.screenHeightDp.dp
     val context = LocalContext.current
@@ -225,7 +228,8 @@ fun MainRootScreen(
                     onMenuClick = {
                         mainUiState.value = MainUiState(MainBottomSheetContent.Menu)
                     },
-                    menuViewModel = menuViewModel
+                    menuViewModel = menuViewModel,
+                    refreshAudioList = refreshAudioList
                 )
             }
 
@@ -274,6 +278,10 @@ fun MainRootScreen(
                     },
                     screenHeight = screenHeight / 4
                 )
+            }
+
+            if (isRefresh) {
+                Loading(backgroundColor = Color.Black.copy(alpha = 0.3F))
             }
         }
     }
