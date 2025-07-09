@@ -21,9 +21,14 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.vishalag53.mp3.music.rhythmflow.R
 import com.vishalag53.mp3.music.rhythmflow.navigation.Screens
+import com.vishalag53.mp3.music.rhythmflow.presentation.mainactivity.MainViewModel
 
 @Composable
-fun AppBarRootScreen(navController: NavHostController) {
+fun AppBarRootScreen(
+    navController: NavHostController,
+    mainViewModel: MainViewModel,
+    onSelectTabMainClick: () -> Unit
+) {
     Box(
         modifier = Modifier
             .statusBarsPadding()
@@ -49,7 +54,10 @@ fun AppBarRootScreen(navController: NavHostController) {
 
                 Spacer(modifier = Modifier.width(8.dp))
 
-                SelectTabMain()
+                SelectTabMain(
+                    mainViewModel = mainViewModel,
+                    onSelectTabMainClick = onSelectTabMainClick
+                )
             }
 
             IconButton(onClick = {

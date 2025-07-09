@@ -9,7 +9,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.vishalag53.mp3.music.rhythmflow.data.local.model.Audio
-import com.vishalag53.mp3.music.rhythmflow.domain.core.K
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.baseplayer.BasePlayerViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.menu.MenuViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.main.MainRootScreen
@@ -65,7 +64,6 @@ private fun NavGraphBuilder.mainGraph(
 ) {
     composable<Screens.Main.Songs> {
         MainRootScreen(
-            tab = K.SONGS,
             navController = navController,
             basePlayerViewModel = basePlayerViewModel,
             startNotificationService = startNotificationService,

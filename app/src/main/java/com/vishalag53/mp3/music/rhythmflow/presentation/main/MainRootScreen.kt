@@ -55,7 +55,9 @@ import com.vishalag53.mp3.music.rhythmflow.presentation.core.rename.Rename
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.repeat.Repeat
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.songinfo.SongInfoRootScreen
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.sortby.SortBy
+import com.vishalag53.mp3.music.rhythmflow.presentation.folders.FoldersRootScreen
 import com.vishalag53.mp3.music.rhythmflow.presentation.main.components.AppBarRootScreen
+import com.vishalag53.mp3.music.rhythmflow.presentation.main.components.SelectTabMainModalBottomSheet
 import com.vishalag53.mp3.music.rhythmflow.presentation.mainactivity.MainViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.smallplayer.SmallPlayerRootScreen
 import com.vishalag53.mp3.music.rhythmflow.presentation.songs.SongsRootScreen
@@ -65,7 +67,6 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalPermissionsApi::class)
 @Composable
 fun MainRootScreen(
-    tab: String,
     navController: NavHostController,
     startNotificationService: () -> Unit,
     basePlayerViewModel: BasePlayerViewModel,
@@ -98,6 +99,7 @@ fun MainRootScreen(
             MainBottomSheetContent.Menu::class.simpleName -> MainBottomSheetContent.Menu
             MainBottomSheetContent.Repeat::class.simpleName -> MainBottomSheetContent.Repeat
             MainBottomSheetContent.SortBy::class.simpleName -> MainBottomSheetContent.SortBy
+            MainBottomSheetContent.SelectTabName::class.simpleName -> MainBottomSheetContent.SelectTabName
             else -> MainBottomSheetContent.None
         }
         MainUiState(sheet = sheet)
@@ -205,6 +207,20 @@ fun MainRootScreen(
                 scope.launch { sheetState.show() }
             }
 
+            MainBottomSheetContent.SelectTabName -> {
+                showSheet.value = true
+                sheetContent.value = {
+                    modalBottomSheetBackgroundColor.value = MaterialTheme.colorScheme.primaryContainer
+                    SelectTabMainModalBottomSheet(
+                        mainViewModel = mainViewModel,
+                        onClose = {
+                            mainUiState.value = MainUiState(MainBottomSheetContent.None)
+                        }
+                    )
+                }
+                scope.launch { sheetState.show() }
+            }
+
             MainBottomSheetContent.None -> {
                 showSheet.value = false
                 scope.launch { sheetState.hide() }
@@ -214,7 +230,13 @@ fun MainRootScreen(
 
     Scaffold(
         topBar = {
-            AppBarRootScreen(navController = navController)
+            AppBarRootScreen(
+                navController = navController,
+                mainViewModel = mainViewModel,
+                onSelectTabMainClick  = {
+                    mainUiState.value = MainUiState(MainBottomSheetContent.SelectTabName)
+                }
+            )
         },
         bottomBar = {
             if (basePlayerViewModel.currentSelectedAudio.collectAsState().value.title != "") {
@@ -243,7 +265,7 @@ fun MainRootScreen(
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
-            when (tab) {
+            when (mainViewModel.selectTabName.collectAsStateWithLifecycle().value) {
                 K.SONGS -> SongsRootScreen(
                     navController = navController,
                     basePlayerViewModel = basePlayerViewModel,
@@ -257,6 +279,9 @@ fun MainRootScreen(
                         mainUiState.value = MainUiState(MainBottomSheetContent.SortBy)
                     }
                 )
+                K.FOLDERS -> {
+                    FoldersRootScreen()
+                }
             }
 
             if (menuViewModel.showRenameBox.collectAsStateWithLifecycle().value) {

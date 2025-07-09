@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
 import com.vishalag53.mp3.music.rhythmflow.data.local.model.Audio
 import com.vishalag53.mp3.music.rhythmflow.data.local.repository.AudioRepository
+import com.vishalag53.mp3.music.rhythmflow.domain.core.K
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -37,6 +38,9 @@ class MainViewModel @Inject constructor(
     private val _isAsc = MutableStateFlow(true)
     val isAsc = _isAsc.asStateFlow()
 
+    private val _selectTabName = MutableStateFlow(K.SONGS)
+    val selectTabName = _selectTabName.asStateFlow()
+
     init {
         viewModelScope.launch {
             delay(2000)
@@ -65,6 +69,10 @@ class MainViewModel @Inject constructor(
             }
         }
         sortAudioListBy()
+    }
+
+    fun setSelectTabName(name: String) {
+        _selectTabName.value = name
     }
 
     fun refreshAudioList() {

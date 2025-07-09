@@ -7,4 +7,5 @@ sealed class MainBottomSheetContent {
     object Repeat: MainBottomSheetContent()
     object SongInfo: MainBottomSheetContent()
     object SortBy: MainBottomSheetContent()
+    object SelectTabName: MainBottomSheetContent()
 }
