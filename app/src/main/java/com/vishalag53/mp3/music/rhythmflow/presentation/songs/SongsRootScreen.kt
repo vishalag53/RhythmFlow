@@ -24,13 +24,15 @@ fun SongsRootScreen(
     basePlayerViewModel: BasePlayerViewModel,
     onMenuClick: () -> Unit,
     menuViewModel: MenuViewModel,
-    refreshAudioList: () -> Unit
+    refreshAudioList: () -> Unit,
+    onSortByClick: () -> Unit
 ) {
     Scaffold(
         topBar = {
             SongsTopBar(
                 audioList = audioList,
-                refreshAudioList = refreshAudioList
+                refreshAudioList = refreshAudioList,
+                onSortByClick = onSortByClick
             )
         },
     ) { innerPadding ->

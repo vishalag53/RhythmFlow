@@ -24,7 +24,10 @@ import androidx.compose.ui.unit.dp
 import com.vishalag53.mp3.music.rhythmflow.R
 
 @Composable
-fun SongAllMenu(refreshAudioList: () -> Unit) {
+fun SongAllMenu(
+    refreshAudioList: () -> Unit,
+    onSortByClick: () -> Unit
+) {
     var expanded by remember { mutableStateOf(false) }
 
     Box {
@@ -78,7 +81,10 @@ fun SongAllMenu(refreshAudioList: () -> Unit) {
                         color = Color(0xFF324E82)
                     )
                 },
-                onClick = {}
+                onClick = {
+                    onSortByClick()
+                    expanded = false
+                }
             )
             DropdownMenuItem(
                 leadingIcon = {
@@ -104,7 +110,10 @@ fun SongAllMenu(refreshAudioList: () -> Unit) {
                         color = Color(0xFF324E82)
                     )
                 },
-                onClick = {}
+                onClick = {
+
+                    expanded = false
+                }
             )
             DropdownMenuItem(
                 leadingIcon = {
@@ -122,7 +131,10 @@ fun SongAllMenu(refreshAudioList: () -> Unit) {
                         color = Color(0xFF324E82)
                     )
                 },
-                onClick = {}
+                onClick = {
+
+                    expanded = false
+                }
             )
         }
     }

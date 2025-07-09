@@ -42,6 +42,7 @@ fun RootNavigation(
             basePlayerViewModel = basePlayerViewModel,
             menuViewModel = menuViewModel,
             updateDisplayName= updateDisplayName,
+            mainViewModel = mainViewModel,
             refreshAudioList = refreshAudioList,
             isRefresh = isRefresh
         )
@@ -72,6 +73,7 @@ private fun NavGraphBuilder.mainGraph(
     updateDisplayName: (String, String) -> Unit,
     refreshAudioList: () -> Unit,
     isRefresh: Boolean,
+    mainViewModel: MainViewModel,
 ) {
     composable<Screens.Main.Songs> {
         MainRootScreen(
@@ -83,7 +85,8 @@ private fun NavGraphBuilder.mainGraph(
             menuViewModel = menuViewModel,
             updateDisplayName = updateDisplayName,
             refreshAudioList = refreshAudioList,
-            isRefresh = isRefresh
+            isRefresh = isRefresh,
+            mainViewModel = mainViewModel
         )
     }
 }

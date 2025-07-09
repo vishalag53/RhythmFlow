@@ -29,7 +29,8 @@ import com.vishalag53.mp3.music.rhythmflow.presentation.songs.songallmenu.SongAl
 @Composable
 fun SongsTopBar(
     audioList: List<Audio>,
-    refreshAudioList: () -> Unit
+    refreshAudioList: () -> Unit,
+    onSortByClick: () -> Unit
 ) {
     val context = LocalContext.current
 
@@ -78,6 +79,9 @@ fun SongsTopBar(
             )
         }
 
-        SongAllMenu(refreshAudioList = refreshAudioList)
+        SongAllMenu(
+            onSortByClick = onSortByClick,
+            refreshAudioList = refreshAudioList
+        )
     }
 }

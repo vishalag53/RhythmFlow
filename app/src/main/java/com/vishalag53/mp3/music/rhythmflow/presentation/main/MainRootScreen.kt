@@ -54,7 +54,9 @@ import com.vishalag53.mp3.music.rhythmflow.presentation.core.playingqueue.SongQu
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.rename.Rename
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.repeat.Repeat
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.songinfo.SongInfoRootScreen
+import com.vishalag53.mp3.music.rhythmflow.presentation.core.sortby.SortBy
 import com.vishalag53.mp3.music.rhythmflow.presentation.main.components.AppBarRootScreen
+import com.vishalag53.mp3.music.rhythmflow.presentation.mainactivity.MainViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.smallplayer.SmallPlayerRootScreen
 import com.vishalag53.mp3.music.rhythmflow.presentation.songs.SongsRootScreen
 import kotlinx.coroutines.launch
@@ -71,7 +73,8 @@ fun MainRootScreen(
     menuViewModel: MenuViewModel,
     updateDisplayName: (String, String) -> Unit,
     refreshAudioList: () -> Unit,
-    isRefresh: Boolean
+    isRefresh: Boolean,
+    mainViewModel: MainViewModel
 ) {
     val screenHeight = LocalConfiguration.current.screenHeightDp.dp
     val context = LocalContext.current
@@ -98,6 +101,7 @@ fun MainRootScreen(
             MainBottomSheetContent.SongInfo::class.simpleName -> MainBottomSheetContent.SongInfo
             MainBottomSheetContent.Menu::class.simpleName -> MainBottomSheetContent.Menu
             MainBottomSheetContent.Repeat::class.simpleName -> MainBottomSheetContent.Repeat
+            MainBottomSheetContent.SortBy::class.simpleName -> MainBottomSheetContent.SortBy
             else -> MainBottomSheetContent.None
         }
         MainUiState(sheet = sheet)
@@ -110,6 +114,9 @@ fun MainRootScreen(
     val sheetContent = remember { mutableStateOf<@Composable () -> Unit>({}) }
     val scope = rememberCoroutineScope()
     val modalBottomSheetBackgroundColor = remember { mutableStateOf(Color(0xFF736659)) }
+
+    val sortBy = remember { mutableStateOf("File name") }
+    val ascDESC = remember { mutableStateOf("Ascending") }
 
     LaunchedEffect(mainUiState.value.sheet) {
         when (mainUiState.value.sheet) {
@@ -181,6 +188,51 @@ fun MainRootScreen(
                 scope.launch { sheetState.show() }
             }
 
+            MainBottomSheetContent.SortBy -> {
+                showSheet.value = true
+                sheetContent.value = {
+                    modalBottomSheetBackgroundColor.value = MaterialTheme.colorScheme.primaryContainer
+                    SortBy(
+                        sortBy = sortBy.value,
+                        ascDESC = ascDESC.value,
+                        onSortByChange = {
+                            sortBy.value = it
+                            val isAsc = ascDESC.value == "Ascending"
+                            when (it) {
+                                "Song title" -> mainViewModel.sortAudioListByTitleName(isAsc)
+                                "File name" -> mainViewModel.sortAudioListByDisplayName(isAsc)
+                                "Song duration" -> mainViewModel.sortAudioListByDuration(isAsc)
+                                "File size" -> mainViewModel.sortAudioListByFileSize(isAsc)
+                                "Folder name" -> mainViewModel.sortAudioListByFolderName(isAsc)
+                                "Album name" -> mainViewModel.sortAudioListByAlbumName(isAsc)
+                                "Artist name" -> mainViewModel.sortAudioListByArtistName(isAsc)
+                                "Date added" -> mainViewModel.sortAudioListByDateAdded(isAsc)
+                                "Date modified" -> mainViewModel.sortAudioListByDateModified(isAsc)
+                            }
+                        },
+                        onAscDescChange = {
+                            ascDESC.value = it
+                            val isAsc = it == "Ascending"
+                            when (sortBy.value) {
+                                "Song title" -> mainViewModel.sortAudioListByTitleName(isAsc)
+                                "File name" -> mainViewModel.sortAudioListByDisplayName(isAsc)
+                                "Song duration" -> mainViewModel.sortAudioListByDuration(isAsc)
+                                "File size" -> mainViewModel.sortAudioListByFileSize(isAsc)
+                                "Folder name" -> mainViewModel.sortAudioListByFolderName(isAsc)
+                                "Album name" -> mainViewModel.sortAudioListByAlbumName(isAsc)
+                                "Artist name" -> mainViewModel.sortAudioListByArtistName(isAsc)
+                                "Date added" -> mainViewModel.sortAudioListByDateAdded(isAsc)
+                                "Date modified" -> mainViewModel.sortAudioListByDateModified(isAsc)
+                            }
+                        },
+                        onClose = {
+                            mainUiState.value = MainUiState(MainBottomSheetContent.None)
+                        }
+                    )
+                }
+                scope.launch { sheetState.show() }
+            }
+
             MainBottomSheetContent.None -> {
                 showSheet.value = false
                 scope.launch { sheetState.hide() }
@@ -229,7 +281,10 @@ fun MainRootScreen(
                         mainUiState.value = MainUiState(MainBottomSheetContent.Menu)
                     },
                     menuViewModel = menuViewModel,
-                    refreshAudioList = refreshAudioList
+                    refreshAudioList = refreshAudioList,
+                    onSortByClick = {
+                        mainUiState.value = MainUiState(MainBottomSheetContent.SortBy)
+                    }
                 )
             }
 

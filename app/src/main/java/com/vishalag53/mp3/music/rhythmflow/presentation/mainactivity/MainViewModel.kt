@@ -54,11 +54,7 @@ class MainViewModel @Inject constructor(
                 if (it.id == audioId) it.copy(displayName = newDisplayName) else it
             }
         }
-        sortAudioListByDisplayName()
-    }
-
-    fun sortAudioListByDisplayName() {
-        _audioList.value = _audioList.value.sortedBy { it.displayName.lowercase() }
+        sortAudioListByDisplayName(true)
     }
 
     fun refreshAudioList() {
@@ -68,5 +64,50 @@ class MainViewModel @Inject constructor(
             delay(1000L)
             _isRefresh.value = false
         }
+    }
+
+    fun sortAudioListByDisplayName(isASC: Boolean) {
+        _audioList.value = if (isASC) _audioList.value.sortedBy { it.displayName.lowercase() }
+        else _audioList.value.sortedByDescending { it.displayName.lowercase() }
+    }
+
+    fun sortAudioListByTitleName(isASC: Boolean) {
+        _audioList.value = if (isASC) _audioList.value.sortedBy { it.title.lowercase() }
+        else _audioList.value.sortedByDescending { it.title.lowercase() }
+    }
+
+    fun sortAudioListByDuration(isASC: Boolean) {
+        _audioList.value = if (isASC) _audioList.value.sortedBy { it.duration }
+        else _audioList.value.sortedByDescending { it.duration }
+    }
+
+    fun sortAudioListByFileSize(isASC: Boolean) {
+        _audioList.value = if (isASC) _audioList.value.sortedBy { it.size }
+        else _audioList.value.sortedByDescending { it.size }
+    }
+
+    fun sortAudioListByFolderName(isASC: Boolean) {
+        _audioList.value = if (isASC) _audioList.value.sortedBy { it.folderName.lowercase() }
+        else _audioList.value.sortedByDescending { it.folderName.lowercase() }
+    }
+
+    fun sortAudioListByAlbumName(isASC: Boolean) {
+        _audioList.value = if (isASC) _audioList.value.sortedBy { it.album.lowercase() }
+        else _audioList.value.sortedByDescending { it.album.lowercase() }
+    }
+
+    fun sortAudioListByArtistName(isASC: Boolean) {
+        _audioList.value = if (isASC) _audioList.value.sortedBy { it.artist.lowercase() }
+        else _audioList.value.sortedByDescending { it.artist.lowercase() }
+    }
+
+    fun sortAudioListByDateAdded(isASC: Boolean) {
+        _audioList.value = if (isASC) _audioList.value.sortedBy { it.dateAdded }
+        else _audioList.value.sortedByDescending { it.dateAdded }
+    }
+
+    fun sortAudioListByDateModified(isASC: Boolean) {
+        _audioList.value = if (isASC) _audioList.value.sortedBy { it.dateModified }
+        else _audioList.value.sortedByDescending { it.dateModified }
     }
 }
