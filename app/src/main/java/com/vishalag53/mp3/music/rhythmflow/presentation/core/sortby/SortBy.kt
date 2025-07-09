@@ -26,9 +26,9 @@ import androidx.compose.ui.unit.dp
 fun SortBy(
     sortBy: String,
     onClose: () -> Unit,
-    ascDESC: String,
+    isAsc: Boolean,
     onSortByChange: (String) -> Unit,
-    onAscDescChange: (String) -> Unit
+    onAscDescChange: (Boolean) -> Unit
 ) {
     val sortList = listOf(
         "Song title",
@@ -115,16 +115,21 @@ fun SortBy(
         }
 
         sortListASC.forEach { listName ->
+            val isASC = listName == "Ascending"
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(6.dp)
                     .clickable {
-                        onAscDescChange(listName)
+                        if (isASC) {
+                            onAscDescChange(true)
+                        } else {
+                            onAscDescChange(false)
+                        }
                         onClose()
                     }
             ) {
-                if (ascDESC == listName) {
+                if (isAsc == isASC) {
                     Icon(
                         imageVector = Icons.Default.Check,
                         contentDescription = null,

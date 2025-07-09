@@ -115,9 +115,6 @@ fun MainRootScreen(
     val scope = rememberCoroutineScope()
     val modalBottomSheetBackgroundColor = remember { mutableStateOf(Color(0xFF736659)) }
 
-    val sortBy = remember { mutableStateOf("File name") }
-    val ascDESC = remember { mutableStateOf("Ascending") }
-
     LaunchedEffect(mainUiState.value.sheet) {
         when (mainUiState.value.sheet) {
             MainBottomSheetContent.PlayingQueue -> {
@@ -193,37 +190,15 @@ fun MainRootScreen(
                 sheetContent.value = {
                     modalBottomSheetBackgroundColor.value = MaterialTheme.colorScheme.primaryContainer
                     SortBy(
-                        sortBy = sortBy.value,
-                        ascDESC = ascDESC.value,
+                        sortBy = mainViewModel.sortBy.value,
+                        isAsc = mainViewModel.isAsc.value,
                         onSortByChange = {
-                            sortBy.value = it
-                            val isAsc = ascDESC.value == "Ascending"
-                            when (it) {
-                                "Song title" -> mainViewModel.sortAudioListByTitleName(isAsc)
-                                "File name" -> mainViewModel.sortAudioListByDisplayName(isAsc)
-                                "Song duration" -> mainViewModel.sortAudioListByDuration(isAsc)
-                                "File size" -> mainViewModel.sortAudioListByFileSize(isAsc)
-                                "Folder name" -> mainViewModel.sortAudioListByFolderName(isAsc)
-                                "Album name" -> mainViewModel.sortAudioListByAlbumName(isAsc)
-                                "Artist name" -> mainViewModel.sortAudioListByArtistName(isAsc)
-                                "Date added" -> mainViewModel.sortAudioListByDateAdded(isAsc)
-                                "Date modified" -> mainViewModel.sortAudioListByDateModified(isAsc)
-                            }
+                            mainViewModel.setSortBy(it)
+                            mainViewModel.sortAudioListBy()
                         },
                         onAscDescChange = {
-                            ascDESC.value = it
-                            val isAsc = it == "Ascending"
-                            when (sortBy.value) {
-                                "Song title" -> mainViewModel.sortAudioListByTitleName(isAsc)
-                                "File name" -> mainViewModel.sortAudioListByDisplayName(isAsc)
-                                "Song duration" -> mainViewModel.sortAudioListByDuration(isAsc)
-                                "File size" -> mainViewModel.sortAudioListByFileSize(isAsc)
-                                "Folder name" -> mainViewModel.sortAudioListByFolderName(isAsc)
-                                "Album name" -> mainViewModel.sortAudioListByAlbumName(isAsc)
-                                "Artist name" -> mainViewModel.sortAudioListByArtistName(isAsc)
-                                "Date added" -> mainViewModel.sortAudioListByDateAdded(isAsc)
-                                "Date modified" -> mainViewModel.sortAudioListByDateModified(isAsc)
-                            }
+                            mainViewModel.setIsAsc(it)
+                            mainViewModel.sortAudioListBy()
                         },
                         onClose = {
                             mainUiState.value = MainUiState(MainBottomSheetContent.None)
