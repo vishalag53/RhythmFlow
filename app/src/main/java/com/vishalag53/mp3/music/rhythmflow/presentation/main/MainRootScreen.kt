@@ -67,13 +67,9 @@ import kotlinx.coroutines.launch
 fun MainRootScreen(
     tab: String,
     navController: NavHostController,
-    audioList: List<Audio>,
     startNotificationService: () -> Unit,
     basePlayerViewModel: BasePlayerViewModel,
     menuViewModel: MenuViewModel,
-    updateDisplayName: (String, String) -> Unit,
-    refreshAudioList: () -> Unit,
-    isRefresh: Boolean,
     mainViewModel: MainViewModel
 ) {
     val screenHeight = LocalConfiguration.current.screenHeightDp.dp
@@ -86,7 +82,7 @@ fun MainRootScreen(
         if (result.resultCode == Activity.RESULT_OK) {
             pendingRename.value?.let { (newName, audio) ->
                 renameDisplayName(newName, audio, context)
-                updateDisplayName(audio.id, newName)
+                mainViewModel.updateDisplayName(audio.id, newName)
                 Toast.makeText(context, "Renamed to $newName", Toast.LENGTH_SHORT).show()
                 pendingRename.value = null
             }
@@ -188,7 +184,8 @@ fun MainRootScreen(
             MainBottomSheetContent.SortBy -> {
                 showSheet.value = true
                 sheetContent.value = {
-                    modalBottomSheetBackgroundColor.value = MaterialTheme.colorScheme.primaryContainer
+                    modalBottomSheetBackgroundColor.value =
+                        MaterialTheme.colorScheme.primaryContainer
                     SortBy(
                         sortBy = mainViewModel.sortBy.value,
                         isAsc = mainViewModel.isAsc.value,
@@ -249,14 +246,13 @@ fun MainRootScreen(
             when (tab) {
                 K.SONGS -> SongsRootScreen(
                     navController = navController,
-                    audioList = audioList,
                     basePlayerViewModel = basePlayerViewModel,
                     startNotificationService = startNotificationService,
                     onMenuClick = {
                         mainUiState.value = MainUiState(MainBottomSheetContent.Menu)
                     },
+                    mainViewModel = mainViewModel,
                     menuViewModel = menuViewModel,
-                    refreshAudioList = refreshAudioList,
                     onSortByClick = {
                         mainUiState.value = MainUiState(MainBottomSheetContent.SortBy)
                     }
@@ -302,7 +298,11 @@ fun MainRootScreen(
                             },
                             onRenameSuccess = {
                                 renameDisplayName(newDisplayName, audio, context)
-                                Toast.makeText(context, "Renamed to $newDisplayName", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(
+                                    context,
+                                    "Renamed to $newDisplayName",
+                                    Toast.LENGTH_SHORT
+                                ).show()
                             }
                         )
                     },
@@ -310,7 +310,7 @@ fun MainRootScreen(
                 )
             }
 
-            if (isRefresh) {
+            if (mainViewModel.isRefresh.collectAsStateWithLifecycle().value) {
                 Loading(backgroundColor = Color.Black.copy(alpha = 0.3F))
             }
         }

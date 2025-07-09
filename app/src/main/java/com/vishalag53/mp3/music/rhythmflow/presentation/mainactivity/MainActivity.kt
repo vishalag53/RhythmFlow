@@ -11,7 +11,6 @@ import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.LaunchedEffect
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
@@ -69,13 +68,6 @@ class MainActivity : ComponentActivity() {
                 }
                 if (permissionState.status.isGranted) {
                     val isLoading = mainViewModel.isLoading.collectAsStateWithLifecycle()
-                    var audioList = mainViewModel.audioList.collectAsStateWithLifecycle()
-
-                    LaunchedEffect(Unit) {
-                        if (audioList.value.isEmpty()) {
-                            mainViewModel.loadAudioData()
-                        }
-                    }
 
                     if (isLoading.value) {
                         Loading(
@@ -84,16 +76,10 @@ class MainActivity : ComponentActivity() {
                     } else {
                         RootNavigation(
                             navController = navController,
-                            audioList = audioList.value,
                             mainViewModel = mainViewModel,
                             basePlayerViewModel = basePlayerViewModel,
                             menuViewModel = menuViewModel,
-                            startNotificationService = { startService() },
-                            updateDisplayName = { audioId, newDisplayName ->
-                                mainViewModel.updateDisplayName(audioId, newDisplayName)
-                            },
-                            refreshAudioList = { mainViewModel.refreshAudioList() },
-                            isRefresh = mainViewModel.isRefresh.collectAsStateWithLifecycle().value
+                            startNotificationService = { startService() }
                         )
                     }
                 } else {

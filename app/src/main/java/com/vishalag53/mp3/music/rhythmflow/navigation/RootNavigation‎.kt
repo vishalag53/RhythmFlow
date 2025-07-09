@@ -23,28 +23,20 @@ import kotlin.reflect.typeOf
 @Composable
 fun RootNavigation(
     navController: NavHostController,
-    audioList: List<Audio>,
     mainViewModel: MainViewModel,
     startNotificationService: () -> Unit,
     basePlayerViewModel: BasePlayerViewModel,
-    menuViewModel: MenuViewModel,
-    updateDisplayName: (String, String) -> Unit,
-    refreshAudioList: () -> Unit,
-    isRefresh: Boolean
+    menuViewModel: MenuViewModel
 ) {
     NavHost(
         navController = navController, startDestination = Screens.Main.Songs
     ) {
         mainGraph(
             navController = navController,
-            audioList = audioList,
             startNotificationService = startNotificationService,
             basePlayerViewModel = basePlayerViewModel,
             menuViewModel = menuViewModel,
-            updateDisplayName= updateDisplayName,
-            mainViewModel = mainViewModel,
-            refreshAudioList = refreshAudioList,
-            isRefresh = isRefresh
+            mainViewModel = mainViewModel
         )
 
         playerGraph(
@@ -66,26 +58,18 @@ fun RootNavigation(
 @RequiresApi(Build.VERSION_CODES.Q)
 private fun NavGraphBuilder.mainGraph(
     navController: NavHostController,
-    audioList: List<Audio>,
     startNotificationService: () -> Unit,
     basePlayerViewModel: BasePlayerViewModel,
     menuViewModel: MenuViewModel,
-    updateDisplayName: (String, String) -> Unit,
-    refreshAudioList: () -> Unit,
-    isRefresh: Boolean,
     mainViewModel: MainViewModel,
 ) {
     composable<Screens.Main.Songs> {
         MainRootScreen(
             tab = K.SONGS,
             navController = navController,
-            audioList = audioList,
             basePlayerViewModel = basePlayerViewModel,
             startNotificationService = startNotificationService,
             menuViewModel = menuViewModel,
-            updateDisplayName = updateDisplayName,
-            refreshAudioList = refreshAudioList,
-            isRefresh = isRefresh,
             mainViewModel = mainViewModel
         )
     }

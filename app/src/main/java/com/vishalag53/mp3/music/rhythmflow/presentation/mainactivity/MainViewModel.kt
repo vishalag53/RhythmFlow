@@ -44,12 +44,16 @@ class MainViewModel @Inject constructor(
         }
     }
 
+    init {
+        loadAudioData()
+    }
+
     fun loadAudioData() {
         viewModelScope.launch {
             _isLoading.value = true
             val audio = repository.getAudioData()
             _audioList.value = audio
-            delay(1000L)
+            delay(300L)
             _isLoading.value = false
         }
     }
@@ -67,10 +71,10 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch {
             _isRefresh.value = true
             _audioList.value = repository.getAudioData()
-            delay(1000L)
+            delay(300L)
+            sortAudioListBy()
             _isRefresh.value = false
         }
-        sortAudioListBy()
     }
 
     fun setSortBy(sortBy: String) {

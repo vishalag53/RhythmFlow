@@ -9,29 +9,30 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
-import com.vishalag53.mp3.music.rhythmflow.data.local.model.Audio
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.AudioItem
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.baseplayer.BasePlayerViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.menu.MenuViewModel
+import com.vishalag53.mp3.music.rhythmflow.presentation.mainactivity.MainViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.songs.components.SongsTopBar
 
 @Composable
 fun SongsRootScreen(
     navController: NavHostController,
-    audioList: List<Audio>,
     startNotificationService: () -> Unit,
     basePlayerViewModel: BasePlayerViewModel,
     onMenuClick: () -> Unit,
     menuViewModel: MenuViewModel,
-    refreshAudioList: () -> Unit,
-    onSortByClick: () -> Unit
+    onSortByClick: () -> Unit,
+    mainViewModel: MainViewModel
 ) {
+    val audioList = mainViewModel.audioList.collectAsStateWithLifecycle().value
     Scaffold(
         topBar = {
             SongsTopBar(
                 audioList = audioList,
-                refreshAudioList = refreshAudioList,
+                refreshAudioList = { mainViewModel.refreshAudioList() },
                 onSortByClick = onSortByClick
             )
         },
