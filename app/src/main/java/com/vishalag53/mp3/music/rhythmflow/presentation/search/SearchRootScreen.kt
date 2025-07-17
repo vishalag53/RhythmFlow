@@ -1,42 +1,24 @@
 package com.vishalag53.mp3.music.rhythmflow.presentation.search
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.vishalag53.mp3.music.rhythmflow.domain.core.K
@@ -46,14 +28,13 @@ import com.vishalag53.mp3.music.rhythmflow.presentation.core.baseplayer.BasePlay
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.baseplayer.BasePlayerViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.menu.MenuViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.mainactivity.MainViewModel
-import com.vishalag53.mp3.music.rhythmflow.presentation.core.playingqueue.SongQueueListsItem
+import com.vishalag53.mp3.music.rhythmflow.presentation.parent.ParentBottomSheetContent
+import com.vishalag53.mp3.music.rhythmflow.presentation.parent.ParentUiState
+import com.vishalag53.mp3.music.rhythmflow.presentation.parent.ParentViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.smallplayer.SmallPlayerRootScreen
 import com.vishalag53.mp3.music.rhythmflow.presentation.search.components.SearchAppBar
-import com.vishalag53.mp3.music.rhythmflow.presentation.search.components.SelectTabSearchModalBottomSheet
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchRootScreen(
     navController: NavHostController,
@@ -61,34 +42,13 @@ fun SearchRootScreen(
     mainViewModel: MainViewModel,
     startNotificationService: () -> Unit,
     basePlayerViewModel: BasePlayerViewModel,
-    menuViewModel: MenuViewModel
+    menuViewModel: MenuViewModel,
+    parentUiState: MutableState<ParentUiState>,
+    searchViewModel: SearchViewModel,
+    parentViewModel: ParentViewModel
 ) {
-    val screenHeight = LocalConfiguration.current.screenHeightDp.dp
-
-    val searchUiStateSaver: Saver<SearchUiState, *> = Saver(save = {
-        listOf(
-            it.sheet::class.simpleName ?: ""
-        )
-    }, restore = {
-        val sheet = when (it.firstOrNull()) {
-            SearchBottomSheetContent.PlayingQueue::class.simpleName -> SearchBottomSheetContent.PlayingQueue
-            SearchBottomSheetContent.TabSelector::class.simpleName -> SearchBottomSheetContent.TabSelector
-            else -> SearchBottomSheetContent.None
-        }
-        SearchUiState(sheet = sheet)
-    })
-    val searchUiState = rememberSaveable(stateSaver = searchUiStateSaver) {
-        mutableStateOf(SearchUiState())
-    }
-    val searchViewModel = hiltViewModel<SearchViewModel>()
     val audioList = mainViewModel.audioList.collectAsStateWithLifecycle().value
     var searchText by rememberSaveable { mutableStateOf("") }
-
-    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-    val sheetContent = remember { mutableStateOf<@Composable () -> Unit>({}) }
-    val showSheet = rememberSaveable { mutableStateOf(false) }
-    val scope = rememberCoroutineScope()
-    val modalBottomSheetBackgroundColor = remember { mutableStateOf(Color(0xFF736659)) }
 
     val selectTabName = searchViewModel.selectTabName.collectAsStateWithLifecycle().value
     val songs = searchViewModel.searchSongList.collectAsStateWithLifecycle().value
@@ -115,48 +75,6 @@ fun SearchRootScreen(
         searchViewModel.searchQuery(searchText)
     }
 
-    LaunchedEffect(searchUiState.value.sheet) {
-        when (searchUiState.value.sheet) {
-            SearchBottomSheetContent.PlayingQueue -> {
-                modalBottomSheetBackgroundColor.value = Color(0xFFFDCF9E)
-                showSheet.value = true
-                sheetContent.value = {
-                    SongQueueListsItem(
-                        audioList = searchViewModel.audioList.collectAsStateWithLifecycle().value
-                    )
-                }
-                scope.launch { sheetState.show() }
-            }
-
-            SearchBottomSheetContent.TabSelector -> {
-                showSheet.value = true
-                sheetContent.value = {
-                    modalBottomSheetBackgroundColor.value = MaterialTheme.colorScheme.primaryContainer
-                    SelectTabSearchModalBottomSheet(
-                        songsSize = songs.size,
-                        albumSize = albums.size,
-                        artistSize = artists.size,
-                        folderSize = folders.size,
-                        playlistSize = playlists.size,
-                        onClick = {
-                            searchUiState.value = SearchUiState()
-                        },
-                        onSelectClick = { selected ->
-                            searchViewModel.setSelectTabName(selected)
-                        },
-                        selectTabName = selectTabName
-                    )
-                }
-                scope.launch { sheetState.show() }
-            }
-
-            SearchBottomSheetContent.None -> {
-                showSheet.value = false
-                scope.launch { sheetState.hide() }
-            }
-        }
-    }
-
     Scaffold(
         topBar = {
             SearchAppBar(
@@ -169,7 +87,7 @@ fun SearchRootScreen(
                     searchViewModel.searchQuery(query)
                 },
                 onClick = {
-                    searchUiState.value = SearchUiState(SearchBottomSheetContent.TabSelector)
+                    parentUiState.value = ParentUiState(ParentBottomSheetContent.SearchTabSelector)
                 },
                 selectTabName = tabDisplayName
             )
@@ -187,7 +105,7 @@ fun SearchRootScreen(
                     audioList = basePlayerViewModel.audioList.collectAsState().value,
                     index = basePlayerViewModel.currentSelectedAudioIndex.collectAsState().value + 1,
                     onClick = {
-                        searchUiState.value = SearchUiState(SearchBottomSheetContent.PlayingQueue)
+                        parentUiState.value = ParentUiState(ParentBottomSheetContent.PlayingQueue)
                     }
                 ) {
                     navController.navigate(Screens.Player)
@@ -247,43 +165,6 @@ fun SearchRootScreen(
                         }
                     }
                 }
-            }
-        }
-    }
-
-    if (showSheet.value) {
-        ModalBottomSheet(
-            modifier = Modifier.statusBarsPadding(),
-            onDismissRequest = {
-                searchUiState.value = SearchUiState()
-                scope.launch { sheetState.hide() }
-            },
-            sheetState = sheetState,
-            containerColor = modalBottomSheetBackgroundColor.value,
-            dragHandle = {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(20.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .width(40.dp)
-                            .height(4.dp)
-                            .clip(RoundedCornerShape(50))
-                            .background(Color.DarkGray)
-                    )
-                }
-            }
-        ) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .heightIn(max = screenHeight * 0.6F)
-                    .background(modalBottomSheetBackgroundColor.value)
-            ) {
-                sheetContent.value()
             }
         }
     }

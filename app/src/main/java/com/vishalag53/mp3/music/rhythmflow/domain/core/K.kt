@@ -12,6 +12,9 @@ object K {
     const val THEME_BLUE = "Blue"
     const val THEME_GREEN = "Green"
 
+    const val PLAYER = "Player"
+    const val MAIN = "Main"
+
     const val NOTIFICATION_ID = 121
     const val NOTIFICATION_CHANNEL_NAME = "RhythmFlow Channel"
     const val NOTIFICATION_CHANNEL_ID = "RhythmFlow Channel Id"

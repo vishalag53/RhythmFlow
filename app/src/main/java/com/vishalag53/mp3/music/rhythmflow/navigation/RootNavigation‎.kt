@@ -2,8 +2,8 @@ package com.vishalag53.mp3.music.rhythmflow.navigation
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -13,19 +13,24 @@ import com.vishalag53.mp3.music.rhythmflow.presentation.core.baseplayer.BasePlay
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.menu.MenuViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.main.MainRootScreen
 import com.vishalag53.mp3.music.rhythmflow.presentation.mainactivity.MainViewModel
+import com.vishalag53.mp3.music.rhythmflow.presentation.parent.ParentUiState
+import com.vishalag53.mp3.music.rhythmflow.presentation.parent.ParentViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.player.PlayerRootScreen
 import com.vishalag53.mp3.music.rhythmflow.presentation.search.SearchRootScreen
+import com.vishalag53.mp3.music.rhythmflow.presentation.search.SearchViewModel
 import kotlin.reflect.typeOf
 
 @RequiresApi(Build.VERSION_CODES.Q)
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun RootNavigation(
     navController: NavHostController,
     mainViewModel: MainViewModel,
     startNotificationService: () -> Unit,
     basePlayerViewModel: BasePlayerViewModel,
-    menuViewModel: MenuViewModel
+    menuViewModel: MenuViewModel,
+    parentUiState: MutableState<ParentUiState>,
+    searchViewModel: SearchViewModel,
+    parentViewModel: ParentViewModel
 ) {
     NavHost(
         navController = navController, startDestination = Screens.Main.Songs
@@ -35,13 +40,17 @@ fun RootNavigation(
             startNotificationService = startNotificationService,
             basePlayerViewModel = basePlayerViewModel,
             menuViewModel = menuViewModel,
-            mainViewModel = mainViewModel
+            mainViewModel = mainViewModel,
+            parentUiState = parentUiState,
+            parentViewModel = parentViewModel
         )
 
         playerGraph(
             navController = navController,
             basePlayerViewModel = basePlayerViewModel,
-            menuViewModel = menuViewModel
+            menuViewModel = menuViewModel,
+            parentUiState = parentUiState,
+            parentViewModel = parentViewModel
         )
 
         search(
@@ -49,7 +58,10 @@ fun RootNavigation(
             mainViewModel = mainViewModel,
             startNotificationService = startNotificationService,
             basePlayerViewModel = basePlayerViewModel,
-            menuViewModel = menuViewModel
+            menuViewModel = menuViewModel,
+            parentUiState = parentUiState,
+            searchViewModel = searchViewModel,
+            parentViewModel = parentViewModel
         )
     }
 }
@@ -61,6 +73,8 @@ private fun NavGraphBuilder.mainGraph(
     basePlayerViewModel: BasePlayerViewModel,
     menuViewModel: MenuViewModel,
     mainViewModel: MainViewModel,
+    parentUiState: MutableState<ParentUiState>,
+    parentViewModel: ParentViewModel,
 ) {
     composable<Screens.Main.Songs> {
         MainRootScreen(
@@ -68,7 +82,9 @@ private fun NavGraphBuilder.mainGraph(
             basePlayerViewModel = basePlayerViewModel,
             startNotificationService = startNotificationService,
             menuViewModel = menuViewModel,
-            mainViewModel = mainViewModel
+            mainViewModel = mainViewModel,
+            parentUiState = parentUiState,
+            parentViewModel = parentViewModel
         )
     }
 }
@@ -77,6 +93,8 @@ private fun NavGraphBuilder.playerGraph(
     navController: NavHostController,
     basePlayerViewModel: BasePlayerViewModel,
     menuViewModel: MenuViewModel,
+    parentUiState: MutableState<ParentUiState>,
+    parentViewModel: ParentViewModel,
 ) {
     composable<Screens.Player>(
         typeMap = mapOf(
@@ -88,7 +106,9 @@ private fun NavGraphBuilder.playerGraph(
                 navController.popBackStack()
             },
             basePlayerViewModel = basePlayerViewModel,
-            menuViewModel = menuViewModel
+            menuViewModel = menuViewModel,
+            parentUiState = parentUiState,
+            parentViewModel = parentViewModel
         )
     }
 }
@@ -99,6 +119,9 @@ private fun NavGraphBuilder.search(
     startNotificationService: () -> Unit,
     basePlayerViewModel: BasePlayerViewModel,
     menuViewModel: MenuViewModel,
+    parentUiState: MutableState<ParentUiState>,
+    searchViewModel: SearchViewModel,
+    parentViewModel: ParentViewModel,
 ) {
     composable<Screens.Search> {
         SearchRootScreen(
@@ -109,7 +132,10 @@ private fun NavGraphBuilder.search(
             mainViewModel = mainViewModel,
             basePlayerViewModel = basePlayerViewModel,
             startNotificationService = startNotificationService,
-            menuViewModel = menuViewModel
+            menuViewModel = menuViewModel,
+            parentUiState = parentUiState,
+            searchViewModel = searchViewModel,
+            parentViewModel = parentViewModel
         )
     }
 }

@@ -23,11 +23,13 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import com.vishalag53.mp3.music.rhythmflow.domain.musicplayer.service.RhythmFlowService
-import com.vishalag53.mp3.music.rhythmflow.navigation.RootNavigation
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.Loading
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.baseplayer.BasePlayerViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.menu.MenuViewModel
+import com.vishalag53.mp3.music.rhythmflow.presentation.parent.Parent
+import com.vishalag53.mp3.music.rhythmflow.presentation.parent.ParentViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.permission.AskStoragePermission
+import com.vishalag53.mp3.music.rhythmflow.presentation.search.SearchViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.theme.RhythmFlowTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -54,6 +56,8 @@ class MainActivity : ComponentActivity() {
                 val lifecycleOwner = LocalLifecycleOwner.current
                 val basePlayerViewModel by viewModels<BasePlayerViewModel>()
                 val menuViewModel by viewModels<MenuViewModel>()
+                val searchViewModel by viewModels<SearchViewModel>()
+                val parentViewModel by viewModels<ParentViewModel>()
 
                 DisposableEffect(key1 = lifecycleOwner) {
                     val observer = LifecycleEventObserver { _, event ->
@@ -74,12 +78,14 @@ class MainActivity : ComponentActivity() {
                             backgroundColor = MaterialTheme.colorScheme.background
                         )
                     } else {
-                        RootNavigation(
+                        Parent(
                             navController = navController,
                             mainViewModel = mainViewModel,
                             basePlayerViewModel = basePlayerViewModel,
                             menuViewModel = menuViewModel,
-                            startNotificationService = { startService() }
+                            startNotificationService = { startService() },
+                            searchViewModel = searchViewModel,
+                            parentViewModel = parentViewModel
                         )
                     }
                 } else {

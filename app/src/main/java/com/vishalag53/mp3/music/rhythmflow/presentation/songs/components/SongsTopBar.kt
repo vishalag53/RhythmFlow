@@ -13,6 +13,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -24,13 +25,15 @@ import androidx.compose.ui.unit.sp
 import com.vishalag53.mp3.music.rhythmflow.R
 import com.vishalag53.mp3.music.rhythmflow.domain.core.totalAudioTime
 import com.vishalag53.mp3.music.rhythmflow.data.local.model.Audio
+import com.vishalag53.mp3.music.rhythmflow.presentation.parent.ParentUiState
 import com.vishalag53.mp3.music.rhythmflow.presentation.songs.songallmenu.SongAllMenu
 
 @Composable
 fun SongsTopBar(
     audioList: List<Audio>,
     refreshAudioList: () -> Unit,
-    onSortByClick: () -> Unit
+    onSortByClick: () -> Unit,
+    parentUiState: MutableState<ParentUiState>
 ) {
     val context = LocalContext.current
 
@@ -81,7 +84,8 @@ fun SongsTopBar(
 
         SongAllMenu(
             onSortByClick = onSortByClick,
-            refreshAudioList = refreshAudioList
+            refreshAudioList = refreshAudioList,
+            parentUiState = parentUiState
         )
     }
 }

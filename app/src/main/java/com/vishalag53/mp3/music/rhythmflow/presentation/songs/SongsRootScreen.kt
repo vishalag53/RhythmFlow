@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
@@ -15,6 +16,7 @@ import com.vishalag53.mp3.music.rhythmflow.presentation.core.AudioItem
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.baseplayer.BasePlayerViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.menu.MenuViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.mainactivity.MainViewModel
+import com.vishalag53.mp3.music.rhythmflow.presentation.parent.ParentUiState
 import com.vishalag53.mp3.music.rhythmflow.presentation.songs.components.SongsTopBar
 
 @Composable
@@ -25,7 +27,8 @@ fun SongsRootScreen(
     onMenuClick: () -> Unit,
     menuViewModel: MenuViewModel,
     onSortByClick: () -> Unit,
-    mainViewModel: MainViewModel
+    mainViewModel: MainViewModel,
+    parentUiState: MutableState<ParentUiState>
 ) {
     val audioList = mainViewModel.audioList.collectAsStateWithLifecycle().value
     Scaffold(
@@ -33,7 +36,8 @@ fun SongsRootScreen(
             SongsTopBar(
                 audioList = audioList,
                 refreshAudioList = { mainViewModel.refreshAudioList() },
-                onSortByClick = onSortByClick
+                onSortByClick = onSortByClick,
+                parentUiState = parentUiState
             )
         },
     ) { innerPadding ->

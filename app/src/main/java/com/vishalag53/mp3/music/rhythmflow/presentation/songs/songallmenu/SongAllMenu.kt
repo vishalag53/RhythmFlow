@@ -12,6 +12,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -22,11 +23,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.vishalag53.mp3.music.rhythmflow.R
+import com.vishalag53.mp3.music.rhythmflow.presentation.parent.ParentBottomSheetContent
+import com.vishalag53.mp3.music.rhythmflow.presentation.parent.ParentUiState
 
 @Composable
 fun SongAllMenu(
     refreshAudioList: () -> Unit,
-    onSortByClick: () -> Unit
+    onSortByClick: () -> Unit,
+    parentUiState: MutableState<ParentUiState>
 ) {
     var expanded by remember { mutableStateOf(false) }
 
@@ -111,7 +115,7 @@ fun SongAllMenu(
                     )
                 },
                 onClick = {
-
+                    parentUiState.value = ParentUiState(ParentBottomSheetContent.PlaybackSpeed)
                     expanded = false
                 }
             )

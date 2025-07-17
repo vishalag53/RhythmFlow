@@ -9,81 +9,45 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableFloatStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.Saver
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.vishalag53.mp3.music.rhythmflow.domain.core.K
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.AudioProgressBar
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.AudioTitleDisplayName
 import com.vishalag53.mp3.music.rhythmflow.domain.core.stringCapitalized
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.PlayerQueue
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.baseplayer.BasePlayerEvents
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.baseplayer.BasePlayerViewModel
-import com.vishalag53.mp3.music.rhythmflow.presentation.core.menu.Menu
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.menu.MenuViewModel
-import com.vishalag53.mp3.music.rhythmflow.presentation.core.playbackspeed.PlaybackSpeed
 import com.vishalag53.mp3.music.rhythmflow.presentation.player.components.PlayerControllers
 import com.vishalag53.mp3.music.rhythmflow.presentation.player.components.PlayerPlaybackSpeed
 import com.vishalag53.mp3.music.rhythmflow.presentation.player.components.PlayerTopBar
-import com.vishalag53.mp3.music.rhythmflow.presentation.core.playingqueue.SongQueueListsItem
-import com.vishalag53.mp3.music.rhythmflow.presentation.core.repeat.Repeat
-import com.vishalag53.mp3.music.rhythmflow.presentation.core.songinfo.SongInfoRootScreen
-import kotlinx.coroutines.launch
+import com.vishalag53.mp3.music.rhythmflow.presentation.parent.ParentBottomSheetContent
+import com.vishalag53.mp3.music.rhythmflow.presentation.parent.ParentUiState
+import com.vishalag53.mp3.music.rhythmflow.presentation.parent.ParentViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PlayerRootScreen(
     navigateBack: () -> Unit,
     basePlayerViewModel: BasePlayerViewModel,
-    menuViewModel: MenuViewModel
+    menuViewModel: MenuViewModel,
+    parentUiState: MutableState<ParentUiState>,
+    parentViewModel: ParentViewModel
 ) {
-    val screenHeight = LocalConfiguration.current.screenHeightDp.dp
     val audio = basePlayerViewModel.currentSelectedAudio.collectAsStateWithLifecycle().value
-
-    val playerUiStateSaver: Saver<PlayerUiState, *> = Saver(save = {
-        listOf(it.sheet::class.simpleName ?: "")
-    }, restore = {
-        val sheet = when (it.firstOrNull()) {
-            PlayerBottomSheetContent.PlayerQueue::class.simpleName -> PlayerBottomSheetContent.PlayerQueue
-            PlayerBottomSheetContent.SongInfo::class.simpleName -> PlayerBottomSheetContent.SongInfo
-            PlayerBottomSheetContent.Repeat::class.simpleName -> PlayerBottomSheetContent.Repeat
-            PlayerBottomSheetContent.PlaybackSpeed::class.simpleName -> PlayerBottomSheetContent.PlaybackSpeed
-            PlayerBottomSheetContent.PlayingMenu::class.simpleName -> PlayerBottomSheetContent.PlayingMenu
-            else -> PlayerBottomSheetContent.None
-        }
-        PlayerUiState(sheet = sheet)
-    })
-
-    val playerUiState = rememberSaveable(stateSaver = playerUiStateSaver) {
-        mutableStateOf(PlayerUiState())
-    }
-    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-    val showSheet = rememberSaveable { mutableStateOf(false) }
-    val sheetContent = remember { mutableStateOf<@Composable () -> Unit>({}) }
-    val scope = rememberCoroutineScope()
-    val modalBottomSheetBackgroundColor = remember { mutableStateOf(Color(0xFF736659)) }
 
     val playbackSpeed = remember { mutableFloatStateOf(1.0F) }
 
@@ -91,111 +55,13 @@ fun PlayerRootScreen(
         menuViewModel.setAudio(audio)
     }
 
-    LaunchedEffect(playerUiState.value.sheet) {
-        when (playerUiState.value.sheet) {
-            PlayerBottomSheetContent.PlayerQueue -> {
-                modalBottomSheetBackgroundColor.value = Color(0xFFFDCF9E)
-                showSheet.value = true
-                sheetContent.value = {
-                    SongQueueListsItem(audioList = basePlayerViewModel.audioList.collectAsStateWithLifecycle().value)
-                }
-                scope.launch { sheetState.show() }
-            }
-
-            PlayerBottomSheetContent.SongInfo -> {
-                modalBottomSheetBackgroundColor.value = Color(0xFF736659)
-                showSheet.value = true
-                sheetContent.value = {
-                    SongInfoRootScreen(audio = menuViewModel.audio.collectAsStateWithLifecycle().value)
-                }
-                scope.launch { sheetState.show() }
-            }
-
-            PlayerBottomSheetContent.PlaybackSpeed -> {
-                showSheet.value = true
-                modalBottomSheetBackgroundColor.value = Color(0xFFFDCF9E)
-                sheetContent.value = {
-                    PlaybackSpeed(
-                        onClose = {
-                            playerUiState.value = PlayerUiState(PlayerBottomSheetContent.None)
-                        },
-                        playbackSpeed = playbackSpeed.floatValue,
-                        onPlaybackSpeedChange = { speed ->
-                            playbackSpeed.floatValue = speed
-                        },
-                        onPlaybackSpeedChangeBasePlayer = { speed ->
-                            basePlayerViewModel.onBasePlayerEvents(
-                                BasePlayerEvents.PlayBackSpeed(
-                                    speed
-                                )
-                            )
-                        }
-                    )
-                }
-                scope.launch { sheetState.show() }
-            }
-
-            PlayerBottomSheetContent.PlayingMenu -> {
-                showSheet.value = true
-                modalBottomSheetBackgroundColor.value = Color(0xFFFDCF9E)
-                sheetContent.value = {
-                    Menu(
-                        onInfoClick = {
-                            playerUiState.value = PlayerUiState(PlayerBottomSheetContent.SongInfo)
-                        },
-                        onRepeatClick = {
-                            playerUiState.value = PlayerUiState(PlayerBottomSheetContent.Repeat)
-                        },
-                        onShuffleClick = {
-                            basePlayerViewModel.onBasePlayerEvents(BasePlayerEvents.SetShuffle(it))
-                        },
-                        onClose = {
-                            playerUiState.value = PlayerUiState(PlayerBottomSheetContent.None)
-                        },
-                        menuViewModel = menuViewModel,
-                        backgroundColor = Color(0xFF736659),
-                        backgroundIconColor = Color(0xFF35363B),
-                        iconColor = Color(0xFFFDCF9E),
-                        textColor = Color(0xFF35363B),
-                        isSongMenu = false
-                    )
-                }
-                scope.launch { sheetState.show() }
-            }
-
-            PlayerBottomSheetContent.Repeat -> {
-                showSheet.value = true
-                modalBottomSheetBackgroundColor.value = Color(0xFFFDCF9E)
-                sheetContent.value = {
-                    Repeat(
-                        repeatMode = menuViewModel.repeatMode.collectAsStateWithLifecycle().value,
-                        onClose = {
-                            playerUiState.value = PlayerUiState(PlayerBottomSheetContent.None)
-                        },
-                        onRepeatChange = { repeat ->
-                            menuViewModel.setRepeatMode(repeat)
-                        },
-                        onRepeatChangeBasePlayer = {
-                            basePlayerViewModel.onBasePlayerEvents(BasePlayerEvents.SetRepeatMode(it))
-                        }
-                    )
-                }
-                scope.launch { sheetState.show() }
-            }
-
-            PlayerBottomSheetContent.None -> {
-                showSheet.value = false
-                scope.launch { sheetState.hide() }
-            }
-        }
-    }
-
     Scaffold(
         topBar = {
             PlayerTopBar(
                 navigateBack = navigateBack,
                 onMenuClick = {
-                    playerUiState.value = PlayerUiState(PlayerBottomSheetContent.PlayingMenu)
+                    parentViewModel.setMenuFrom(K.PLAYER)
+                    parentUiState.value = ParentUiState(ParentBottomSheetContent.Menu)
                 }
             )
         },
@@ -238,8 +104,7 @@ fun PlayerRootScreen(
                     Spacer(modifier = Modifier.width(4.dp))
                     PlayerPlaybackSpeed(
                         onOpen = {
-                            playerUiState.value =
-                                PlayerUiState(PlayerBottomSheetContent.PlaybackSpeed)
+                            parentUiState.value = ParentUiState(ParentBottomSheetContent.PlaybackSpeed)
                         },
                         playbackSpeed = playbackSpeed.floatValue
                     )
@@ -248,8 +113,7 @@ fun PlayerRootScreen(
                         index = basePlayerViewModel.currentSelectedAudioIndex.collectAsStateWithLifecycle().value + 1,
                         length = basePlayerViewModel.audioList.collectAsStateWithLifecycle().value.size,
                         onClick = {
-                            playerUiState.value =
-                                PlayerUiState(PlayerBottomSheetContent.PlayerQueue)
+                            parentUiState.value = ParentUiState(ParentBottomSheetContent.PlayingQueue)
                         },
                         color = Color(0xFFFDCF9E)
                     )
@@ -293,42 +157,6 @@ fun PlayerRootScreen(
                 )
 
                 Spacer(modifier = Modifier.height(10.dp))
-            }
-        }
-    }
-
-    if (showSheet.value) {
-        ModalBottomSheet(
-            modifier = Modifier.statusBarsPadding(),
-            onDismissRequest = {
-                playerUiState.value = PlayerUiState()
-                scope.launch { sheetState.hide() }
-            },
-            sheetState = sheetState,
-            containerColor = modalBottomSheetBackgroundColor.value,
-            dragHandle = {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(20.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .width(40.dp)
-                            .height(4.dp)
-                            .clip(RoundedCornerShape(50))
-                            .background(Color.DarkGray)
-                    )
-                }
-            }) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .heightIn(max = screenHeight * 0.7F)
-                    .background(modalBottomSheetBackgroundColor.value)
-            ) {
-                sheetContent.value()
             }
         }
     }
