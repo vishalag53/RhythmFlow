@@ -130,8 +130,7 @@ fun MainRootScreen(
             }
 
             if (menuViewModel.showRenameBox.collectAsStateWithLifecycle().value) {
-                val currentNameWithExtension =
-                    menuViewModel.audio.collectAsStateWithLifecycle().value.displayName
+                val currentNameWithExtension = menuViewModel.audio.collectAsStateWithLifecycle().value.displayName
 
                 val currentName = if (currentNameWithExtension.contains(".")) {
                     currentNameWithExtension.substringBeforeLast(".")
@@ -152,8 +151,7 @@ fun MainRootScreen(
                         menuViewModel.setRenameBox(false)
                     },
                     onRename = { editDisplayName ->
-                        val newDisplayName =
-                            editDisplayName.trim() + if (extension.isNotEmpty()) ".$extension" else ""
+                        val newDisplayName = editDisplayName.trim() + if (extension.isNotEmpty()) ".$extension" else ""
                         val audio = menuViewModel.audio.value
 
                         requestRenamePermission(
@@ -168,11 +166,7 @@ fun MainRootScreen(
                             },
                             onRenameSuccess = {
                                 renameDisplayName(newDisplayName, audio, context)
-                                Toast.makeText(
-                                    context,
-                                    "Renamed to $newDisplayName",
-                                    Toast.LENGTH_SHORT
-                                ).show()
+                                Toast.makeText(context, "Renamed to $newDisplayName", Toast.LENGTH_SHORT).show()
                             }
                         )
                     },

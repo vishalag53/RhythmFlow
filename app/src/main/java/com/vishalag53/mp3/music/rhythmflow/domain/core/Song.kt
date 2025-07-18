@@ -94,11 +94,32 @@ fun requestRenamePermission(
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.Q)
 fun renameDisplayName(editDisplayName: String, audio: Audio, context: Context) {
     val contentValues = ContentValues().apply {
         put(MediaStore.MediaColumns.DISPLAY_NAME, editDisplayName)
     }
 
     context.contentResolver.update(audio.uri, contentValues, null, null)
+}
+
+@RequiresApi(Build.VERSION_CODES.Q)
+fun requestDeletePermission(
+    audio: Audio,
+    context: Context,
+    onPermissionGranted: (IntentSender) -> Unit,
+    onDeleteSuccess: () -> Unit
+) {
+    try {
+        val rowsUpdated = context.contentResolver.delete(audio.uri, null, null)
+        if (rowsUpdated > 0) onDeleteSuccess()
+    } catch (e: RecoverableSecurityException) {
+        onPermissionGranted(e.userAction.actionIntent.intentSender)
+    } catch (e: SecurityException) {
+        e.printStackTrace()
+    }
+}
+
+
+fun deleteAudioFile(audio: Audio, context: Context) {
+    context.contentResolver.delete(audio.uri, null, null)
 }

@@ -26,7 +26,7 @@ import com.vishalag53.mp3.music.rhythmflow.domain.musicplayer.service.RhythmFlow
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.Loading
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.baseplayer.BasePlayerViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.menu.MenuViewModel
-import com.vishalag53.mp3.music.rhythmflow.presentation.parent.Parent
+import com.vishalag53.mp3.music.rhythmflow.presentation.parent.ParentRootScreen
 import com.vishalag53.mp3.music.rhythmflow.presentation.parent.ParentViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.permission.AskStoragePermission
 import com.vishalag53.mp3.music.rhythmflow.presentation.search.SearchViewModel
@@ -78,7 +78,7 @@ class MainActivity : ComponentActivity() {
                             backgroundColor = MaterialTheme.colorScheme.background
                         )
                     } else {
-                        Parent(
+                        ParentRootScreen(
                             navController = navController,
                             mainViewModel = mainViewModel,
                             basePlayerViewModel = basePlayerViewModel,

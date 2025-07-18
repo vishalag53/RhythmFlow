@@ -1,6 +1,11 @@
 package com.vishalag53.mp3.music.rhythmflow.presentation.parent
 
+import android.app.Activity
 import android.os.Build
+import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.IntentSenderRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -27,13 +32,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
+import com.vishalag53.mp3.music.rhythmflow.data.local.model.Audio
 import com.vishalag53.mp3.music.rhythmflow.domain.core.K
+import com.vishalag53.mp3.music.rhythmflow.domain.core.deleteAudioFile
+import com.vishalag53.mp3.music.rhythmflow.domain.core.requestDeletePermission
 import com.vishalag53.mp3.music.rhythmflow.navigation.RootNavigation
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.baseplayer.BasePlayerEvents
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.baseplayer.BasePlayerViewModel
+import com.vishalag53.mp3.music.rhythmflow.presentation.core.delete.Delete
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.menu.Menu
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.menu.MenuViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.playbackspeed.PlaybackSpeed
@@ -50,7 +60,7 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @RequiresApi(Build.VERSION_CODES.Q)
 @Composable
-fun Parent(
+fun ParentRootScreen(
     navController: NavHostController,
     mainViewModel: MainViewModel,
     basePlayerViewModel: BasePlayerViewModel,
@@ -60,6 +70,7 @@ fun Parent(
     parentViewModel: ParentViewModel
 ) {
     val screenHeight = LocalConfiguration.current.screenHeightDp.dp
+    val context = LocalContext.current
 
     // modal bottom sheet
     val parentUiStateSaver: Saver<ParentUiState, *> = Saver(save = {
@@ -92,6 +103,20 @@ fun Parent(
     val folders = searchViewModel.searchFolderList.collectAsStateWithLifecycle().value
     val playlists = searchViewModel.searchPlaylistList.collectAsStateWithLifecycle().value
 
+    // Delete
+    val pendingDelete = remember { mutableStateOf<Audio?>(null) }
+    val deleteLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartIntentSenderForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            pendingDelete.value?.let { audio ->
+                deleteAudioFile(audio, context)
+                mainViewModel.removeAudio(audio)
+                Toast.makeText(context, "Delete ${audio.displayName}", Toast.LENGTH_SHORT).show()
+                pendingDelete.value = null
+            }
+        }
+    }
 
     LaunchedEffect(parentUiState.value.sheet) {
         when (parentUiState.value.sheet) {
@@ -181,11 +206,12 @@ fun Parent(
                             K.PLAYER -> Color(0xFF35363B)
                             else -> MaterialTheme.colorScheme.primary
                         },
-                        isSongMenu =  when (parentViewModel.from.collectAsStateWithLifecycle().value) {
+                        isSongMenu = when (parentViewModel.from.collectAsStateWithLifecycle().value) {
                             K.MAIN -> true
                             K.PLAYER -> false
                             else -> true
-                        }
+                        },
+                        parentViewModel = parentViewModel
                     )
                 }
                 scope.launch { sheetState.show() }
@@ -287,7 +313,6 @@ fun Parent(
             modifier = Modifier.statusBarsPadding(),
             onDismissRequest = {
                 parentUiState.value = ParentUiState()
-                scope.launch { sheetState.hide() }
             },
             sheetState = sheetState,
             containerColor = modalBottomSheetBackgroundColor.value,
@@ -316,5 +341,37 @@ fun Parent(
                 sheetContent.value()
             }
         }
+    }
+
+    if (parentViewModel.showDeleteDialog.collectAsStateWithLifecycle().value) {
+        parentUiState.value = ParentUiState()
+
+        Delete(
+            displayName = parentViewModel.selectAudio.collectAsStateWithLifecycle().value.displayName,
+            onConfirmDelete = {
+                requestDeletePermission(
+                    audio = parentViewModel.selectAudio.value,
+                    context = context,
+                    onPermissionGranted = { intentSender ->
+                        pendingDelete.value = parentViewModel.selectAudio.value
+                        deleteLauncher.launch(
+                            IntentSenderRequest.Builder(intentSender).build()
+                        )
+                    },
+                    onDeleteSuccess = {
+                        deleteAudioFile(
+                            audio = parentViewModel.selectAudio.value,
+                            context = context
+                        )
+                        mainViewModel.removeAudio(parentViewModel.selectAudio.value)
+                        Toast.makeText(context, "Delete ${parentViewModel.selectAudio.value.displayName}", Toast.LENGTH_SHORT).show()
+                    }
+                )
+                parentViewModel.setShowDeleteDialog(false)
+            },
+            onDismiss = {
+                parentViewModel.setShowDeleteDialog(false)
+            }
+        )
     }
 }

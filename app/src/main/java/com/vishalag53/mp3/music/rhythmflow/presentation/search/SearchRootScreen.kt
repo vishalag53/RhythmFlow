@@ -131,7 +131,10 @@ fun SearchRootScreen(
                                 index = index,
                                 startNotificationService = startNotificationService,
                                 basePlayerViewModel = basePlayerViewModel,
-                                onMenuClick = {},
+                                onMenuClick = {
+                                    parentViewModel.setMenuFrom(K.MAIN)
+                                    parentUiState.value = ParentUiState(ParentBottomSheetContent.Menu)
+                                },
                                 menuViewModel = menuViewModel
                             )
                         }

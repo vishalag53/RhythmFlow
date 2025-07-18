@@ -52,7 +52,7 @@ class MainViewModel @Inject constructor(
         loadAudioData()
     }
 
-    fun loadAudioData() {
+    private fun loadAudioData() {
         viewModelScope.launch {
             _isLoading.value = true
             val audio = repository.getAudioData()
@@ -67,6 +67,13 @@ class MainViewModel @Inject constructor(
             list.map {
                 if (it.id == audioId) it.copy(displayName = newDisplayName) else it
             }
+        }
+        sortAudioListBy()
+    }
+
+    fun removeAudio(audio: Audio) {
+        _audioList.update { list ->
+            list.filterNot { it.id == audio.id }
         }
         sortAudioListBy()
     }

@@ -28,6 +28,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.vishalag53.mp3.music.rhythmflow.R
 import com.vishalag53.mp3.music.rhythmflow.domain.core.stringCapitalized
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.AudioTitleDisplayName
+import com.vishalag53.mp3.music.rhythmflow.presentation.parent.ParentViewModel
 
 @Composable
 fun Menu(
@@ -40,7 +41,8 @@ fun Menu(
     backgroundIconColor: Color,
     iconColor: Color,
     textColor: Color,
-    isSongMenu: Boolean
+    isSongMenu: Boolean,
+    parentViewModel: ParentViewModel
 ) {
     val audio = menuViewModel.audio.collectAsStateWithLifecycle().value
     val width = (LocalConfiguration.current.screenWidthDp.dp - 24.dp) / 2
@@ -157,7 +159,10 @@ fun Menu(
                             backgroundColor = backgroundColor,
                             backgroundIconColor = backgroundIconColor,
                             iconColor = iconColor,
-                            onClick = {},
+                            onClick = {
+                                parentViewModel.setSelectAudio(audio)
+                                parentViewModel.setShowDeleteDialog(true)
+                            },
                             textColor = textColor
                         )
                     }
