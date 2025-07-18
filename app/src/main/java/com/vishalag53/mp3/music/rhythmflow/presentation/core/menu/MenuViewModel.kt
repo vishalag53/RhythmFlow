@@ -2,6 +2,7 @@ package com.vishalag53.mp3.music.rhythmflow.presentation.core.menu
 
 import androidx.lifecycle.ViewModel
 import com.vishalag53.mp3.music.rhythmflow.data.local.model.Audio
+import com.vishalag53.mp3.music.rhythmflow.domain.core.K
 import com.vishalag53.mp3.music.rhythmflow.domain.core.dummyAudio
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,11 +17,17 @@ class MenuViewModel @Inject constructor() : ViewModel() {
     private val _shuffleText = MutableStateFlow("Shuffle Off")
     val shuffleText = _shuffleText.asStateFlow()
 
+    private val _from = MutableStateFlow(K.MAIN)
+    val from = _from.asStateFlow()
+
     private val _audio = MutableStateFlow<Audio>(dummyAudio)
     val audio = _audio.asStateFlow()
 
-    private val _showRenameBox = MutableStateFlow(false)
-    val showRenameBox = _showRenameBox.asStateFlow()
+    private val _showRenameDialog = MutableStateFlow(false)
+    val showRenameDialog = _showRenameDialog.asStateFlow()
+
+    private val _showDeleteDialog = MutableStateFlow(false)
+    val showDeleteDialog = _showDeleteDialog.asStateFlow()
 
     fun setRepeatMode(repeat: String) {
         _repeatMode.value = repeat
@@ -35,6 +42,14 @@ class MenuViewModel @Inject constructor() : ViewModel() {
     }
 
     fun setRenameBox(show: Boolean) {
-        _showRenameBox.value = show
+        _showRenameDialog.value = show
+    }
+
+    fun setDeleteDialog(isShow : Boolean) {
+        _showDeleteDialog.value = isShow
+    }
+
+    fun setMenuFrom(text: String) {
+        _from.value = text
     }
 }

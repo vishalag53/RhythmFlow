@@ -14,6 +14,7 @@ object K {
 
     const val PLAYER = "Player"
     const val MAIN = "Main"
+    const val SEARCH = "Search"
 
     const val NOTIFICATION_ID = 121
     const val NOTIFICATION_CHANNEL_NAME = "RhythmFlow Channel"

@@ -34,13 +34,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.vishalag53.mp3.music.rhythmflow.data.local.model.Audio
 import com.vishalag53.mp3.music.rhythmflow.domain.core.K
 import com.vishalag53.mp3.music.rhythmflow.domain.core.deleteAudioFile
+import com.vishalag53.mp3.music.rhythmflow.domain.core.renameDisplayName
 import com.vishalag53.mp3.music.rhythmflow.domain.core.requestDeletePermission
+import com.vishalag53.mp3.music.rhythmflow.domain.core.requestRenamePermission
 import com.vishalag53.mp3.music.rhythmflow.navigation.RootNavigation
+import com.vishalag53.mp3.music.rhythmflow.presentation.core.Loading
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.baseplayer.BasePlayerEvents
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.baseplayer.BasePlayerViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.delete.Delete
@@ -48,6 +52,7 @@ import com.vishalag53.mp3.music.rhythmflow.presentation.core.menu.Menu
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.menu.MenuViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.playbackspeed.PlaybackSpeed
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.playingqueue.SongQueueListsItem
+import com.vishalag53.mp3.music.rhythmflow.presentation.core.rename.Rename
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.repeat.Repeat
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.songinfo.SongInfoRootScreen
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.sortby.SortBy
@@ -63,16 +68,18 @@ import kotlinx.coroutines.launch
 fun ParentRootScreen(
     navController: NavHostController,
     mainViewModel: MainViewModel,
-    basePlayerViewModel: BasePlayerViewModel,
-    menuViewModel: MenuViewModel,
     startNotificationService: () -> Unit,
-    searchViewModel: SearchViewModel,
-    parentViewModel: ParentViewModel
 ) {
     val screenHeight = LocalConfiguration.current.screenHeightDp.dp
     val context = LocalContext.current
 
-    // modal bottom sheet
+    // Viewmodel
+    val basePlayerViewModel = hiltViewModel<BasePlayerViewModel>()
+    val menuViewModel = hiltViewModel<MenuViewModel>()
+    val searchViewModel = hiltViewModel<SearchViewModel>()
+    val parentViewModel = hiltViewModel<ParentViewModel>()
+
+    // Modal bottom sheet
     val parentUiStateSaver: Saver<ParentUiState, *> = Saver(save = {
         listOf(it.sheet::class.simpleName ?: "")
     }, restore = {
@@ -114,6 +121,21 @@ fun ParentRootScreen(
                 mainViewModel.removeAudio(audio)
                 Toast.makeText(context, "Delete ${audio.displayName}", Toast.LENGTH_SHORT).show()
                 pendingDelete.value = null
+            }
+        }
+    }
+
+    // Rename
+    val pendingRename = remember { mutableStateOf<Pair<String, Audio>?>(null) }
+    val renameLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartIntentSenderForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            pendingRename.value?.let { (newName, audio) ->
+                renameDisplayName(newName, audio, context)
+                mainViewModel.updateDisplayName(audio.id, newName)
+                Toast.makeText(context, "Renamed to $newName", Toast.LENGTH_SHORT).show()
+                pendingRename.value = null
             }
         }
     }
@@ -186,28 +208,33 @@ fun ParentRootScreen(
                             parentUiState.value = ParentUiState(ParentBottomSheetContent.None)
                         },
                         menuViewModel = menuViewModel,
-                        backgroundColor = when (parentViewModel.from.collectAsStateWithLifecycle().value) {
+                        backgroundColor = when (menuViewModel.from.collectAsStateWithLifecycle().value) {
                             K.MAIN -> MaterialTheme.colorScheme.background
                             K.PLAYER -> Color(0xFF736659)
+                            K.SEARCH -> MaterialTheme.colorScheme.background
                             else -> MaterialTheme.colorScheme.background
                         },
-                        backgroundIconColor = when (parentViewModel.from.collectAsStateWithLifecycle().value) {
+                        backgroundIconColor = when (menuViewModel.from.collectAsStateWithLifecycle().value) {
                             K.MAIN -> MaterialTheme.colorScheme.secondary
+                            K.SEARCH -> MaterialTheme.colorScheme.secondary
                             K.PLAYER -> Color(0xFF35363B)
                             else -> MaterialTheme.colorScheme.secondary
                         },
-                        iconColor = when (parentViewModel.from.collectAsStateWithLifecycle().value) {
+                        iconColor = when (menuViewModel.from.collectAsStateWithLifecycle().value) {
                             K.MAIN -> MaterialTheme.colorScheme.primary
+                            K.SEARCH -> MaterialTheme.colorScheme.primary
                             K.PLAYER -> Color(0xFFFDCF9E)
                             else -> MaterialTheme.colorScheme.primary
                         },
-                        textColor = when (parentViewModel.from.collectAsStateWithLifecycle().value) {
+                        textColor = when (menuViewModel.from.collectAsStateWithLifecycle().value) {
                             K.MAIN -> MaterialTheme.colorScheme.primary
+                            K.SEARCH -> MaterialTheme.colorScheme.primary
                             K.PLAYER -> Color(0xFF35363B)
                             else -> MaterialTheme.colorScheme.primary
                         },
-                        isSongMenu = when (parentViewModel.from.collectAsStateWithLifecycle().value) {
+                        isSongMenu = when (menuViewModel.from.collectAsStateWithLifecycle().value) {
                             K.MAIN -> true
+                            K.SEARCH -> true
                             K.PLAYER -> false
                             else -> true
                         },
@@ -343,35 +370,84 @@ fun ParentRootScreen(
         }
     }
 
-    if (parentViewModel.showDeleteDialog.collectAsStateWithLifecycle().value) {
+    if (menuViewModel.showDeleteDialog.collectAsStateWithLifecycle().value) {
         parentUiState.value = ParentUiState()
 
         Delete(
-            displayName = parentViewModel.selectAudio.collectAsStateWithLifecycle().value.displayName,
+            displayName = menuViewModel.audio.collectAsStateWithLifecycle().value.displayName,
             onConfirmDelete = {
                 requestDeletePermission(
-                    audio = parentViewModel.selectAudio.value,
+                    audio = menuViewModel.audio.value,
                     context = context,
                     onPermissionGranted = { intentSender ->
-                        pendingDelete.value = parentViewModel.selectAudio.value
+                        pendingDelete.value = menuViewModel.audio.value
                         deleteLauncher.launch(
                             IntentSenderRequest.Builder(intentSender).build()
                         )
                     },
                     onDeleteSuccess = {
                         deleteAudioFile(
-                            audio = parentViewModel.selectAudio.value,
+                            audio = menuViewModel.audio.value,
                             context = context
                         )
-                        mainViewModel.removeAudio(parentViewModel.selectAudio.value)
-                        Toast.makeText(context, "Delete ${parentViewModel.selectAudio.value.displayName}", Toast.LENGTH_SHORT).show()
+                        mainViewModel.removeAudio(menuViewModel.audio.value)
+                        Toast.makeText(context, "Delete ${menuViewModel.audio.value.displayName}", Toast.LENGTH_SHORT).show()
                     }
                 )
-                parentViewModel.setShowDeleteDialog(false)
+                menuViewModel.setDeleteDialog(false)
             },
             onDismiss = {
-                parentViewModel.setShowDeleteDialog(false)
+                menuViewModel.setDeleteDialog(false)
             }
         )
+    }
+
+    if (menuViewModel.showRenameDialog.collectAsStateWithLifecycle().value) {
+        parentUiState.value = ParentUiState()
+
+        val currentNameWithExtension = menuViewModel.audio.collectAsStateWithLifecycle().value.displayName
+        val currentName = if (currentNameWithExtension.contains(".")) {
+            currentNameWithExtension.substringBeforeLast(".")
+        } else {
+            currentNameWithExtension
+        }
+
+        val extension = if (currentNameWithExtension.contains(".")) {
+            currentNameWithExtension.substringAfterLast(".")
+        } else {
+            ""
+        }
+
+        Rename(
+            currentNameWithExtension = currentNameWithExtension,
+            currentName = currentName,
+            onDismiss = {
+                menuViewModel.setRenameBox(false)
+            },
+            onRename = { editDisplayName ->
+                val newDisplayName = editDisplayName.trim() + if (extension.isNotEmpty()) ".$extension" else ""
+                val audio = menuViewModel.audio.value
+
+                requestRenamePermission(
+                    newDisplayName = newDisplayName,
+                    audio = audio,
+                    context = context,
+                    onPermissionGranted = { intentSender ->
+                        pendingRename.value = newDisplayName to audio
+                        renameLauncher.launch(
+                            IntentSenderRequest.Builder(intentSender).build()
+                        )
+                    },
+                    onRenameSuccess = {
+                        renameDisplayName(newDisplayName, audio, context)
+                        Toast.makeText(context, "Renamed to $newDisplayName", Toast.LENGTH_SHORT).show()
+                    }
+                )
+            }
+        )
+    }
+
+    if (mainViewModel.isRefresh.collectAsStateWithLifecycle().value) {
+        Loading(backgroundColor = Color.Black.copy(alpha = 0.3F))
     }
 }

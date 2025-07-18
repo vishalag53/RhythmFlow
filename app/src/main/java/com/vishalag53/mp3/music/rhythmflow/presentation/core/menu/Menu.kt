@@ -160,8 +160,7 @@ fun Menu(
                             backgroundIconColor = backgroundIconColor,
                             iconColor = iconColor,
                             onClick = {
-                                parentViewModel.setSelectAudio(audio)
-                                parentViewModel.setShowDeleteDialog(true)
+                                menuViewModel.setDeleteDialog(true)
                             },
                             textColor = textColor
                         )

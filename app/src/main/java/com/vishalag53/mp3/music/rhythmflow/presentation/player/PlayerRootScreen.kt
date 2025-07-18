@@ -60,7 +60,7 @@ fun PlayerRootScreen(
             PlayerTopBar(
                 navigateBack = navigateBack,
                 onMenuClick = {
-                    parentViewModel.setMenuFrom(K.PLAYER)
+                    menuViewModel.setMenuFrom(K.PLAYER)
                     parentUiState.value = ParentUiState(ParentBottomSheetContent.Menu)
                 }
             )
