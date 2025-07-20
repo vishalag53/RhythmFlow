@@ -100,35 +100,15 @@ fun PlaybackSpeed(
                     .fillMaxWidth()
                     .height(50.dp),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Absolute.SpaceBetween
+                horizontalArrangement = Arrangement.Absolute.Center
             ) {
-                IconButton(
-                    onClick = {
-                        val speed = playbackSpeedText.value.toFloatOrNull()
-                        if (speed != null) {
-                            val newSpeed = when (speed) {
-                                in 0.3F..5.0F -> speed.minus(0.05F)
-                                in 0.25F..0.3F -> 0.25F
-                                else -> speed
-                            }
-                            playbackSpeedText.value = String.format("%.2f", newSpeed)
-                        }
-                    }
-                ) {
-                    Icon(
-                        painter = painterResource(R.drawable.ic_minus),
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.primary
-                    )
-                }
-
                 TextField(
                     value = playbackSpeedText.value,
                     onValueChange = {
                         playbackSpeedText.value = it
                     },
                     modifier = Modifier
-                        .width(132.dp)
+                        .width(216.dp)
                         .height(56.dp)
                         .clip(RoundedCornerShape(12.dp)),
                     textStyle = MaterialTheme.typography.labelMedium.copy(
@@ -150,62 +130,88 @@ fun PlaybackSpeed(
                         unfocusedContainerColor = Color.White,
                         disabledContainerColor = Color.White
                     ),
-                    trailingIcon = {
-                        TextButton(
+                    leadingIcon = {
+                        IconButton(
                             onClick = {
                                 val speed = playbackSpeedText.value.toFloatOrNull()
                                 if (speed != null) {
-                                    playbackSpeedText.value = String.format("%.2f", speed)
-                                    val newSpeed = playbackSpeedText.value.toFloat()
-
-                                    if (newSpeed in 0.25f..5.0f) {
-                                        onPlaybackSpeedChange(newSpeed)
-                                        onPlaybackSpeedChangeBasePlayer(newSpeed)
-                                        onClose()
-                                    } else {
-                                        if (newSpeed < 0.25F) {
-                                            playbackSpeedText.value = "0.25"
-                                        } else {
-                                            playbackSpeedText.value = "5.0"
-                                        }
-                                        Toast
-                                            .makeText(context, "Please enter a speed between 0.25x and 5.0x.", Toast.LENGTH_SHORT)
-                                            .show()
+                                    val newSpeed = when (speed) {
+                                        in 0.3F..5.0F -> speed.minus(0.05F)
+                                        in 0.25F..0.3F -> 0.25F
+                                        else -> speed
                                     }
-                                } else {
-                                    Toast
-                                        .makeText(context, " Invalid speed, Please enter a number.", Toast.LENGTH_SHORT)
-                                        .show()
+                                    playbackSpeedText.value = String.format("%.2f", newSpeed)
                                 }
                             }
                         ) {
-                            Text(
-                                text = "SET",
-                                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
+                            Icon(
+                                painter = painterResource(R.drawable.ic_minus),
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.primary
                             )
+                        }
+                    },
+                    trailingIcon = {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(4.dp)
+                        ) {
+                            IconButton(
+                                onClick = {
+                                    val speed = playbackSpeedText.value.toFloatOrNull()
+                                    if (speed != null) {
+                                        val newSpeed = when (speed) {
+                                            in 0.25F..4.95F -> speed.plus(0.05F)
+                                            in 4.95F..5.0F -> 5.0F
+                                            else -> speed
+                                        }
+                                        playbackSpeedText.value = String.format("%.2f", newSpeed)
+                                    }
+                                }
+                            ) {
+                                Icon(
+                                    painter = painterResource(R.drawable.ic_add),
+                                    contentDescription = null,
+                                    tint = MaterialTheme.colorScheme.primary
+                                )
+                            }
+
+                            TextButton(
+                                onClick = {
+                                    val speed = playbackSpeedText.value.toFloatOrNull()
+                                    if (speed != null) {
+                                        playbackSpeedText.value = String.format("%.2f", speed)
+                                        val newSpeed = playbackSpeedText.value.toFloat()
+
+                                        if (newSpeed in 0.25f..5.0f) {
+                                            onPlaybackSpeedChange(newSpeed)
+                                            onPlaybackSpeedChangeBasePlayer(newSpeed)
+                                            onClose()
+                                        } else {
+                                            if (newSpeed < 0.25F) {
+                                                playbackSpeedText.value = "0.25"
+                                            } else {
+                                                playbackSpeedText.value = "5.0"
+                                            }
+                                            Toast
+                                                .makeText(context, "Please enter a speed between 0.25x and 5.0x.", Toast.LENGTH_SHORT)
+                                                .show()
+                                        }
+                                    } else {
+                                        Toast
+                                            .makeText(context, " Invalid speed, Please enter a number.", Toast.LENGTH_SHORT)
+                                            .show()
+                                    }
+                                }
+                            ) {
+                                Text(
+                                    text = "SET",
+                                    style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
+                                )
+                            }
                         }
                     }
                 )
-
-                IconButton(
-                    onClick = {
-                        val speed = playbackSpeedText.value.toFloatOrNull()
-                        if (speed != null) {
-                            val newSpeed = when (speed) {
-                                in 0.25F..4.95F -> speed.plus(0.05F)
-                                in 4.95F..5.0F -> 5.0F
-                                else -> speed
-                            }
-                            playbackSpeedText.value = String.format("%.2f", newSpeed)
-                        }
-                    }
-                ) {
-                    Icon(
-                        painter = painterResource(R.drawable.ic_add),
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.primary
-                    )
-                }
             }
 
             Spacer(modifier = Modifier.height(8.dp))
