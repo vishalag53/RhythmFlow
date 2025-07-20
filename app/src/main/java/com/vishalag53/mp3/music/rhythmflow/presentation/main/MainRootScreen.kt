@@ -93,7 +93,9 @@ fun MainRootScreen(
                 )
 
                 K.FOLDERS -> {
-                    FoldersRootScreen()
+                    FoldersRootScreen(
+                        folderList = mainViewModel.foldersList.collectAsStateWithLifecycle().value
+                    )
                 }
             }
         }

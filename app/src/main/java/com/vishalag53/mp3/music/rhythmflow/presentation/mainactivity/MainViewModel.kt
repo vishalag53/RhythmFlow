@@ -2,10 +2,11 @@ package com.vishalag53.mp3.music.rhythmflow.presentation.mainactivity
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
 import com.vishalag53.mp3.music.rhythmflow.data.local.model.Audio
 import com.vishalag53.mp3.music.rhythmflow.data.local.repository.AudioRepository
+import com.vishalag53.mp3.music.rhythmflow.domain.core.Folder
 import com.vishalag53.mp3.music.rhythmflow.domain.core.K
+import com.vishalag53.mp3.music.rhythmflow.domain.core.totalAudioTime
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,7 +15,6 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-@OptIn(SavedStateHandleSaveableApi::class)
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val repository: AudioRepository
@@ -38,8 +38,11 @@ class MainViewModel @Inject constructor(
     private val _isAsc = MutableStateFlow(true)
     val isAsc = _isAsc.asStateFlow()
 
-    private val _selectTabName = MutableStateFlow(K.SONGS)
+    private val _selectTabName = MutableStateFlow(K.FOLDERS)
     val selectTabName = _selectTabName.asStateFlow()
+
+    private val _foldersList = MutableStateFlow<List<Folder>>(emptyList())
+    val foldersList = _foldersList.asStateFlow()
 
     init {
         viewModelScope.launch {
@@ -59,7 +62,27 @@ class MainViewModel @Inject constructor(
             _audioList.value = audio
             delay(300L)
             _isLoading.value = false
+            getFolderList()
         }
+    }
+
+    private fun getFolderList() {
+        val folders = mutableListOf<Folder>()
+        val folderList = _audioList.value
+            .map { it.folderName to it.path }
+            .distinctBy { it.first }
+
+        for ((folderName, path) in folderList) {
+            val audiosInFolder = _audioList.value.filter { it.folderName == folderName }
+            val folder = Folder(
+                name = folderName,
+                path = path,
+                length = audiosInFolder.size,
+                totalTime = totalAudioTime(audiosInFolder)
+            )
+            folders.add(folder)
+        }
+        _foldersList.value = folders
     }
 
     fun updateDisplayName(audioId: String, newDisplayName: String) {
@@ -89,6 +112,7 @@ class MainViewModel @Inject constructor(
             delay(300L)
             sortAudioListBy()
             _isRefresh.value = false
+            getFolderList()
         }
     }
 
