@@ -55,7 +55,7 @@ import com.vishalag53.mp3.music.rhythmflow.presentation.core.playingqueue.SongQu
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.rename.Rename
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.repeat.Repeat
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.songinfo.SongInfoRootScreen
-import com.vishalag53.mp3.music.rhythmflow.presentation.core.sortby.SortBy
+import com.vishalag53.mp3.music.rhythmflow.presentation.core.sortAudioby.SortAudioBy
 import com.vishalag53.mp3.music.rhythmflow.presentation.main.components.SelectTabMainModalBottomSheet
 import com.vishalag53.mp3.music.rhythmflow.presentation.mainactivity.MainViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.search.SearchViewModel
@@ -304,7 +304,7 @@ fun ParentRootScreen(
                 sheetContent.value = {
                     modalBottomSheetBackgroundColor.value =
                         MaterialTheme.colorScheme.primaryContainer
-                    SortBy(
+                    SortAudioBy(
                         sortBy = mainViewModel.sortBy.value,
                         isAsc = mainViewModel.isAsc.value,
                         onSortByChange = {

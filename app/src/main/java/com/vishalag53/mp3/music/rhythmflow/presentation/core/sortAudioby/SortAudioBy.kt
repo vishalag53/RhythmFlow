@@ -1,4 +1,4 @@
-package com.vishalag53.mp3.music.rhythmflow.presentation.core.sortby
+package com.vishalag53.mp3.music.rhythmflow.presentation.core.sortAudioby
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -23,7 +23,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun SortBy(
+fun SortAudioBy(
     sortBy: String,
     onClose: () -> Unit,
     isAsc: Boolean,
