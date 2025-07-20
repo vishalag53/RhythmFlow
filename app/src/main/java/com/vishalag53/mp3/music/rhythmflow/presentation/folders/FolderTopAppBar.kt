@@ -19,7 +19,8 @@ import com.vishalag53.mp3.music.rhythmflow.R
 
 @Composable
 fun FolderTopAppBar(
-    size: Int
+    size: Int,
+    refreshFolderList: () -> Unit
 ) {
     Row(
         modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
@@ -48,9 +49,7 @@ fun FolderTopAppBar(
             }
 
             IconButton(
-                onClick = {
-
-                }
+                onClick = refreshFolderList
             ) {
                 Icon(
                     imageVector = Icons.Default.Refresh,

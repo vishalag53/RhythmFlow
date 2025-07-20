@@ -10,15 +10,18 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.vishalag53.mp3.music.rhythmflow.domain.core.Folder
+import com.vishalag53.mp3.music.rhythmflow.presentation.mainactivity.MainViewModel
 
 @Composable
 fun FoldersRootScreen(
-    folderList: List<Folder>
+    folderList: List<Folder>,
+    mainViewModel: MainViewModel
 ) {
     Scaffold(
         topBar = {
             FolderTopAppBar(
-                size = folderList.size
+                size = folderList.size,
+                refreshFolderList = { mainViewModel.refreshAudioList() }
             )
         }
     ) { innerPadding ->
