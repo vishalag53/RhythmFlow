@@ -20,7 +20,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -31,8 +30,6 @@ import com.vishalag53.mp3.music.rhythmflow.domain.core.totalAudioTime
 
 @Composable
 internal fun SongQueueListsItem(audioList: List<Audio>) {
-    val context = LocalContext.current
-
     Column(
         modifier = Modifier.padding(top = 8.dp)
     ) {
@@ -59,7 +56,7 @@ internal fun SongQueueListsItem(audioList: List<Audio>) {
                 Spacer(modifier = Modifier.width(2.dp))
 
                 Text(
-                    text = "(${audioList.size})${totalAudioTime(audioList, context)}",
+                    text = "(${audioList.size})${totalAudioTime(audioList)}",
                     color = Color(0xBF35363B),
                     maxLines = 1
                 )

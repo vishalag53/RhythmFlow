@@ -1,6 +1,5 @@
 package com.vishalag53.mp3.music.rhythmflow.presentation.core.baseplayer
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.media3.common.MediaItem
@@ -12,7 +11,6 @@ import com.vishalag53.mp3.music.rhythmflow.domain.musicplayer.service.AudioEvent
 import com.vishalag53.mp3.music.rhythmflow.domain.musicplayer.service.AudioState
 import com.vishalag53.mp3.music.rhythmflow.domain.musicplayer.service.RhythmFlowServiceHandler
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -22,7 +20,6 @@ import javax.inject.Inject
 @HiltViewModel
 class BasePlayerViewModel @Inject constructor(
     private val rhythmFlowServiceHandler: RhythmFlowServiceHandler,
-    @ApplicationContext context: Context
 ) : ViewModel() {
     private val _duration = MutableStateFlow(0L)
     val duration = _duration.asStateFlow()
@@ -57,7 +54,6 @@ class BasePlayerViewModel @Inject constructor(
                     is AudioState.Buffering -> {
                         val (newProgress, newProgressString) = calculateProgressValue(
                             mediaState.progress,
-                            context,
                             _duration.value,
                         )
                         _progress.value = newProgress
@@ -77,7 +73,6 @@ class BasePlayerViewModel @Inject constructor(
                     is AudioState.Progress -> {
                         val (newProgress, newProgressString) = calculateProgressValue(
                             mediaState.progress,
-                            context,
                             _duration.value,
                         )
                         _progress.value = newProgress

@@ -10,7 +10,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
@@ -24,7 +23,6 @@ fun AudioProgressBar(
     progressString: String,
     onProgressChange: (Float) -> Unit
 ) {
-    val context = LocalContext.current
     Column(
         modifier = Modifier
             .fillMaxWidth(),
@@ -52,7 +50,7 @@ fun AudioProgressBar(
             )
 
             Text(
-                text = formatDuration(audioDuration, context),
+                text = formatDuration(audioDuration),
                 style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Medium),
                 color = Color(0xFFFDCF9E),
                 fontSize = 12.sp,

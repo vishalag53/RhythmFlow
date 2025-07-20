@@ -11,7 +11,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.vishalag53.mp3.music.rhythmflow.data.local.model.Audio
 import com.vishalag53.mp3.music.rhythmflow.domain.core.formatBitrate
@@ -21,7 +20,6 @@ import com.vishalag53.mp3.music.rhythmflow.domain.core.formatSize
 
 @Composable
 fun SongInfoRootScreen(audio: Audio) {
-    val context = LocalContext.current
     val about = arrayOf(
         "Song Name",
         "Display Name",
@@ -41,9 +39,9 @@ fun SongInfoRootScreen(audio: Audio) {
         audio.displayName,
         audio.artist,
         audio.album,
-        formatDuration(audio.duration, context),
-        formatSize(audio.size, context),
-        formatBitrate(audio.bitrate, context),
+        formatDuration(audio.duration),
+        formatSize(audio.size),
+        formatBitrate(audio.bitrate),
         formatDate(audio.dateAdded),
         formatDate(audio.dateModified),
         audio.folderName,

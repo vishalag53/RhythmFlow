@@ -20,7 +20,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.vishalag53.mp3.music.rhythmflow.data.local.model.Audio
@@ -45,8 +44,6 @@ fun SmallPlayerRootScreen(
     onClick: () -> Unit,
     onOpenPlayer: () -> Unit
 ) {
-    val context = LocalContext.current
-
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -76,7 +73,7 @@ fun SmallPlayerRootScreen(
             modifier = Modifier.padding(2.dp)
         ) {
             Spacer(modifier = Modifier.height(2.dp))
-            SmallPlayerTime(progressString, formatDuration(audio.duration, context))
+            SmallPlayerTime(progressString, formatDuration(audio.duration))
             Spacer(modifier = Modifier.height(3.dp))
 
             Row(

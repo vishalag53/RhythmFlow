@@ -16,7 +16,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -32,7 +31,6 @@ import com.vishalag53.mp3.music.rhythmflow.domain.core.stringCapitalized
 fun SongQueueItem(
     audio: Audio
 ) {
-    val context = LocalContext.current
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -77,7 +75,7 @@ fun SongQueueItem(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = formatDuration(audio.duration, context),
+                    text = formatDuration(audio.duration),
                     style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Medium),
                     color = Color(0xFF35363B),
                     fontSize = 12.sp,

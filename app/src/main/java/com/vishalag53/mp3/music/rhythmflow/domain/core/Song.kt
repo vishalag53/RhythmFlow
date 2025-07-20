@@ -1,5 +1,6 @@
 package com.vishalag53.mp3.music.rhythmflow.domain.core
 
+import android.annotation.SuppressLint
 import android.app.RecoverableSecurityException
 import android.content.ContentValues
 import android.content.Context
@@ -7,14 +8,14 @@ import android.content.IntentSender
 import android.os.Build
 import android.provider.MediaStore
 import androidx.annotation.RequiresApi
-import com.vishalag53.mp3.music.rhythmflow.R
 import com.vishalag53.mp3.music.rhythmflow.data.local.model.Audio
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import java.util.concurrent.TimeUnit
 
-fun formatDuration(duration: Long, context: Context): String {
+@SuppressLint("DefaultLocale")
+fun formatDuration(duration: Long): String {
     val hours = TimeUnit.HOURS.convert(duration, TimeUnit.MILLISECONDS)
     val minutes = TimeUnit.MINUTES.convert(
         duration, TimeUnit.MILLISECONDS
@@ -25,20 +26,22 @@ fun formatDuration(duration: Long, context: Context): String {
         1, TimeUnit.MINUTES
     ))
     return if (hours > 0) {
-        context.getString(R.string.duration_with_hour, hours, minutes, seconds)
+        String.format("%1$02d:%2$02d:%3$02d", hours, minutes, seconds)
     } else {
-        context.getString(R.string.duration_without_hour, minutes, seconds)
+        String.format("%1$02d:%2$02d", minutes, seconds)
     }
 }
 
-fun formatSize(size: Long, context: Context): String {
+@SuppressLint("DefaultLocale")
+fun formatSize(size: Long): String {
     val sizeMB = size / (1024.0 * 1024.0)
-    return context.getString(R.string.size, sizeMB)
+    return String.format("%.2f MB", sizeMB)
 }
 
-fun formatBitrate(bitrate: Long, context: Context): String {
+@SuppressLint("DefaultLocale")
+fun formatBitrate(bitrate: Long): String {
     val bitrateKBPS = bitrate / 1000
-    return context.getString(R.string.bitrate, bitrateKBPS)
+    return String.format("%d kbps", bitrateKBPS)
 }
 
 fun formatDate(date: Long): String {
@@ -46,12 +49,8 @@ fun formatDate(date: Long): String {
     return simpleDateFormat.format(Date(date * 1000L))
 }
 
-fun totalAudioTime(audioList: List<Audio>, context: Context): String {
-    var totalTime: Long = 0
-    for (audio in audioList) {
-        totalTime += audio.duration
-    }
-    return context.getString(R.string.total_time_text, formatDuration(totalTime, context))
+fun totalAudioTime(audioList: List<Audio>): String {
+    return formatDuration(audioList.sumOf { it.duration })
 }
 
 fun stringCapitalized(string: String): String {
@@ -62,13 +61,12 @@ fun stringCapitalized(string: String): String {
 
 fun calculateProgressValue(
     currentProgress: Long,
-    context: Context,
     duration: Long
 ): Pair<Float, String> {
     val progress =
         if (currentProgress > 0) ((currentProgress.toFloat() / duration.toFloat()) * 1f)
         else 0f
-    val progressString = formatDuration(currentProgress, context)
+    val progressString = formatDuration(currentProgress)
     return Pair(progress, progressString)
 }
 

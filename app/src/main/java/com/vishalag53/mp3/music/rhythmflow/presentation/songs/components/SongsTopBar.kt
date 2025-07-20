@@ -16,7 +16,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -35,8 +34,6 @@ fun SongsTopBar(
     onSortByClick: () -> Unit,
     parentUiState: MutableState<ParentUiState>
 ) {
-    val context = LocalContext.current
-
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -70,7 +67,7 @@ fun SongsTopBar(
             Spacer(modifier = Modifier.width(2.dp))
 
             Text(
-                text = "(${audioList.size})${totalAudioTime(audioList, context)}",
+                text = "(${audioList.size})(${totalAudioTime(audioList)})",
                 style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Medium),
                 color = MaterialTheme.colorScheme.secondary,
                 maxLines = 1,
