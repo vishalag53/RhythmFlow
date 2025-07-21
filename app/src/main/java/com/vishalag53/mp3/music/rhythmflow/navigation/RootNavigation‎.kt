@@ -14,7 +14,6 @@ import com.vishalag53.mp3.music.rhythmflow.presentation.core.menu.MenuViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.main.MainRootScreen
 import com.vishalag53.mp3.music.rhythmflow.presentation.mainactivity.MainViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.parent.ParentUiState
-import com.vishalag53.mp3.music.rhythmflow.presentation.parent.ParentViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.player.PlayerRootScreen
 import com.vishalag53.mp3.music.rhythmflow.presentation.search.SearchRootScreen
 import com.vishalag53.mp3.music.rhythmflow.presentation.search.SearchViewModel
@@ -29,8 +28,7 @@ fun RootNavigation(
     basePlayerViewModel: BasePlayerViewModel,
     menuViewModel: MenuViewModel,
     parentUiState: MutableState<ParentUiState>,
-    searchViewModel: SearchViewModel,
-    parentViewModel: ParentViewModel
+    searchViewModel: SearchViewModel
 ) {
     NavHost(
         navController = navController, startDestination = Screens.Main.Songs
@@ -41,16 +39,14 @@ fun RootNavigation(
             basePlayerViewModel = basePlayerViewModel,
             menuViewModel = menuViewModel,
             mainViewModel = mainViewModel,
-            parentUiState = parentUiState,
-            parentViewModel = parentViewModel
+            parentUiState = parentUiState
         )
 
         playerGraph(
             navController = navController,
             basePlayerViewModel = basePlayerViewModel,
             menuViewModel = menuViewModel,
-            parentUiState = parentUiState,
-            parentViewModel = parentViewModel
+            parentUiState = parentUiState
         )
 
         search(
@@ -60,8 +56,7 @@ fun RootNavigation(
             basePlayerViewModel = basePlayerViewModel,
             menuViewModel = menuViewModel,
             parentUiState = parentUiState,
-            searchViewModel = searchViewModel,
-            parentViewModel = parentViewModel
+            searchViewModel = searchViewModel
         )
     }
 }
@@ -73,8 +68,7 @@ private fun NavGraphBuilder.mainGraph(
     basePlayerViewModel: BasePlayerViewModel,
     menuViewModel: MenuViewModel,
     mainViewModel: MainViewModel,
-    parentUiState: MutableState<ParentUiState>,
-    parentViewModel: ParentViewModel,
+    parentUiState: MutableState<ParentUiState>
 ) {
     composable<Screens.Main.Songs> {
         MainRootScreen(
@@ -83,8 +77,7 @@ private fun NavGraphBuilder.mainGraph(
             startNotificationService = startNotificationService,
             menuViewModel = menuViewModel,
             mainViewModel = mainViewModel,
-            parentUiState = parentUiState,
-            parentViewModel = parentViewModel
+            parentUiState = parentUiState
         )
     }
 }
@@ -93,8 +86,7 @@ private fun NavGraphBuilder.playerGraph(
     navController: NavHostController,
     basePlayerViewModel: BasePlayerViewModel,
     menuViewModel: MenuViewModel,
-    parentUiState: MutableState<ParentUiState>,
-    parentViewModel: ParentViewModel,
+    parentUiState: MutableState<ParentUiState>
 ) {
     composable<Screens.Player>(
         typeMap = mapOf(
@@ -107,8 +99,7 @@ private fun NavGraphBuilder.playerGraph(
             },
             basePlayerViewModel = basePlayerViewModel,
             menuViewModel = menuViewModel,
-            parentUiState = parentUiState,
-            parentViewModel = parentViewModel
+            parentUiState = parentUiState
         )
     }
 }
@@ -120,8 +111,7 @@ private fun NavGraphBuilder.search(
     basePlayerViewModel: BasePlayerViewModel,
     menuViewModel: MenuViewModel,
     parentUiState: MutableState<ParentUiState>,
-    searchViewModel: SearchViewModel,
-    parentViewModel: ParentViewModel,
+    searchViewModel: SearchViewModel
 ) {
     composable<Screens.Search> {
         SearchRootScreen(
@@ -134,8 +124,7 @@ private fun NavGraphBuilder.search(
             startNotificationService = startNotificationService,
             menuViewModel = menuViewModel,
             parentUiState = parentUiState,
-            searchViewModel = searchViewModel,
-            parentViewModel = parentViewModel
+            searchViewModel = searchViewModel
         )
     }
 }

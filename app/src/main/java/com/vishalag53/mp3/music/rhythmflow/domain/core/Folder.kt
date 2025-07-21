@@ -4,5 +4,6 @@ data class Folder(
     val name: String,
     val path: String,
     val length: Int,
-    val totalTime: String
+    val totalTime: Long,
+    val totalSize: Long
 )

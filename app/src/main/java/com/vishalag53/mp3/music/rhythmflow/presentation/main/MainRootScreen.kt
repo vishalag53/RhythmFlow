@@ -22,7 +22,6 @@ import com.vishalag53.mp3.music.rhythmflow.presentation.main.components.AppBarRo
 import com.vishalag53.mp3.music.rhythmflow.presentation.mainactivity.MainViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.parent.ParentBottomSheetContent
 import com.vishalag53.mp3.music.rhythmflow.presentation.parent.ParentUiState
-import com.vishalag53.mp3.music.rhythmflow.presentation.parent.ParentViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.smallplayer.SmallPlayerRootScreen
 import com.vishalag53.mp3.music.rhythmflow.presentation.songs.SongsRootScreen
 
@@ -35,7 +34,6 @@ fun MainRootScreen(
     menuViewModel: MenuViewModel,
     mainViewModel: MainViewModel,
     parentUiState: MutableState<ParentUiState>,
-    parentViewModel: ParentViewModel
 ) {
     Scaffold(
         topBar = {
@@ -87,7 +85,7 @@ fun MainRootScreen(
                     mainViewModel = mainViewModel,
                     menuViewModel = menuViewModel,
                     onSortByClick = {
-                        parentUiState.value = ParentUiState(ParentBottomSheetContent.SortBy)
+                        parentUiState.value = ParentUiState(ParentBottomSheetContent.SortAudioBy)
                     },
                     parentUiState = parentUiState
                 )
@@ -95,7 +93,10 @@ fun MainRootScreen(
                 K.FOLDERS -> {
                     FoldersRootScreen(
                         folderList = mainViewModel.foldersList.collectAsStateWithLifecycle().value,
-                        mainViewModel = mainViewModel
+                        mainViewModel = mainViewModel,
+                        onSortByClick = {
+                            parentUiState.value = ParentUiState(ParentBottomSheetContent.SortFolderBy)
+                        }
                     )
                 }
             }

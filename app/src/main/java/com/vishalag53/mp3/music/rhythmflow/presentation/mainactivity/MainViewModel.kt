@@ -6,7 +6,6 @@ import com.vishalag53.mp3.music.rhythmflow.data.local.model.Audio
 import com.vishalag53.mp3.music.rhythmflow.data.local.repository.AudioRepository
 import com.vishalag53.mp3.music.rhythmflow.domain.core.Folder
 import com.vishalag53.mp3.music.rhythmflow.domain.core.K
-import com.vishalag53.mp3.music.rhythmflow.domain.core.totalAudioTime
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -32,17 +31,24 @@ class MainViewModel @Inject constructor(
     private val _keepSplashOn = MutableStateFlow(true)
     val keepSplashOn get() = _keepSplashOn.asStateFlow()
 
-    private val _sortBy = MutableStateFlow("File name")
-    val sortBy = _sortBy.asStateFlow()
+    private val _sortAudioBy = MutableStateFlow("File name")
+    val sortAudioBy = _sortAudioBy.asStateFlow()
 
-    private val _isAsc = MutableStateFlow(true)
-    val isAsc = _isAsc.asStateFlow()
+    private val _isAscAudio = MutableStateFlow(true)
+    val isAscAudio = _isAscAudio.asStateFlow()
 
     private val _selectTabName = MutableStateFlow(K.FOLDERS)
     val selectTabName = _selectTabName.asStateFlow()
 
     private val _foldersList = MutableStateFlow<List<Folder>>(emptyList())
     val foldersList = _foldersList.asStateFlow()
+
+    private val _sortFolderBy = MutableStateFlow("Folder name")
+    val sortFolderBy = _sortFolderBy.asStateFlow()
+
+    private val _isAscFolder = MutableStateFlow(true)
+    val isAscFolder = _isAscFolder.asStateFlow()
+
 
     init {
         viewModelScope.launch {
@@ -78,11 +84,13 @@ class MainViewModel @Inject constructor(
                 name = folderName,
                 path = path,
                 length = audiosInFolder.size,
-                totalTime = totalAudioTime(audiosInFolder)
+                totalTime = audiosInFolder.sumOf { it.duration },
+                totalSize = audiosInFolder.sumOf { it.size }
             )
             folders.add(folder)
         }
         _foldersList.value = folders
+        sortFolderListBy()
     }
 
     fun updateDisplayName(audioId: String, newDisplayName: String) {
@@ -116,68 +124,101 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun setSortBy(sortBy: String) {
-        _sortBy.value = sortBy
+    fun setSortAudioBy(sortBy: String) {
+        _sortAudioBy.value = sortBy
     }
 
-    fun setIsAsc(isASC: Boolean) {
-        _isAsc.value = isASC
+    fun setIsAscAudio(isASC: Boolean) {
+        _isAscAudio.value = isASC
     }
 
     fun sortAudioListBy() {
-        when (_sortBy.value) {
+        when (_sortAudioBy.value) {
             "Song title" -> {
                 _audioList.value =
-                    if (_isAsc.value) _audioList.value.sortedBy { it.title.lowercase() }
+                    if (_isAscAudio.value) _audioList.value.sortedBy { it.title.lowercase() }
                     else _audioList.value.sortedByDescending { it.title.lowercase() }
             }
 
             "File name" -> {
                 _audioList.value =
-                    if (_isAsc.value) _audioList.value.sortedBy { it.displayName.lowercase() }
+                    if (_isAscAudio.value) _audioList.value.sortedBy { it.displayName.lowercase() }
                     else _audioList.value.sortedByDescending { it.displayName.lowercase() }
             }
 
             "Song duration" -> {
                 _audioList.value =
-                    if (_isAsc.value) _audioList.value.sortedBy { it.duration }
+                    if (_isAscAudio.value) _audioList.value.sortedBy { it.duration }
                     else _audioList.value.sortedByDescending { it.duration }
             }
 
             "File size" -> {
                 _audioList.value =
-                    if (_isAsc.value) _audioList.value.sortedBy { it.size }
+                    if (_isAscAudio.value) _audioList.value.sortedBy { it.size }
                     else _audioList.value.sortedByDescending { it.size }
             }
 
             "Folder name" -> {
                 _audioList.value =
-                    if (_isAsc.value) _audioList.value.sortedBy { it.folderName.lowercase() }
+                    if (_isAscAudio.value) _audioList.value.sortedBy { it.folderName.lowercase() }
                     else _audioList.value.sortedByDescending { it.folderName.lowercase() }
             }
 
             "Album name" -> {
                 _audioList.value =
-                    if (_isAsc.value) _audioList.value.sortedBy { it.album.lowercase() }
+                    if (_isAscAudio.value) _audioList.value.sortedBy { it.album.lowercase() }
                     else _audioList.value.sortedByDescending { it.album.lowercase() }
             }
 
             "Artist name" -> {
                 _audioList.value =
-                    if (_isAsc.value) _audioList.value.sortedBy { it.artist.lowercase() }
+                    if (_isAscAudio.value) _audioList.value.sortedBy { it.artist.lowercase() }
                     else _audioList.value.sortedByDescending { it.artist.lowercase() }
             }
 
             "Date added" -> {
                 _audioList.value =
-                    if (_isAsc.value) _audioList.value.sortedBy { it.dateAdded }
+                    if (_isAscAudio.value) _audioList.value.sortedBy { it.dateAdded }
                     else _audioList.value.sortedByDescending { it.dateAdded }
             }
 
             "Date modified" -> {
                 _audioList.value =
-                    if (_isAsc.value) _audioList.value.sortedBy { it.dateModified }
+                    if (_isAscAudio.value) _audioList.value.sortedBy { it.dateModified }
                     else _audioList.value.sortedByDescending { it.dateModified }
+            }
+        }
+    }
+
+    fun setSortFolderBy(sortBy: String) {
+        _sortFolderBy.value = sortBy
+    }
+
+    fun setIsAscFolder(isASC: Boolean) {
+        _isAscFolder.value = isASC
+    }
+
+    fun sortFolderListBy() {
+        when (_sortFolderBy.value) {
+            "Folder name" -> {
+                _foldersList.value =
+                    if (_isAscFolder.value) _foldersList.value.sortedBy { it.name }
+                    else _foldersList.value.sortedByDescending { it.name }
+            }
+            "Folder length" -> {
+                _foldersList.value =
+                    if (_isAscFolder.value) _foldersList.value.sortedBy { it.length }
+                    else _foldersList.value.sortedByDescending { it.length }
+            }
+            "Folder size" -> {
+                _foldersList.value =
+                    if (_isAscFolder.value) _foldersList.value.sortedBy { it.totalSize }
+                    else _foldersList.value.sortedByDescending { it.totalSize }
+            }
+            "Folder time" -> {
+                _foldersList.value =
+                    if (_isAscFolder.value) _foldersList.value.sortedBy { it.totalTime }
+                    else _foldersList.value.sortedByDescending { it.totalTime }
             }
         }
     }

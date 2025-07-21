@@ -30,7 +30,6 @@ import com.vishalag53.mp3.music.rhythmflow.presentation.core.menu.MenuViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.mainactivity.MainViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.parent.ParentBottomSheetContent
 import com.vishalag53.mp3.music.rhythmflow.presentation.parent.ParentUiState
-import com.vishalag53.mp3.music.rhythmflow.presentation.parent.ParentViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.smallplayer.SmallPlayerRootScreen
 import com.vishalag53.mp3.music.rhythmflow.presentation.search.components.SearchAppBar
 import kotlinx.coroutines.delay
@@ -44,8 +43,7 @@ fun SearchRootScreen(
     basePlayerViewModel: BasePlayerViewModel,
     menuViewModel: MenuViewModel,
     parentUiState: MutableState<ParentUiState>,
-    searchViewModel: SearchViewModel,
-    parentViewModel: ParentViewModel
+    searchViewModel: SearchViewModel
 ) {
     val audioList = mainViewModel.audioList.collectAsStateWithLifecycle().value
     var searchText by rememberSaveable { mutableStateOf("") }

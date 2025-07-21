@@ -35,7 +35,12 @@ fun formatDuration(duration: Long): String {
 @SuppressLint("DefaultLocale")
 fun formatSize(size: Long): String {
     val sizeMB = size / (1024.0 * 1024.0)
-    return String.format("%.2f MB", sizeMB)
+    return if (sizeMB < 1024) {
+        String.format("%.2f MB", sizeMB)
+    } else {
+        val sizeGB = sizeMB / 1024.0
+        String.format("%.2f GB", sizeGB)
+    }
 }
 
 @SuppressLint("DefaultLocale")

@@ -1,4 +1,4 @@
-package com.vishalag53.mp3.music.rhythmflow.presentation.core.sortAudioby
+package com.vishalag53.mp3.music.rhythmflow.presentation.core.sortBy
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -23,24 +23,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun SortAudioBy(
+fun SortBy(
+    sortList: List<String>,
     sortBy: String,
     onClose: () -> Unit,
     isAsc: Boolean,
     onSortByChange: (String) -> Unit,
     onAscDescChange: (Boolean) -> Unit
 ) {
-    val sortList = listOf(
-        "Song title",
-        "File name",
-        "Song duration",
-        "File size",
-        "Folder name",
-        "Album name",
-        "Artist name",
-        "Date added",
-        "Date modified"
-    )
 
     val sortListASC = listOf(
         "Ascending",

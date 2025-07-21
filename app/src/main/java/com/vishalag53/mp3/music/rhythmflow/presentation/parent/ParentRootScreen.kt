@@ -55,7 +55,7 @@ import com.vishalag53.mp3.music.rhythmflow.presentation.core.playingqueue.SongQu
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.rename.Rename
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.repeat.Repeat
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.songinfo.SongInfoRootScreen
-import com.vishalag53.mp3.music.rhythmflow.presentation.core.sortAudioby.SortAudioBy
+import com.vishalag53.mp3.music.rhythmflow.presentation.core.sortBy.SortBy
 import com.vishalag53.mp3.music.rhythmflow.presentation.main.components.SelectTabMainModalBottomSheet
 import com.vishalag53.mp3.music.rhythmflow.presentation.mainactivity.MainViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.search.SearchViewModel
@@ -77,7 +77,6 @@ fun ParentRootScreen(
     val basePlayerViewModel = hiltViewModel<BasePlayerViewModel>()
     val menuViewModel = hiltViewModel<MenuViewModel>()
     val searchViewModel = hiltViewModel<SearchViewModel>()
-    val parentViewModel = hiltViewModel<ParentViewModel>()
 
     // Modal bottom sheet
     val parentUiStateSaver: Saver<ParentUiState, *> = Saver(save = {
@@ -139,6 +138,25 @@ fun ParentRootScreen(
             }
         }
     }
+
+    val sortAudioList = listOf(
+        "Song title",
+        "File name",
+        "Song duration",
+        "File size",
+        "Folder name",
+        "Album name",
+        "Artist name",
+        "Date added",
+        "Date modified"
+    )
+
+    val sortFolderList = listOf(
+        "Folder name",
+        "Folder length",
+        "Folder size",
+        "Folder time"
+    )
 
     LaunchedEffect(parentUiState.value.sheet) {
         when (parentUiState.value.sheet) {
@@ -237,8 +255,7 @@ fun ParentRootScreen(
                             K.SEARCH -> true
                             K.PLAYER -> false
                             else -> true
-                        },
-                        parentViewModel = parentViewModel
+                        }
                     )
                 }
                 scope.launch { sheetState.show() }
@@ -299,25 +316,49 @@ fun ParentRootScreen(
                 scope.launch { sheetState.show() }
             }
 
-            ParentBottomSheetContent.SortBy -> {
+            ParentBottomSheetContent.SortAudioBy -> {
                 showSheet.value = true
                 sheetContent.value = {
-                    modalBottomSheetBackgroundColor.value =
-                        MaterialTheme.colorScheme.primaryContainer
-                    SortAudioBy(
-                        sortBy = mainViewModel.sortBy.value,
-                        isAsc = mainViewModel.isAsc.value,
+                    modalBottomSheetBackgroundColor.value = MaterialTheme.colorScheme.primaryContainer
+                    SortBy(
+                        sortList = sortAudioList,
+                        sortBy = mainViewModel.sortAudioBy.value,
+                        isAsc = mainViewModel.isAscAudio.value,
                         onSortByChange = {
-                            mainViewModel.setSortBy(it)
+                            mainViewModel.setSortAudioBy(it)
                             mainViewModel.sortAudioListBy()
                         },
                         onAscDescChange = {
-                            mainViewModel.setIsAsc(it)
+                            mainViewModel.setIsAscAudio(it)
                             mainViewModel.sortAudioListBy()
                         },
                         onClose = {
                             parentUiState.value = ParentUiState(ParentBottomSheetContent.None)
                         })
+                }
+                scope.launch { sheetState.show() }
+            }
+
+            ParentBottomSheetContent.SortFolderBy -> {
+                showSheet.value = true
+                sheetContent.value = {
+                    modalBottomSheetBackgroundColor.value = MaterialTheme.colorScheme.primaryContainer
+                    SortBy(
+                        sortList = sortFolderList,
+                        sortBy = mainViewModel.sortFolderBy.value,
+                        isAsc = mainViewModel.isAscFolder.value,
+                        onSortByChange = {
+                            mainViewModel.setSortFolderBy(it)
+                            mainViewModel.sortFolderListBy()
+                        },
+                        onAscDescChange = {
+                            mainViewModel.setIsAscFolder(it)
+                            mainViewModel.sortFolderListBy()
+                        },
+                        onClose = {
+                            parentUiState.value = ParentUiState(ParentBottomSheetContent.None)
+                        }
+                    )
                 }
                 scope.launch { sheetState.show() }
             }
@@ -331,8 +372,7 @@ fun ParentRootScreen(
         menuViewModel = menuViewModel,
         startNotificationService = { startNotificationService() },
         parentUiState = parentUiState,
-        searchViewModel = searchViewModel,
-        parentViewModel = parentViewModel
+        searchViewModel = searchViewModel
     )
 
     if (showSheet.value) {

@@ -19,6 +19,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.vishalag53.mp3.music.rhythmflow.R
 import com.vishalag53.mp3.music.rhythmflow.domain.core.Folder
+import com.vishalag53.mp3.music.rhythmflow.domain.core.formatDuration
 
 @Composable
 fun FolderItem(
@@ -56,7 +57,7 @@ fun FolderItem(
             )
 
             Text(
-                text = "${folder.length} songs | ${folder.totalTime}",
+                text = "${folder.length} songs | ${formatDuration(folder.totalTime)}",
                 style = MaterialTheme.typography.bodySmall,
                 fontWeight = FontWeight.Medium,
                 color = MaterialTheme.colorScheme.primary.copy(alpha = 0.6F),

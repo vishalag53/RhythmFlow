@@ -15,13 +15,15 @@ import com.vishalag53.mp3.music.rhythmflow.presentation.mainactivity.MainViewMod
 @Composable
 fun FoldersRootScreen(
     folderList: List<Folder>,
-    mainViewModel: MainViewModel
+    mainViewModel: MainViewModel,
+    onSortByClick: () -> Unit
 ) {
     Scaffold(
         topBar = {
             FolderTopAppBar(
                 size = folderList.size,
-                refreshFolderList = { mainViewModel.refreshAudioList() }
+                refreshFolderList = { mainViewModel.refreshAudioList() },
+                onSortByClick = onSortByClick
             )
         }
     ) { innerPadding ->

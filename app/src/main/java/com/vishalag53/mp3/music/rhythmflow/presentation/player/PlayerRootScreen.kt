@@ -37,15 +37,13 @@ import com.vishalag53.mp3.music.rhythmflow.presentation.player.components.Player
 import com.vishalag53.mp3.music.rhythmflow.presentation.player.components.PlayerTopBar
 import com.vishalag53.mp3.music.rhythmflow.presentation.parent.ParentBottomSheetContent
 import com.vishalag53.mp3.music.rhythmflow.presentation.parent.ParentUiState
-import com.vishalag53.mp3.music.rhythmflow.presentation.parent.ParentViewModel
 
 @Composable
 fun PlayerRootScreen(
     navigateBack: () -> Unit,
     basePlayerViewModel: BasePlayerViewModel,
     menuViewModel: MenuViewModel,
-    parentUiState: MutableState<ParentUiState>,
-    parentViewModel: ParentViewModel
+    parentUiState: MutableState<ParentUiState>
 ) {
     val audio = basePlayerViewModel.currentSelectedAudio.collectAsStateWithLifecycle().value
 

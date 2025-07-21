@@ -20,7 +20,8 @@ import com.vishalag53.mp3.music.rhythmflow.R
 @Composable
 fun FolderTopAppBar(
     size: Int,
-    refreshFolderList: () -> Unit
+    refreshFolderList: () -> Unit,
+    onSortByClick: () -> Unit
 ) {
     Row(
         modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
@@ -37,9 +38,7 @@ fun FolderTopAppBar(
             verticalAlignment = Alignment.CenterVertically
         ) {
             IconButton(
-                onClick = {
-
-                }
+                onClick = onSortByClick
             ) {
                 Icon(
                     painter = painterResource(R.drawable.ic_sort),
