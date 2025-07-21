@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.vishalag53.mp3.music.rhythmflow.data.local.model.Audio
 import com.vishalag53.mp3.music.rhythmflow.data.local.repository.AudioRepository
-import com.vishalag53.mp3.music.rhythmflow.domain.core.Folder
+import com.vishalag53.mp3.music.rhythmflow.domain.core.FolderData
 import com.vishalag53.mp3.music.rhythmflow.domain.core.K
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
@@ -40,7 +40,7 @@ class MainViewModel @Inject constructor(
     private val _selectTabName = MutableStateFlow(K.FOLDERS)
     val selectTabName = _selectTabName.asStateFlow()
 
-    private val _foldersList = MutableStateFlow<List<Folder>>(emptyList())
+    private val _foldersList = MutableStateFlow<List<FolderData>>(emptyList())
     val foldersList = _foldersList.asStateFlow()
 
     private val _sortFolderBy = MutableStateFlow("Folder name")
@@ -73,14 +73,14 @@ class MainViewModel @Inject constructor(
     }
 
     private fun getFolderList() {
-        val folders = mutableListOf<Folder>()
+        val folders = mutableListOf<FolderData>()
         val folderList = _audioList.value
             .map { it.folderName to it.path }
             .distinctBy { it.first }
 
         for ((folderName, path) in folderList) {
             val audiosInFolder = _audioList.value.filter { it.folderName == folderName }
-            val folder = Folder(
+            val folder = FolderData(
                 name = folderName,
                 path = path,
                 length = audiosInFolder.size,

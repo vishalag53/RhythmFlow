@@ -37,7 +37,7 @@ fun SongAllMenu(
     Box {
         IconButton(onClick = { expanded = !expanded }) {
             Icon(
-                painter = painterResource(R.drawable.ic_rotate_menu),
+                painter = painterResource(R.drawable.ic_menu),
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.size(20.dp)

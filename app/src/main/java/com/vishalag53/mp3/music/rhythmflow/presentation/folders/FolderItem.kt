@@ -1,5 +1,6 @@
 package com.vishalag53.mp3.music.rhythmflow.presentation.folders
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -17,19 +18,25 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.vishalag53.mp3.music.rhythmflow.R
-import com.vishalag53.mp3.music.rhythmflow.domain.core.Folder
+import com.vishalag53.mp3.music.rhythmflow.domain.core.FolderData
 import com.vishalag53.mp3.music.rhythmflow.domain.core.formatDuration
+import com.vishalag53.mp3.music.rhythmflow.navigation.Screens
 
 @Composable
 fun FolderItem(
-    folder: Folder
+    folder: FolderData,
+    navController: NavHostController
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .height(60.dp)
-            .padding(horizontal = 8.dp),
+            .padding(horizontal = 8.dp)
+            .clickable {
+                navController.navigate(Screens.Folder(folder))
+            },
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Absolute.SpaceBetween
     ) {

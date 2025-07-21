@@ -1,7 +1,5 @@
-package com.vishalag53.mp3.music.rhythmflow.presentation.main
+package com.vishalag53.mp3.music.rhythmflow.presentation.folder
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -12,37 +10,33 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
+import com.vishalag53.mp3.music.rhythmflow.domain.core.FolderData
 import com.vishalag53.mp3.music.rhythmflow.domain.core.K
 import com.vishalag53.mp3.music.rhythmflow.navigation.Screens
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.baseplayer.BasePlayerEvents
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.baseplayer.BasePlayerViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.menu.MenuViewModel
-import com.vishalag53.mp3.music.rhythmflow.presentation.folders.FoldersRootScreen
-import com.vishalag53.mp3.music.rhythmflow.presentation.main.components.AppBarRootScreen
 import com.vishalag53.mp3.music.rhythmflow.presentation.mainactivity.MainViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.parent.ParentBottomSheetContent
 import com.vishalag53.mp3.music.rhythmflow.presentation.parent.ParentUiState
 import com.vishalag53.mp3.music.rhythmflow.presentation.smallplayer.SmallPlayerRootScreen
 import com.vishalag53.mp3.music.rhythmflow.presentation.songs.SongsRootScreen
 
-@RequiresApi(Build.VERSION_CODES.Q)
 @Composable
-fun MainRootScreen(
+fun FolderRootScreen(
+    folder: FolderData,
     navController: NavHostController,
     startNotificationService: () -> Unit,
     basePlayerViewModel: BasePlayerViewModel,
     menuViewModel: MenuViewModel,
     mainViewModel: MainViewModel,
-    parentUiState: MutableState<ParentUiState>
+    parentUiState: MutableState<ParentUiState>,
 ) {
     Scaffold(
         topBar = {
-            AppBarRootScreen(
-                navController = navController,
-                mainViewModel = mainViewModel,
-                onSelectTabMainClick  = {
-                    parentUiState.value = ParentUiState(ParentBottomSheetContent.SelectTabName)
-                }
+            FolderTopBar(
+                folderName = folder.name,
+                navController = navController
             )
         },
         bottomBar = {
@@ -67,41 +61,27 @@ fun MainRootScreen(
             }
         }
     ) { innerPadding ->
-
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
-            when (mainViewModel.selectTabName.collectAsStateWithLifecycle().value) {
-                K.SONGS -> SongsRootScreen(
-                    audioList = mainViewModel.audioList.collectAsStateWithLifecycle().value,
-                    navController = navController,
-                    basePlayerViewModel = basePlayerViewModel,
-                    startNotificationService = startNotificationService,
-                    onMenuClick = {
-                        menuViewModel.setMenuFrom(K.MAIN)
-                        parentUiState.value = ParentUiState(ParentBottomSheetContent.Menu)
-                    },
-                    mainViewModel = mainViewModel,
-                    menuViewModel = menuViewModel,
-                    onSortByClick = {
-                        parentUiState.value = ParentUiState(ParentBottomSheetContent.SortAudioBy)
-                    },
-                    parentUiState = parentUiState
-                )
-
-                K.FOLDERS -> {
-                    FoldersRootScreen(
-                        folderList = mainViewModel.foldersList.collectAsStateWithLifecycle().value,
-                        mainViewModel = mainViewModel,
-                        onSortByClick = {
-                            parentUiState.value = ParentUiState(ParentBottomSheetContent.SortFolderBy)
-                        },
-                        navController = navController
-                    )
-                }
-            }
+            SongsRootScreen(
+                audioList = mainViewModel.audioList.collectAsStateWithLifecycle().value.filter { it.folderName == folder.name },
+                navController = navController,
+                basePlayerViewModel = basePlayerViewModel,
+                startNotificationService = startNotificationService,
+                onMenuClick = {
+                    menuViewModel.setMenuFrom(K.FOLDERS)
+                    parentUiState.value = ParentUiState(ParentBottomSheetContent.Menu)
+                },
+                mainViewModel = mainViewModel,
+                menuViewModel = menuViewModel,
+                onSortByClick = {
+                    parentUiState.value = ParentUiState(ParentBottomSheetContent.SortAudioBy)
+                },
+                parentUiState = parentUiState
+            )
         }
     }
 }

@@ -9,14 +9,16 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.vishalag53.mp3.music.rhythmflow.domain.core.Folder
+import androidx.navigation.NavHostController
+import com.vishalag53.mp3.music.rhythmflow.domain.core.FolderData
 import com.vishalag53.mp3.music.rhythmflow.presentation.mainactivity.MainViewModel
 
 @Composable
 fun FoldersRootScreen(
-    folderList: List<Folder>,
+    folderList: List<FolderData>,
     mainViewModel: MainViewModel,
-    onSortByClick: () -> Unit
+    onSortByClick: () -> Unit,
+    navController: NavHostController
 ) {
     Scaffold(
         topBar = {
@@ -38,7 +40,8 @@ fun FoldersRootScreen(
             ) {
                 items(folderList) { folder ->
                     FolderItem(
-                        folder = folder
+                        folder = folder,
+                        navController = navController
                     )
                 }
             }

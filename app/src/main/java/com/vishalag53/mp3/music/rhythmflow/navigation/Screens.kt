@@ -1,5 +1,6 @@
 package com.vishalag53.mp3.music.rhythmflow.navigation
 
+import com.vishalag53.mp3.music.rhythmflow.domain.core.FolderData
 import kotlinx.serialization.Serializable
 
 sealed interface Screens {
@@ -14,4 +15,7 @@ sealed interface Screens {
 
     @Serializable
     data object Search : Screens
+
+    @Serializable
+    data class Folder(val folder: FolderData) : Screens
 }

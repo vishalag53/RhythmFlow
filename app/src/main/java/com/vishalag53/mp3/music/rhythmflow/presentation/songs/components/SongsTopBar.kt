@@ -38,7 +38,7 @@ fun SongsTopBar(
         modifier = Modifier
             .fillMaxWidth()
             .height(36.dp)
-            .padding(horizontal = 6.dp),
+            .padding(start = 6.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Absolute.SpaceBetween
     ) {

@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -40,7 +41,7 @@ fun AudioItem(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 4.dp)
+            .padding(start = 4.dp)
             .clickable {
                 basePlayerViewModel.onBasePlayerEvents(BasePlayerEvents.ClearMediaItems)
                 basePlayerViewModel.setAudioList(audioList)
@@ -79,15 +80,18 @@ fun AudioItem(
                     overflow = TextOverflow.Visible
                 )
 
-                Icon(
-                    painter = painterResource(R.drawable.ic_menu),
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.clickable {
+                IconButton(
+                    onClick = {
                         menuViewModel.setAudio(audio)
                         onMenuClick()
                     }
-                )
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_menu),
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                }
             }
         }
     }

@@ -8,9 +8,11 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.vishalag53.mp3.music.rhythmflow.data.local.model.Audio
+import androidx.navigation.toRoute
+import com.vishalag53.mp3.music.rhythmflow.domain.core.FolderData
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.baseplayer.BasePlayerViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.menu.MenuViewModel
+import com.vishalag53.mp3.music.rhythmflow.presentation.folder.FolderRootScreen
 import com.vishalag53.mp3.music.rhythmflow.presentation.main.MainRootScreen
 import com.vishalag53.mp3.music.rhythmflow.presentation.mainactivity.MainViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.parent.ParentUiState
@@ -58,6 +60,15 @@ fun RootNavigation(
             parentUiState = parentUiState,
             searchViewModel = searchViewModel
         )
+
+        folder(
+            navController = navController,
+            mainViewModel = mainViewModel,
+            startNotificationService = startNotificationService,
+            basePlayerViewModel = basePlayerViewModel,
+            menuViewModel = menuViewModel,
+            parentUiState = parentUiState
+        )
     }
 }
 
@@ -88,11 +99,7 @@ private fun NavGraphBuilder.playerGraph(
     menuViewModel: MenuViewModel,
     parentUiState: MutableState<ParentUiState>
 ) {
-    composable<Screens.Player>(
-        typeMap = mapOf(
-            typeOf<Audio>() to CustomNavType(Audio::class, Audio.serializer())
-        )
-    ) {
+    composable<Screens.Player> {
         PlayerRootScreen(
             navigateBack = {
                 navController.popBackStack()
@@ -125,6 +132,33 @@ private fun NavGraphBuilder.search(
             menuViewModel = menuViewModel,
             parentUiState = parentUiState,
             searchViewModel = searchViewModel
+        )
+    }
+}
+
+private fun NavGraphBuilder.folder(
+    navController: NavHostController,
+    mainViewModel: MainViewModel,
+    startNotificationService: () -> Unit,
+    basePlayerViewModel: BasePlayerViewModel,
+    menuViewModel: MenuViewModel,
+    parentUiState: MutableState<ParentUiState>
+) {
+    composable<Screens.Folder>(
+        typeMap = mapOf(
+            typeOf<FolderData>() to CustomNavType(FolderData::class, FolderData.serializer())
+        )
+    ) {
+        val args = it.toRoute<Screens.Folder>()
+
+        FolderRootScreen(
+            folder = args.folder,
+            navController = navController,
+            startNotificationService = startNotificationService,
+            basePlayerViewModel = basePlayerViewModel,
+            menuViewModel = menuViewModel,
+            mainViewModel = mainViewModel,
+            parentUiState = parentUiState
         )
     }
 }

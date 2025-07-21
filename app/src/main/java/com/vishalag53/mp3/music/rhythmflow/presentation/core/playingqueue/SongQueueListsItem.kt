@@ -56,7 +56,7 @@ internal fun SongQueueListsItem(audioList: List<Audio>) {
                 Spacer(modifier = Modifier.width(2.dp))
 
                 Text(
-                    text = "(${audioList.size})${totalAudioTime(audioList)}",
+                    text = "(${audioList.size})(${totalAudioTime(audioList)})",
                     color = Color(0xBF35363B),
                     maxLines = 1
                 )
