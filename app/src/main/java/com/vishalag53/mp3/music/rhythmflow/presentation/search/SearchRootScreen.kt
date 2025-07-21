@@ -27,6 +27,7 @@ import com.vishalag53.mp3.music.rhythmflow.presentation.core.AudioItem
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.baseplayer.BasePlayerEvents
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.baseplayer.BasePlayerViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.menu.MenuViewModel
+import com.vishalag53.mp3.music.rhythmflow.presentation.folders.FolderItem
 import com.vishalag53.mp3.music.rhythmflow.presentation.mainactivity.MainViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.parent.ParentBottomSheetContent
 import com.vishalag53.mp3.music.rhythmflow.presentation.parent.ParentUiState
@@ -159,9 +160,10 @@ fun SearchRootScreen(
 
                     K.FOLDERS -> {
                         items(folders) { folder ->
-                            Text(
-                                text = folder,
-                                color = MaterialTheme.colorScheme.primary
+                            val folderData = mainViewModel.foldersList.collectAsStateWithLifecycle().value.first { it.name == folder }
+                            FolderItem(
+                                folder = folderData,
+                                navController = navController
                             )
                         }
                     }
