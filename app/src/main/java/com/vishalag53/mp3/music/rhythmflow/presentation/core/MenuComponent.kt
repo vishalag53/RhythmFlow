@@ -1,4 +1,4 @@
-package com.vishalag53.mp3.music.rhythmflow.presentation.core.menu
+package com.vishalag53.mp3.music.rhythmflow.presentation.core
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

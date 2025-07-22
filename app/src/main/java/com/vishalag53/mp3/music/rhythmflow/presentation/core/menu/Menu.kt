@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -26,8 +25,11 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.vishalag53.mp3.music.rhythmflow.R
+import com.vishalag53.mp3.music.rhythmflow.domain.core.MenuItemData
 import com.vishalag53.mp3.music.rhythmflow.domain.core.stringCapitalized
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.AudioTitleDisplayName
+import com.vishalag53.mp3.music.rhythmflow.presentation.core.MenuComponent
+import com.vishalag53.mp3.music.rhythmflow.presentation.core.MenuRow
 
 @Composable
 fun Menu(
@@ -44,6 +46,68 @@ fun Menu(
 ) {
     val audio = menuViewModel.audio.collectAsStateWithLifecycle().value
     val width = (LocalConfiguration.current.screenWidthDp.dp - 24.dp) / 2
+
+    val repeatText = menuViewModel.repeatMode.collectAsStateWithLifecycle().value
+    val shuffleText = menuViewModel.shuffleText.collectAsStateWithLifecycle().value
+
+    val onShuffleChange = {
+        val newShuffle = shuffleText == "Shuffle Off"
+        menuViewModel.setShuffle(if (newShuffle) "Shuffle On" else "Shuffle Off")
+        onShuffleClick(newShuffle)
+    }
+    val onRenameClick = {
+        menuViewModel.setRenameBox(true)
+        onClose()
+    }
+    val onDeleteClick = {
+        menuViewModel.setDeleteDialog(true)
+    }
+
+    val songMenuItems = listOf(
+        listOf(
+            MenuItemData(R.drawable.ic_rename, "Rename", onRenameClick),
+            MenuItemData(R.drawable.ic_edit_audio_info, "Edit song info") {}
+        ),
+        listOf(
+            MenuItemData(R.drawable.ic_trash, "Trash") {},
+            MenuItemData(R.drawable.ic_delete, "Delete", onDeleteClick)
+        ),
+        listOf(
+            MenuItemData(R.drawable.ic_hide, "Hide") {},
+            MenuItemData(R.drawable.ic_round_lyrics, "Lyric") {}
+        )
+    )
+
+    val generalMenuItems = listOf(
+        listOf(
+            MenuItemData(R.drawable.ic_add_to_playing_queue, "Add to playing queue") {},
+            MenuItemData(R.drawable.ic_add_to_next_play, "Add to next play") {}
+        ),
+        listOf(
+            MenuItemData(R.drawable.ic_equalizer, "Equalizer") {},
+            MenuItemData(R.drawable.ic_repeat, repeatText, onRepeatClick)
+        ),
+        listOf(
+            MenuItemData(R.drawable.ic_shuffle, shuffleText, onShuffleChange),
+            MenuItemData(R.drawable.ic_bluetooth, "Bluetooth") {}
+        ),
+        listOf(
+            MenuItemData(R.drawable.ic_add_to_playlist, "Add to playlist") {},
+            MenuItemData(R.drawable.ic_share, "Share") {}
+        ),
+        listOf(
+            MenuItemData(R.drawable.ic_ringtone, "Use as a ringtone") {},
+            MenuItemData(R.drawable.ic_sleep_timer, "Sleep timer") {}
+        ),
+        listOf(
+            MenuItemData(R.drawable.ic_drive_mode, "Drive mode") {},
+            MenuItemData(R.drawable.ic_go_to, "Go to") {}
+        ),
+        listOf(
+            MenuItemData(R.drawable.ic_volume, "Volume") {},
+            MenuItemData(R.drawable.ic_edit_audio, "Edit audio") {}
+        )
+    )
 
     Box(
         modifier = Modifier.fillMaxWidth()
@@ -102,310 +166,30 @@ fun Menu(
                     .padding(4.dp)
             ) {
                 if (isSongMenu) {
-                    Row(
-                        modifier = Modifier.fillMaxSize(),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        MenuComponent(
+                    songMenuItems.forEach { row ->
+                        MenuRow(
                             width = width,
-                            painter = R.drawable.ic_rename,
-                            text = "Rename",
                             backgroundColor = backgroundColor,
                             backgroundIconColor = backgroundIconColor,
                             iconColor = iconColor,
                             textColor = textColor,
-                            onClick = {
-                                menuViewModel.setRenameBox(true)
-                                onClose()
-                            }
+                            items = row
                         )
-
-                        MenuComponent(
-                            width = width,
-                            painter = R.drawable.ic_edit_audio_info,
-                            text = "Edit song info",
-                            backgroundColor = backgroundColor,
-                            backgroundIconColor = backgroundIconColor,
-                            iconColor = iconColor,
-                            onClick = {},
-                            textColor = textColor
-                        )
+                        Spacer(modifier = Modifier.height(6.dp))
                     }
+                }
 
+                generalMenuItems.forEach { row ->
+                    MenuRow(
+                        width = width,
+                        backgroundColor = backgroundColor,
+                        backgroundIconColor = backgroundIconColor,
+                        iconColor = iconColor,
+                        textColor = textColor,
+                        items = row
+                    )
                     Spacer(modifier = Modifier.height(6.dp))
-
-                    Row(
-                        modifier = Modifier.fillMaxSize(),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        MenuComponent(
-                            width = width,
-                            painter = R.drawable.ic_trash,
-                            text = "Trash",
-                            backgroundColor = backgroundColor,
-                            backgroundIconColor = backgroundIconColor,
-                            iconColor = iconColor,
-                            textColor = textColor,
-                            onClick = {})
-
-                        MenuComponent(
-                            width = width,
-                            painter = R.drawable.ic_delete,
-                            text = "Delete",
-                            backgroundColor = backgroundColor,
-                            backgroundIconColor = backgroundIconColor,
-                            iconColor = iconColor,
-                            onClick = {
-                                menuViewModel.setDeleteDialog(true)
-                            },
-                            textColor = textColor
-                        )
-                    }
-
-                    Spacer(modifier = Modifier.height(6.dp))
-
-                    Row(
-                        modifier = Modifier.fillMaxSize(),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        MenuComponent(
-                            width = width,
-                            painter = R.drawable.ic_hide,
-                            text = "Hide",
-                            backgroundColor = backgroundColor,
-                            backgroundIconColor = backgroundIconColor,
-                            iconColor = iconColor,
-                            textColor = textColor,
-                            onClick = {})
-
-                        MenuComponent(
-                            width = width,
-                            painter = R.drawable.ic_round_lyrics,
-                            text = "Lyric",
-                            backgroundColor = backgroundColor,
-                            backgroundIconColor = backgroundIconColor,
-                            iconColor = iconColor,
-                            onClick = {},
-                            textColor = textColor
-                        )
-                    }
                 }
-
-                Spacer(modifier = Modifier.height(6.dp))
-
-                Row(
-                    modifier = Modifier.fillMaxSize(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    MenuComponent(
-                        width = width,
-                        painter = R.drawable.ic_add_to_playing_queue,
-                        text = "Add to playing queue",
-                        backgroundColor = backgroundColor,
-                        backgroundIconColor = backgroundIconColor,
-                        iconColor = iconColor,
-                        textColor = textColor,
-                        onClick = {})
-
-                    MenuComponent(
-                        width = width,
-                        painter = R.drawable.ic_add_to_next_play,
-                        text = "Add to next play",
-                        backgroundColor = backgroundColor,
-                        backgroundIconColor = backgroundIconColor,
-                        iconColor = iconColor,
-                        onClick = {},
-                        textColor = textColor
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(6.dp))
-
-                Row(
-                    modifier = Modifier.fillMaxSize(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    MenuComponent(
-                        width = width,
-                        painter = R.drawable.ic_equalizer,
-                        text = "Equalizer",
-                        backgroundColor = backgroundColor,
-                        backgroundIconColor = backgroundIconColor,
-                        iconColor = iconColor,
-                        textColor = textColor,
-                        onClick = {})
-
-                    MenuComponent(
-                        width = width,
-                        painter = R.drawable.ic_repeat,
-                        text = menuViewModel.repeatMode.collectAsStateWithLifecycle().value,
-                        backgroundColor = backgroundColor,
-                        backgroundIconColor = backgroundIconColor,
-                        iconColor = iconColor,
-                        onClick = onRepeatClick,
-                        textColor = textColor
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(6.dp))
-
-                Row(
-                    modifier = Modifier.fillMaxSize(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    MenuComponent(
-                        width = width,
-                        painter = R.drawable.ic_shuffle,
-                        text = menuViewModel.shuffleText.collectAsStateWithLifecycle().value,
-                        backgroundColor = backgroundColor,
-                        backgroundIconColor = backgroundIconColor,
-                        iconColor = iconColor,
-                        textColor = textColor,
-                        onClick = {
-                            if (menuViewModel.shuffleText.value == "Shuffle Off") {
-                                menuViewModel.setShuffle("Shuffle On")
-                                onShuffleClick(true)
-                            } else {
-                                menuViewModel.setShuffle("Shuffle Off")
-                                onShuffleClick(false)
-                            }
-                        })
-
-                    MenuComponent(
-                        width = width,
-                        painter = R.drawable.ic_bluetooth,
-                        text = "Bluetooth",
-                        backgroundColor = backgroundColor,
-                        backgroundIconColor = backgroundIconColor,
-                        iconColor = iconColor,
-                        onClick = {},
-                        textColor = textColor
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(6.dp))
-
-                Row(
-                    modifier = Modifier.fillMaxSize(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    MenuComponent(
-                        width = width,
-                        painter = R.drawable.ic_add_to_playlist,
-                        text = "Add to playlist",
-                        backgroundColor = backgroundColor,
-                        backgroundIconColor = backgroundIconColor,
-                        iconColor = iconColor,
-                        textColor = textColor,
-                        onClick = {})
-
-                    MenuComponent(
-                        width = width,
-                        painter = R.drawable.ic_share,
-                        text = "Share",
-                        backgroundColor = backgroundColor,
-                        backgroundIconColor = backgroundIconColor,
-                        iconColor = iconColor,
-                        onClick = {},
-                        textColor = textColor
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(6.dp))
-
-                Row(
-                    modifier = Modifier.fillMaxSize(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    MenuComponent(
-                        width = width,
-                        painter = R.drawable.ic_ringtone,
-                        text = "Use as a ringtone",
-                        backgroundColor = backgroundColor,
-                        backgroundIconColor = backgroundIconColor,
-                        iconColor = iconColor,
-                        textColor = textColor,
-                        onClick = {})
-
-                    MenuComponent(
-                        width = width,
-                        painter = R.drawable.ic_sleep_timer,
-                        text = "Sleep timer",
-                        backgroundColor = backgroundColor,
-                        backgroundIconColor = backgroundIconColor,
-                        iconColor = iconColor,
-                        onClick = {},
-                        textColor = textColor
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(6.dp))
-
-                Row(
-                    modifier = Modifier.fillMaxSize(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    MenuComponent(
-                        width = width,
-                        painter = R.drawable.ic_drive_mode,
-                        text = "Drive mode",
-                        backgroundColor = backgroundColor,
-                        backgroundIconColor = backgroundIconColor,
-                        iconColor = iconColor,
-                        textColor = textColor,
-                        onClick = {})
-
-                    MenuComponent(
-                        width = width,
-                        painter = R.drawable.ic_go_to,
-                        text = "Go to",
-                        backgroundColor = backgroundColor,
-                        backgroundIconColor = backgroundIconColor,
-                        iconColor = iconColor,
-                        onClick = {},
-                        textColor = textColor
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(6.dp))
-
-                Row(
-                    modifier = Modifier.fillMaxSize(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    MenuComponent(
-                        width = width,
-                        painter = R.drawable.ic_volume,
-                        text = "Volume",
-                        backgroundColor = backgroundColor,
-                        backgroundIconColor = backgroundIconColor,
-                        iconColor = iconColor,
-                        textColor = textColor,
-                        onClick = {})
-
-                    MenuComponent(
-                        width = width,
-                        painter = R.drawable.ic_edit_audio,
-                        text = "Edit audio",
-                        backgroundColor = backgroundColor,
-                        backgroundIconColor = backgroundIconColor,
-                        iconColor = iconColor,
-                        onClick = {},
-                        textColor = textColor
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(6.dp))
 
                 if (!isSongMenu) {
                     MenuComponent(
@@ -416,7 +200,8 @@ fun Menu(
                         backgroundIconColor = backgroundIconColor,
                         iconColor = iconColor,
                         textColor = textColor,
-                        onClick = {})
+                        onClick = {}
+                    )
                 }
 
                 Spacer(modifier = Modifier.height(12.dp))
