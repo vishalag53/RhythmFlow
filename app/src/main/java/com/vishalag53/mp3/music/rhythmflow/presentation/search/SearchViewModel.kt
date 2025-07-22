@@ -16,12 +16,6 @@ class SearchViewModel @Inject constructor() : ViewModel() {
     private val _searchSongList = MutableStateFlow<List<Audio>>(emptyList())
     val searchSongList = _searchSongList.asStateFlow()
 
-    private val _searchArtistList = MutableStateFlow<List<String>>(emptyList())
-    val searchArtistList = _searchArtistList.asStateFlow()
-
-    private val _searchAlbumList = MutableStateFlow<List<String>>(emptyList())
-    val searchAlbumList = _searchAlbumList.asStateFlow()
-
     private val _searchFolderList = MutableStateFlow<List<String>>(emptyList())
     val searchFolderList = _searchFolderList.asStateFlow()
 
@@ -48,18 +42,6 @@ class SearchViewModel @Inject constructor() : ViewModel() {
                     .contains(lowerQuery)
             }
 
-            _searchArtistList.value = _audioList.value.mapNotNull {
-                it.artist.takeIf { artist ->
-                    artist != "<unknown>" && artist.lowercase().contains(lowerQuery)
-                }
-            }.distinct()
-
-            _searchAlbumList.value = _audioList.value.mapNotNull {
-                it.album.takeIf { album ->
-                    album != "<unknown>" && album.lowercase().contains(lowerQuery)
-                }
-            }.distinct()
-
             _searchFolderList.value = _audioList.value.mapNotNull {
                 it.folderName.takeIf { folder ->
                     folder != "<unknown>" && folder.lowercase().contains(lowerQuery)
@@ -67,8 +49,6 @@ class SearchViewModel @Inject constructor() : ViewModel() {
             }.distinct()
         } else {
             _searchSongList.value = emptyList()
-            _searchArtistList.value = emptyList()
-            _searchAlbumList.value = emptyList()
             _searchFolderList.value = emptyList()
         }
     }

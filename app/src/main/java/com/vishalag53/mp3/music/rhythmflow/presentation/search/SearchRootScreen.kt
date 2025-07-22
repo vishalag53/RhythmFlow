@@ -7,9 +7,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
@@ -52,8 +50,6 @@ fun SearchRootScreen(
     val audioListFilter = when (from) {
         K.MAIN -> audioList
         K.FOLDERS -> audioList.filter { it.folderName == name }
-        K.ALBUMS -> audioList.filter { it.album == name }
-        K.ARTISTS -> audioList.filter { it.artist == name }
         else -> audioList
     }
     var searchText by rememberSaveable { mutableStateOf("") }
@@ -64,15 +60,11 @@ fun SearchRootScreen(
         K.SONGS
     }
     val songs = searchViewModel.searchSongList.collectAsStateWithLifecycle().value
-    val albums = searchViewModel.searchAlbumList.collectAsStateWithLifecycle().value
-    val artists = searchViewModel.searchArtistList.collectAsStateWithLifecycle().value
     val folders = searchViewModel.searchFolderList.collectAsStateWithLifecycle().value
     val playlists = searchViewModel.searchPlaylistList.collectAsStateWithLifecycle().value
 
     val tabDisplayName = when (selectTabName) {
         K.SONGS -> K.SONGS + " (${songs.size})"
-        K.ALBUMS -> K.ALBUMS + " (${albums.size})"
-        K.ARTISTS -> K.ARTISTS + " (${artists.size})"
         K.FOLDERS -> K.FOLDERS + " (${folders.size})"
         K.PLAYLISTS -> K.PLAYLISTS + " (${playlists.size})"
         else -> selectTabName
@@ -155,24 +147,6 @@ fun SearchRootScreen(
                     }
 
                     K.PLAYLISTS -> {}
-                    K.ALBUMS -> {
-                        items(albums) { album ->
-                            Text(
-                                text = album,
-                                color = MaterialTheme.colorScheme.primary
-                            )
-                        }
-                    }
-
-                    K.ARTISTS -> {
-                        items(artists) { artist ->
-                            Text(
-                                text = artist,
-                                color = MaterialTheme.colorScheme.primary
-                            )
-                        }
-                    }
-
                     K.FOLDERS -> {
                         items(folders) { folder ->
                             val folderData = mainViewModel.foldersList.collectAsStateWithLifecycle().value.first { it.name == folder }

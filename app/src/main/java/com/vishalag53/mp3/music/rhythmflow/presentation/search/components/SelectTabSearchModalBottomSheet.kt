@@ -26,8 +26,6 @@ import com.vishalag53.mp3.music.rhythmflow.domain.core.K
 @Composable
 internal fun SelectTabSearchModalBottomSheet(
     songsSize: Int,
-    albumSize: Int,
-    artistSize: Int,
     folderSize: Int,
     playlistSize: Int,
     onClick: () -> Unit,
@@ -37,9 +35,7 @@ internal fun SelectTabSearchModalBottomSheet(
     val selectTabNames = listOf(
         K.SONGS to songsSize,
         K.PLAYLISTS to playlistSize,
-        K.FOLDERS to folderSize,
-        K.ARTISTS to artistSize,
-        K.ALBUMS to albumSize
+        K.FOLDERS to folderSize
     )
 
     Column(

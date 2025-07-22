@@ -6,8 +6,6 @@ object K {
     const val SONGS = "Songs"
     const val PLAYLISTS = "Playlists"
     const val FOLDERS = "Folders"
-    const val ARTISTS = "Artists"
-    const val ALBUMS = "Albums"
 
     const val THEME_BLUE = "Blue"
     const val THEME_GREEN = "Green"

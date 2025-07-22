@@ -30,9 +30,7 @@ fun SelectTabMainModalBottomSheet(mainViewModel: MainViewModel, onClose: () -> U
     val selectTabNames = listOf(
         K.SONGS,
         K.PLAYLISTS,
-        K.FOLDERS,
-        K.ARTISTS,
-        K.ALBUMS
+        K.FOLDERS
     )
 
     Column(

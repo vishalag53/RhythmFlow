@@ -104,8 +104,6 @@ fun ParentRootScreen(
     // Search tab selector
     val selectTabName = searchViewModel.selectTabName.collectAsStateWithLifecycle().value
     val songs = searchViewModel.searchSongList.collectAsStateWithLifecycle().value
-    val albums = searchViewModel.searchAlbumList.collectAsStateWithLifecycle().value
-    val artists = searchViewModel.searchArtistList.collectAsStateWithLifecycle().value
     val folders = searchViewModel.searchFolderList.collectAsStateWithLifecycle().value
     val playlists = searchViewModel.searchPlaylistList.collectAsStateWithLifecycle().value
 
@@ -287,8 +285,6 @@ fun ParentRootScreen(
                         MaterialTheme.colorScheme.primaryContainer
                     SelectTabSearchModalBottomSheet(
                         songsSize = songs.size,
-                        albumSize = albums.size,
-                        artistSize = artists.size,
                         folderSize = folders.size,
                         playlistSize = playlists.size,
                         onClick = {
