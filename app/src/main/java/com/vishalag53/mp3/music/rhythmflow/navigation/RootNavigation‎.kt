@@ -121,7 +121,10 @@ private fun NavGraphBuilder.search(
     searchViewModel: SearchViewModel
 ) {
     composable<Screens.Search> {
+        val args = it.toRoute<Screens.Search>()
         SearchRootScreen(
+            from = args.from,
+            name = args.name,
             navController = navController,
             navigateBack = {
                 navController.popBackStack()

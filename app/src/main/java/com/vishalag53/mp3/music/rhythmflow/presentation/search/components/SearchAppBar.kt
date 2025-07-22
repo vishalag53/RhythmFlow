@@ -1,5 +1,6 @@
 package com.vishalag53.mp3.music.rhythmflow.presentation.search.components
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -25,6 +26,7 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.vishalag53.mp3.music.rhythmflow.R
 import kotlinx.coroutines.delay
@@ -36,7 +38,9 @@ fun SearchAppBar(
     navigateBack: () -> Boolean,
     searchResult: (String) -> Unit,
     onClick: () -> Unit,
-    selectTabName: String
+    selectTabName: String,
+    isSelectTabNameShow: Boolean,
+    songsSize: String
 ) {
     val focusRequester = remember { FocusRequester() }
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -126,10 +130,27 @@ fun SearchAppBar(
                 .fillMaxWidth()
                 .padding(8.dp)
         ) {
-            SelectTabSearch(
-                onClick = onClick,
-                selectTabName = selectTabName
-            )
+            if (isSelectTabNameShow) {
+                SelectTabSearch(
+                    onClick = onClick,
+                    selectTabName = selectTabName
+                )
+            } else {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 6.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Absolute.Center
+                ) {
+                    Text(
+                        text = songsSize,
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Medium,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                }
+            }
         }
     }
 }

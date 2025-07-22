@@ -14,7 +14,7 @@ sealed interface Screens {
     data object Player : Screens
 
     @Serializable
-    data object Search : Screens
+    data class Search(val from: String, val name: String) : Screens
 
     @Serializable
     data class Folder(val folder: FolderData) : Screens

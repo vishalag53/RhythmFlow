@@ -37,6 +37,8 @@ import kotlinx.coroutines.delay
 
 @Composable
 fun SearchRootScreen(
+    from: String,
+    name: String,
     navController: NavHostController,
     navigateBack: () -> Boolean,
     mainViewModel: MainViewModel,
@@ -47,9 +49,20 @@ fun SearchRootScreen(
     searchViewModel: SearchViewModel
 ) {
     val audioList = mainViewModel.audioList.collectAsStateWithLifecycle().value
+    val audioListFilter = when (from) {
+        K.MAIN -> audioList
+        K.FOLDERS -> audioList.filter { it.folderName == name }
+        K.ALBUMS -> audioList.filter { it.album == name }
+        K.ARTISTS -> audioList.filter { it.artist == name }
+        else -> audioList
+    }
     var searchText by rememberSaveable { mutableStateOf("") }
 
-    val selectTabName = searchViewModel.selectTabName.collectAsStateWithLifecycle().value
+    val selectTabName = if (K.MAIN == from) {
+        searchViewModel.selectTabName.collectAsStateWithLifecycle().value
+    } else {
+        K.SONGS
+    }
     val songs = searchViewModel.searchSongList.collectAsStateWithLifecycle().value
     val albums = searchViewModel.searchAlbumList.collectAsStateWithLifecycle().value
     val artists = searchViewModel.searchArtistList.collectAsStateWithLifecycle().value
@@ -65,8 +78,8 @@ fun SearchRootScreen(
         else -> selectTabName
     }
 
-    LaunchedEffect(audioList) {
-        searchViewModel.setAudioList(audioList)
+    LaunchedEffect(audioListFilter) {
+        searchViewModel.setAudioList(audioListFilter)
     }
 
     LaunchedEffect(searchText) {
@@ -88,7 +101,9 @@ fun SearchRootScreen(
                 onClick = {
                     parentUiState.value = ParentUiState(ParentBottomSheetContent.SearchTabSelector)
                 },
-                selectTabName = tabDisplayName
+                selectTabName = tabDisplayName,
+                isSelectTabNameShow = K.MAIN == from,
+                songsSize = K.SONGS + " (${songs.size})"
             )
         },
         bottomBar = {

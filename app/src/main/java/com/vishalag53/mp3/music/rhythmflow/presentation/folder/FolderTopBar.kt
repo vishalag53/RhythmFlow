@@ -17,6 +17,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.vishalag53.mp3.music.rhythmflow.R
+import com.vishalag53.mp3.music.rhythmflow.domain.core.K
+import com.vishalag53.mp3.music.rhythmflow.navigation.Screens
 
 @Composable
 fun FolderTopBar(
@@ -60,7 +62,9 @@ fun FolderTopBar(
         }
 
         IconButton(
-            onClick = {}
+            onClick = {
+                navController.navigate(Screens.Search(from = K.FOLDERS, name = folderName))
+            }
         ) {
             Icon(
                 painter = painterResource(R.drawable.ic_search),

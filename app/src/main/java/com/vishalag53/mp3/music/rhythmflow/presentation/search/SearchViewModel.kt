@@ -31,7 +31,6 @@ class SearchViewModel @Inject constructor() : ViewModel() {
     private val _selectTabName = MutableStateFlow(K.SONGS)
     val selectTabName = _selectTabName.asStateFlow()
 
-
     fun setAudioList(audioList: List<Audio>) {
         _audioList.value = audioList
     }

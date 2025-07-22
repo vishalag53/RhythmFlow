@@ -20,6 +20,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.vishalag53.mp3.music.rhythmflow.R
+import com.vishalag53.mp3.music.rhythmflow.domain.core.K
 import com.vishalag53.mp3.music.rhythmflow.navigation.Screens
 import com.vishalag53.mp3.music.rhythmflow.presentation.mainactivity.MainViewModel
 
@@ -61,7 +62,7 @@ fun AppBarRootScreen(
             }
 
             IconButton(onClick = {
-                navController.navigate(Screens.Search)
+                navController.navigate(Screens.Search(from = K.MAIN, name = ""))
             }) {
                 Icon(
                     painter = painterResource(R.drawable.ic_search),
