@@ -48,6 +48,8 @@ import com.vishalag53.mp3.music.rhythmflow.presentation.core.Loading
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.baseplayer.BasePlayerEvents
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.baseplayer.BasePlayerViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.delete.Delete
+import com.vishalag53.mp3.music.rhythmflow.presentation.core.folderMenu.FolderMenu
+import com.vishalag53.mp3.music.rhythmflow.presentation.core.folderMenu.FolderMenuViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.menu.Menu
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.menu.MenuViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.playbackspeed.PlaybackSpeed
@@ -77,6 +79,7 @@ fun ParentRootScreen(
     val basePlayerViewModel = hiltViewModel<BasePlayerViewModel>()
     val menuViewModel = hiltViewModel<MenuViewModel>()
     val searchViewModel = hiltViewModel<SearchViewModel>()
+    val folderMenuViewModel = hiltViewModel<FolderMenuViewModel>()
 
     // Modal bottom sheet
     val parentUiStateSaver: Saver<ParentUiState, *> = Saver(save = {
@@ -259,6 +262,21 @@ fun ParentRootScreen(
                 scope.launch { sheetState.show() }
             }
 
+            ParentBottomSheetContent.FolderMenu -> {
+                modalBottomSheetBackgroundColor.value = Color(0xFFFDCF9E)
+                showSheet.value = true
+                sheetContent.value = {
+                    FolderMenu(
+                        folderMenuViewModel = folderMenuViewModel,
+                        backgroundColor = MaterialTheme.colorScheme.background,
+                        backgroundIconColor = MaterialTheme.colorScheme.secondary,
+                        iconColor = MaterialTheme.colorScheme.primary,
+                        textColor = MaterialTheme.colorScheme.primary
+                    )
+                }
+                scope.launch { sheetState.show() }
+            }
+
             ParentBottomSheetContent.Repeat -> {
                 modalBottomSheetBackgroundColor.value = Color(0xFFFDCF9E)
                 showSheet.value = true
@@ -368,7 +386,8 @@ fun ParentRootScreen(
         menuViewModel = menuViewModel,
         startNotificationService = { startNotificationService() },
         parentUiState = parentUiState,
-        searchViewModel = searchViewModel
+        searchViewModel = searchViewModel,
+        folderMenuViewModel = folderMenuViewModel
     )
 
     if (showSheet.value) {

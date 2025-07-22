@@ -11,6 +11,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import com.vishalag53.mp3.music.rhythmflow.domain.core.FolderData
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.baseplayer.BasePlayerViewModel
+import com.vishalag53.mp3.music.rhythmflow.presentation.core.folderMenu.FolderMenuViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.menu.MenuViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.folder.FolderRootScreen
 import com.vishalag53.mp3.music.rhythmflow.presentation.main.MainRootScreen
@@ -30,7 +31,8 @@ fun RootNavigation(
     basePlayerViewModel: BasePlayerViewModel,
     menuViewModel: MenuViewModel,
     parentUiState: MutableState<ParentUiState>,
-    searchViewModel: SearchViewModel
+    searchViewModel: SearchViewModel,
+    folderMenuViewModel: FolderMenuViewModel
 ) {
     NavHost(
         navController = navController, startDestination = Screens.Main.Songs
@@ -41,7 +43,8 @@ fun RootNavigation(
             basePlayerViewModel = basePlayerViewModel,
             menuViewModel = menuViewModel,
             mainViewModel = mainViewModel,
-            parentUiState = parentUiState
+            parentUiState = parentUiState,
+            folderMenuViewModel = folderMenuViewModel
         )
 
         playerGraph(
@@ -58,7 +61,8 @@ fun RootNavigation(
             basePlayerViewModel = basePlayerViewModel,
             menuViewModel = menuViewModel,
             parentUiState = parentUiState,
-            searchViewModel = searchViewModel
+            searchViewModel = searchViewModel,
+            folderMenuViewModel = folderMenuViewModel
         )
 
         folder(
@@ -79,7 +83,8 @@ private fun NavGraphBuilder.mainGraph(
     basePlayerViewModel: BasePlayerViewModel,
     menuViewModel: MenuViewModel,
     mainViewModel: MainViewModel,
-    parentUiState: MutableState<ParentUiState>
+    parentUiState: MutableState<ParentUiState>,
+    folderMenuViewModel: FolderMenuViewModel
 ) {
     composable<Screens.Main.Songs> {
         MainRootScreen(
@@ -88,7 +93,8 @@ private fun NavGraphBuilder.mainGraph(
             startNotificationService = startNotificationService,
             menuViewModel = menuViewModel,
             mainViewModel = mainViewModel,
-            parentUiState = parentUiState
+            parentUiState = parentUiState,
+            folderMenuViewModel = folderMenuViewModel
         )
     }
 }
@@ -118,7 +124,8 @@ private fun NavGraphBuilder.search(
     basePlayerViewModel: BasePlayerViewModel,
     menuViewModel: MenuViewModel,
     parentUiState: MutableState<ParentUiState>,
-    searchViewModel: SearchViewModel
+    searchViewModel: SearchViewModel,
+    folderMenuViewModel: FolderMenuViewModel
 ) {
     composable<Screens.Search> {
         val args = it.toRoute<Screens.Search>()
@@ -134,7 +141,8 @@ private fun NavGraphBuilder.search(
             startNotificationService = startNotificationService,
             menuViewModel = menuViewModel,
             parentUiState = parentUiState,
-            searchViewModel = searchViewModel
+            searchViewModel = searchViewModel,
+            folderMenuViewModel = folderMenuViewModel
         )
     }
 }

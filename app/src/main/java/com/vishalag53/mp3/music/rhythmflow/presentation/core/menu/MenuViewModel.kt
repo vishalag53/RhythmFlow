@@ -20,7 +20,7 @@ class MenuViewModel @Inject constructor() : ViewModel() {
     private val _from = MutableStateFlow(K.MAIN)
     val from = _from.asStateFlow()
 
-    private val _audio = MutableStateFlow<Audio>(dummyAudio)
+    private val _audio = MutableStateFlow(dummyAudio)
     val audio = _audio.asStateFlow()
 
     private val _showRenameDialog = MutableStateFlow(false)

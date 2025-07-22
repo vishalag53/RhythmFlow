@@ -9,9 +9,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -23,11 +25,16 @@ import com.vishalag53.mp3.music.rhythmflow.R
 import com.vishalag53.mp3.music.rhythmflow.domain.core.FolderData
 import com.vishalag53.mp3.music.rhythmflow.domain.core.formatDuration
 import com.vishalag53.mp3.music.rhythmflow.navigation.Screens
+import com.vishalag53.mp3.music.rhythmflow.presentation.core.folderMenu.FolderMenuViewModel
+import com.vishalag53.mp3.music.rhythmflow.presentation.parent.ParentBottomSheetContent
+import com.vishalag53.mp3.music.rhythmflow.presentation.parent.ParentUiState
 
 @Composable
 fun FolderItem(
     folder: FolderData,
-    navController: NavHostController
+    navController: NavHostController,
+    folderMenuViewModel: FolderMenuViewModel,
+    parentUiState: MutableState<ParentUiState>
 ) {
     Row(
         modifier = Modifier
@@ -74,10 +81,17 @@ fun FolderItem(
             )
         }
 
-        Icon(
-            painter = painterResource(R.drawable.ic_menu),
-            contentDescription = null,
-            tint = MaterialTheme.colorScheme.primary
-        )
+        IconButton(
+            onClick = {
+                folderMenuViewModel.setFolder(folder)
+                parentUiState.value = ParentUiState(ParentBottomSheetContent.FolderMenu)
+            }
+        ) {
+            Icon(
+                painter = painterResource(R.drawable.ic_menu),
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.primary
+            )
+        }
     }
 }

@@ -6,6 +6,7 @@ sealed class ParentBottomSheetContent {
     data object PlayingQueue: ParentBottomSheetContent()
     data object SongInfo: ParentBottomSheetContent()
     data object Menu: ParentBottomSheetContent()
+    data object FolderMenu: ParentBottomSheetContent()
     data object Repeat: ParentBottomSheetContent()
     data object SearchTabSelector: ParentBottomSheetContent()
     data object SortAudioBy: ParentBottomSheetContent()

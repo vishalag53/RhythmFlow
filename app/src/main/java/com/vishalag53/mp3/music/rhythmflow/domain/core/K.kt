@@ -37,3 +37,11 @@ val dummyAudio = Audio(
     size = 0L,
     bitrate = 0L
 )
+
+val dummyFolder = FolderData(
+    name = "",
+    path = "",
+    length = 0,
+    totalTime = 0,
+    totalSize = 0
+)

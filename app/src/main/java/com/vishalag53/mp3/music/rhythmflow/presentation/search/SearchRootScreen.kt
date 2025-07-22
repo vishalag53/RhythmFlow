@@ -24,6 +24,7 @@ import com.vishalag53.mp3.music.rhythmflow.navigation.Screens
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.AudioItem
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.baseplayer.BasePlayerEvents
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.baseplayer.BasePlayerViewModel
+import com.vishalag53.mp3.music.rhythmflow.presentation.core.folderMenu.FolderMenuViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.menu.MenuViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.folders.FolderItem
 import com.vishalag53.mp3.music.rhythmflow.presentation.mainactivity.MainViewModel
@@ -44,7 +45,8 @@ fun SearchRootScreen(
     basePlayerViewModel: BasePlayerViewModel,
     menuViewModel: MenuViewModel,
     parentUiState: MutableState<ParentUiState>,
-    searchViewModel: SearchViewModel
+    searchViewModel: SearchViewModel,
+    folderMenuViewModel: FolderMenuViewModel
 ) {
     val audioList = mainViewModel.audioList.collectAsStateWithLifecycle().value
     val audioListFilter = when (from) {
@@ -152,7 +154,9 @@ fun SearchRootScreen(
                             val folderData = mainViewModel.foldersList.collectAsStateWithLifecycle().value.first { it.name == folder }
                             FolderItem(
                                 folder = folderData,
-                                navController = navController
+                                navController = navController,
+                                folderMenuViewModel = folderMenuViewModel,
+                                parentUiState = parentUiState
                             )
                         }
                     }
