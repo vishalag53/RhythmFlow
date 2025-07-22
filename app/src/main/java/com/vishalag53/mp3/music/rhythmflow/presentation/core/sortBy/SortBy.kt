@@ -31,7 +31,6 @@ fun SortBy(
     onSortByChange: (String) -> Unit,
     onAscDescChange: (Boolean) -> Unit
 ) {
-
     val sortListASC = listOf(
         "Ascending",
         "Descending"

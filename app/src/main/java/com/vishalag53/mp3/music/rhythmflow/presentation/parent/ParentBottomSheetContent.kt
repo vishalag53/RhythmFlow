@@ -5,6 +5,7 @@ sealed class ParentBottomSheetContent {
     data object PlaybackSpeed : ParentBottomSheetContent()
     data object PlayingQueue: ParentBottomSheetContent()
     data object SongInfo: ParentBottomSheetContent()
+    data object FolderInfo: ParentBottomSheetContent()
     data object Menu: ParentBottomSheetContent()
     data object FolderMenu: ParentBottomSheetContent()
     data object Repeat: ParentBottomSheetContent()

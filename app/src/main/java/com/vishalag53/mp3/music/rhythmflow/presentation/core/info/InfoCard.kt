@@ -1,4 +1,4 @@
-package com.vishalag53.mp3.music.rhythmflow.presentation.core.songinfo
+package com.vishalag53.mp3.music.rhythmflow.presentation.core.info
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -27,7 +27,7 @@ import androidx.compose.ui.unit.sp
 import com.vishalag53.mp3.music.rhythmflow.domain.core.stringCapitalized
 
 @Composable
-internal fun AboutCard(about: String, aboutInfo: String) {
+internal fun InfoCard(about: String, aboutInfo: String) {
     Card(
         modifier = Modifier
             .fillMaxWidth(),

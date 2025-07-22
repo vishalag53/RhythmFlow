@@ -1,4 +1,4 @@
-package com.vishalag53.mp3.music.rhythmflow.presentation.core.songinfo
+package com.vishalag53.mp3.music.rhythmflow.presentation.core.info
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -12,42 +12,12 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.vishalag53.mp3.music.rhythmflow.data.local.model.Audio
-import com.vishalag53.mp3.music.rhythmflow.domain.core.formatBitrate
-import com.vishalag53.mp3.music.rhythmflow.domain.core.formatDate
-import com.vishalag53.mp3.music.rhythmflow.domain.core.formatDuration
-import com.vishalag53.mp3.music.rhythmflow.domain.core.formatSize
 
 @Composable
-fun SongInfoRootScreen(audio: Audio) {
-    val about = arrayOf(
-        "Song Name",
-        "Display Name",
-        "Artist",
-        "Album",
-        "Duration",
-        "Size",
-        "Bit Rate",
-        "Date Added",
-        "Date Modified",
-        "Folder Name",
-        "File Path"
-    )
-
-    val aboutInfo = arrayOf(
-        audio.title,
-        audio.displayName,
-        audio.artist,
-        audio.album,
-        formatDuration(audio.duration),
-        formatSize(audio.size),
-        formatBitrate(audio.bitrate),
-        formatDate(audio.dateAdded),
-        formatDate(audio.dateModified),
-        audio.folderName,
-        audio.path
-    )
-
+fun Info(
+    about: Array<String>,
+    aboutInfo: Array<String>
+) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -61,7 +31,7 @@ fun SongInfoRootScreen(audio: Audio) {
         ) {
             for (i in about.indices) {
                 if (aboutInfo[i] != "<unknown>") {
-                    AboutCard(about[i], aboutInfo[i])
+                    InfoCard(about[i], aboutInfo[i])
                     Spacer(modifier = Modifier.height(12.dp))
                 }
             }

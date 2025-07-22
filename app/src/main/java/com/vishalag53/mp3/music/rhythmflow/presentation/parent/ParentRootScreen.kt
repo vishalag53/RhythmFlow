@@ -40,6 +40,10 @@ import androidx.navigation.NavHostController
 import com.vishalag53.mp3.music.rhythmflow.data.local.model.Audio
 import com.vishalag53.mp3.music.rhythmflow.domain.core.K
 import com.vishalag53.mp3.music.rhythmflow.domain.core.deleteAudioFile
+import com.vishalag53.mp3.music.rhythmflow.domain.core.formatBitrate
+import com.vishalag53.mp3.music.rhythmflow.domain.core.formatDate
+import com.vishalag53.mp3.music.rhythmflow.domain.core.formatDuration
+import com.vishalag53.mp3.music.rhythmflow.domain.core.formatSize
 import com.vishalag53.mp3.music.rhythmflow.domain.core.renameDisplayName
 import com.vishalag53.mp3.music.rhythmflow.domain.core.requestDeletePermission
 import com.vishalag53.mp3.music.rhythmflow.domain.core.requestRenamePermission
@@ -50,13 +54,13 @@ import com.vishalag53.mp3.music.rhythmflow.presentation.core.baseplayer.BasePlay
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.delete.Delete
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.folderMenu.FolderMenu
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.folderMenu.FolderMenuViewModel
+import com.vishalag53.mp3.music.rhythmflow.presentation.core.info.Info
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.menu.Menu
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.menu.MenuViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.playbackspeed.PlaybackSpeed
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.playingqueue.SongQueueListsItem
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.rename.Rename
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.repeat.Repeat
-import com.vishalag53.mp3.music.rhythmflow.presentation.core.songinfo.SongInfoRootScreen
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.sortBy.SortBy
 import com.vishalag53.mp3.music.rhythmflow.presentation.main.components.SelectTabMainModalBottomSheet
 import com.vishalag53.mp3.music.rhythmflow.presentation.mainactivity.MainViewModel
@@ -140,6 +144,7 @@ fun ParentRootScreen(
         }
     }
 
+    // Sort Audio
     val sortAudioList = listOf(
         "Song title",
         "File name",
@@ -152,11 +157,58 @@ fun ParentRootScreen(
         "Date modified"
     )
 
+    // Sort Folder
     val sortFolderList = listOf(
         "Folder name",
-        "Folder length",
+        "Song count",
         "Folder size",
-        "Folder time"
+        "Total songs time"
+    )
+
+    // Song Info
+    val audioMenu = menuViewModel.audio.collectAsStateWithLifecycle().value
+    val aboutSong = arrayOf(
+        "Song Name",
+        "Display Name",
+        "Artist",
+        "Album",
+        "Duration",
+        "Size",
+        "Bit Rate",
+        "Date Added",
+        "Date Modified",
+        "Folder Name",
+        "File Path"
+    )
+    val aboutSongInfo = arrayOf(
+        audioMenu.title,
+        audioMenu.displayName,
+        audioMenu.artist,
+        audioMenu.album,
+        formatDuration(audioMenu.duration),
+        formatSize(audioMenu.size),
+        formatBitrate(audioMenu.bitrate),
+        formatDate(audioMenu.dateAdded),
+        formatDate(audioMenu.dateModified),
+        audioMenu.folderName,
+        audioMenu.path
+    )
+
+    // Folder Info
+    val folder = folderMenuViewModel.folder.collectAsStateWithLifecycle().value
+    val aboutFolder = arrayOf(
+        "Name",
+        "Total songs",
+        "Total songs time",
+        "Folder size",
+        "Folder Path"
+    )
+    val aboutFolderInfo = arrayOf(
+        folder.name,
+        folder.length.toString(),
+        formatDuration(folder.totalTime),
+        formatSize(folder.totalSize),
+        folder.path
     )
 
     LaunchedEffect(parentUiState.value.sheet) {
@@ -204,7 +256,22 @@ fun ParentRootScreen(
                 modalBottomSheetBackgroundColor.value = Color(0xFF736659)
                 showSheet.value = true
                 sheetContent.value = {
-                    SongInfoRootScreen(audio = menuViewModel.audio.collectAsStateWithLifecycle().value)
+                    Info(
+                        about = aboutSong,
+                        aboutInfo = aboutSongInfo
+                    )
+                }
+                scope.launch { sheetState.show() }
+            }
+
+            ParentBottomSheetContent.FolderInfo -> {
+                modalBottomSheetBackgroundColor.value = Color(0xFF736659)
+                showSheet.value = true
+                sheetContent.value = {
+                    Info(
+                        about = aboutFolder,
+                        aboutInfo = aboutFolderInfo
+                    )
                 }
                 scope.launch { sheetState.show() }
             }
@@ -271,7 +338,10 @@ fun ParentRootScreen(
                         backgroundColor = MaterialTheme.colorScheme.background,
                         backgroundIconColor = MaterialTheme.colorScheme.secondary,
                         iconColor = MaterialTheme.colorScheme.primary,
-                        textColor = MaterialTheme.colorScheme.primary
+                        textColor = MaterialTheme.colorScheme.primary,
+                        onInfoClick = {
+                            parentUiState.value = ParentUiState(ParentBottomSheetContent.FolderInfo)
+                        }
                     )
                 }
                 scope.launch { sheetState.show() }
