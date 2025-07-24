@@ -55,6 +55,7 @@ fun Drawer(width: Dp) {
         DrawerItem("Volume Booster", R.drawable.ic_volume),
         DrawerItem("Sleep Timer", R.drawable.ic_sleep_timer),
         DrawerItem("Drive Mode", R.drawable.ic_drive_mode),
+        DrawerItem("Trash", R.drawable.ic_trash),
         DrawerItem("History", R.drawable.ic_history),
         DrawerItem("Hidden Songs", R.drawable.ic_hide),
         DrawerItem("Settings", R.drawable.ic_settings),
