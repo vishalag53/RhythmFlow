@@ -22,7 +22,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.NavigationDrawerItem
-import androidx.compose.material3.NavigationDrawerItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -57,6 +56,7 @@ fun Drawer(width: Dp) {
         DrawerItem("Sleep Timer", R.drawable.ic_sleep_timer),
         DrawerItem("Drive Mode", R.drawable.ic_drive_mode),
         DrawerItem("History", R.drawable.ic_history),
+        DrawerItem("Hidden Songs", R.drawable.ic_hide),
         DrawerItem("Settings", R.drawable.ic_settings),
     )
 
@@ -144,8 +144,12 @@ fun Drawer(width: Dp) {
                         )
                     },
                     onClick = {},
-                    modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
+                    modifier = Modifier.background(
+                        color = MaterialTheme.colorScheme.primaryContainer,
+                        shape = RoundedCornerShape(36.dp)
+                    )
                 )
+                Spacer(modifier = Modifier.height(6.dp))
             }
 
             HorizontalDivider(
@@ -172,8 +176,10 @@ fun Drawer(width: Dp) {
                     )
                 },
                 onClick = {},
-                modifier = Modifier
-                    .padding(NavigationDrawerItemDefaults.ItemPadding)
+                modifier = Modifier.background(
+                    color = MaterialTheme.colorScheme.primaryContainer,
+                    shape = RoundedCornerShape(36.dp)
+                )
             )
 
             Spacer(Modifier.height(12.dp))
