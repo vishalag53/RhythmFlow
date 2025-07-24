@@ -136,7 +136,7 @@ fun PlaybackSpeed(
                                 val speed = playbackSpeedText.value.toFloatOrNull()
                                 if (speed != null) {
                                     val newSpeed = when (speed) {
-                                        in 0.3F..5.0F -> speed.minus(0.05F)
+                                        in 0.3F..6.0F -> speed.minus(0.05F)
                                         in 0.25F..0.3F -> 0.25F
                                         else -> speed
                                     }
@@ -161,8 +161,8 @@ fun PlaybackSpeed(
                                     val speed = playbackSpeedText.value.toFloatOrNull()
                                     if (speed != null) {
                                         val newSpeed = when (speed) {
-                                            in 0.25F..4.95F -> speed.plus(0.05F)
-                                            in 4.95F..5.0F -> 5.0F
+                                            in 0.25F..5.95F -> speed.plus(0.05F)
+                                            in 5.95F..6.0F -> 6.0F
                                             else -> speed
                                         }
                                         playbackSpeedText.value = String.format("%.2f", newSpeed)
@@ -183,7 +183,7 @@ fun PlaybackSpeed(
                                         playbackSpeedText.value = String.format("%.2f", speed)
                                         val newSpeed = playbackSpeedText.value.toFloat()
 
-                                        if (newSpeed in 0.25f..5.0f) {
+                                        if (newSpeed in 0.25f..6.0f) {
                                             onPlaybackSpeedChange(newSpeed)
                                             onPlaybackSpeedChangeBasePlayer(newSpeed)
                                             onClose()
@@ -191,10 +191,10 @@ fun PlaybackSpeed(
                                             if (newSpeed < 0.25F) {
                                                 playbackSpeedText.value = "0.25"
                                             } else {
-                                                playbackSpeedText.value = "5.0"
+                                                playbackSpeedText.value = "6.0"
                                             }
                                             Toast
-                                                .makeText(context, "Please enter a speed between 0.25x and 5.0x.", Toast.LENGTH_SHORT)
+                                                .makeText(context, "Please enter a speed between 0.25x and 6.0x.", Toast.LENGTH_SHORT)
                                                 .show()
                                         }
                                     } else {

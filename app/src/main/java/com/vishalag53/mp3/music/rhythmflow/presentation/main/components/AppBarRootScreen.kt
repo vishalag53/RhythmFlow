@@ -28,7 +28,8 @@ import com.vishalag53.mp3.music.rhythmflow.presentation.mainactivity.MainViewMod
 fun AppBarRootScreen(
     navController: NavHostController,
     mainViewModel: MainViewModel,
-    onSelectTabMainClick: () -> Unit
+    onSelectTabMainClick: () -> Unit,
+    onNavigationDrawerClick: () -> Unit
 ) {
     Box(
         modifier = Modifier
@@ -46,12 +47,16 @@ fun AppBarRootScreen(
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Icon(
-                    painter = painterResource(R.drawable.ic_drawable_menu),
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.size(26.dp)
-                )
+                IconButton(
+                    onClick = onNavigationDrawerClick
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_drawable_menu),
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.size(26.dp)
+                    )
+                }
 
                 Spacer(modifier = Modifier.width(8.dp))
 
