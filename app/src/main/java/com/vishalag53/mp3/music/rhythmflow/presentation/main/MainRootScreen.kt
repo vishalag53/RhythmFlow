@@ -53,7 +53,10 @@ fun MainRootScreen(
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
-            Drawer(width = screenWidth * 0.8f)
+            Drawer(
+                width = screenWidth * 0.8f,
+                navController = navController
+            )
         }
     ) {
         Scaffold(

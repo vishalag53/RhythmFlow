@@ -34,31 +34,37 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.vishalag53.mp3.music.rhythmflow.R
+import com.vishalag53.mp3.music.rhythmflow.navigation.Screens
 
 data class DrawerItem(
     val label: String,
-    @DrawableRes val iconRes: Int
+    @DrawableRes val iconRes: Int,
+    val onClick: () -> Unit
 )
 
 @Composable
-fun Drawer(width: Dp) {
+fun Drawer(
+    width: Dp,
+    navController: NavHostController
+) {
     val isDarkTheme = isSystemInDarkTheme()
     val logo = if (isDarkTheme) R.drawable.ic_logo_dark_splash
     else R.drawable.ic_logo_light_splash
 
     val items = listOf(
-        DrawerItem("Themes", R.drawable.ic_themes),
-        DrawerItem("Widget", R.drawable.ic_widget),
-        DrawerItem("Equalizer", R.drawable.ic_equalizer1),
-        DrawerItem("Playback Speed", R.drawable.ic_playback_speed),
-        DrawerItem("Volume Booster", R.drawable.ic_volume),
-        DrawerItem("Sleep Timer", R.drawable.ic_sleep_timer),
-        DrawerItem("Drive Mode", R.drawable.ic_drive_mode),
-        DrawerItem("Trash", R.drawable.ic_trash),
-        DrawerItem("History", R.drawable.ic_history),
-        DrawerItem("Hidden Songs", R.drawable.ic_hide),
-        DrawerItem("Settings", R.drawable.ic_settings),
+        DrawerItem("Themes", R.drawable.ic_themes) {},
+        DrawerItem("Widget", R.drawable.ic_widget) {},
+        DrawerItem("Equalizer", R.drawable.ic_equalizer1) {},
+        DrawerItem("Playback Speed", R.drawable.ic_playback_speed) { navController.navigate(Screens.PlaybackSpeed) },
+        DrawerItem("Volume Booster", R.drawable.ic_volume) {},
+        DrawerItem("Sleep Timer", R.drawable.ic_sleep_timer) {},
+        DrawerItem("Drive Mode", R.drawable.ic_drive_mode) {},
+        DrawerItem("Trash", R.drawable.ic_trash) {},
+        DrawerItem("History", R.drawable.ic_history) {},
+        DrawerItem("Hidden Songs", R.drawable.ic_hide) {},
+        DrawerItem("Settings", R.drawable.ic_settings) {},
     )
 
     ModalDrawerSheet(
@@ -144,7 +150,7 @@ fun Drawer(width: Dp) {
                             modifier = Modifier.size(20.dp)
                         )
                     },
-                    onClick = {},
+                    onClick = item.onClick,
                     modifier = Modifier.background(
                         color = MaterialTheme.colorScheme.primaryContainer,
                         shape = RoundedCornerShape(36.dp)

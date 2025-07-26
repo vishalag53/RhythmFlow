@@ -57,7 +57,7 @@ import com.vishalag53.mp3.music.rhythmflow.presentation.core.folderMenu.FolderMe
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.info.Info
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.menu.Menu
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.menu.MenuViewModel
-import com.vishalag53.mp3.music.rhythmflow.presentation.core.playbackspeed.PlaybackSpeed
+import com.vishalag53.mp3.music.rhythmflow.presentation.playbackspeed.components.PlaybackSpeed
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.playingqueue.SongQueueListsItem
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.rename.Rename
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.repeat.Repeat

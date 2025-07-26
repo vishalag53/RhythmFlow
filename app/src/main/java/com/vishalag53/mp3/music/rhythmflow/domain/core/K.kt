@@ -10,6 +10,8 @@ object K {
     const val THEME_BLUE = "Blue"
     const val THEME_GREEN = "Green"
 
+    const val FAVOURITE = "Favourite"
+
     const val PLAYER = "Player"
     const val MAIN = "Main"
     const val SEARCH = "Search"

@@ -17,6 +17,7 @@ import com.vishalag53.mp3.music.rhythmflow.presentation.folder.FolderRootScreen
 import com.vishalag53.mp3.music.rhythmflow.presentation.main.MainRootScreen
 import com.vishalag53.mp3.music.rhythmflow.presentation.mainactivity.MainViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.parent.ParentUiState
+import com.vishalag53.mp3.music.rhythmflow.presentation.playbackspeed.PlaybackSpeedRootScreen
 import com.vishalag53.mp3.music.rhythmflow.presentation.player.PlayerRootScreen
 import com.vishalag53.mp3.music.rhythmflow.presentation.search.SearchRootScreen
 import com.vishalag53.mp3.music.rhythmflow.presentation.search.SearchViewModel
@@ -72,6 +73,10 @@ fun RootNavigation(
             basePlayerViewModel = basePlayerViewModel,
             menuViewModel = menuViewModel,
             parentUiState = parentUiState
+        )
+
+        playbackSpeed(
+            navController = navController
         )
     }
 }
@@ -170,6 +175,16 @@ private fun NavGraphBuilder.folder(
             menuViewModel = menuViewModel,
             mainViewModel = mainViewModel,
             parentUiState = parentUiState
+        )
+    }
+}
+
+private fun NavGraphBuilder.playbackSpeed(
+    navController: NavHostController
+) {
+    composable<Screens.PlaybackSpeed> {
+        PlaybackSpeedRootScreen(
+            navController = navController
         )
     }
 }

@@ -18,4 +18,7 @@ sealed interface Screens {
 
     @Serializable
     data class Folder(val folder: FolderData) : Screens
+
+    @Serializable
+    data object PlaybackSpeed : Screens
 }
