@@ -3,7 +3,6 @@ package com.vishalag53.mp3.music.rhythmflow.presentation.folder
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -17,8 +16,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.vishalag53.mp3.music.rhythmflow.R
-import com.vishalag53.mp3.music.rhythmflow.domain.core.K
-import com.vishalag53.mp3.music.rhythmflow.navigation.Screens
 
 @Composable
 fun FolderTopBar(
@@ -27,8 +24,7 @@ fun FolderTopBar(
 ) {
     Row(
         modifier = Modifier
-            .fillMaxWidth()
-            .statusBarsPadding(),
+            .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
@@ -58,18 +54,6 @@ fun FolderTopBar(
                 softWrap = true,
                 overflow = TextOverflow.Ellipsis,
                 modifier = Modifier.weight(1f)
-            )
-        }
-
-        IconButton(
-            onClick = {
-                navController.navigate(Screens.Search(from = K.FOLDERS, name = folderName))
-            }
-        ) {
-            Icon(
-                painter = painterResource(R.drawable.ic_search),
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.primary
             )
         }
     }

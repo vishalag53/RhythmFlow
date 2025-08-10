@@ -1,15 +1,19 @@
 package com.vishalag53.mp3.music.rhythmflow.presentation.songs
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.navigation.NavHostController
 import com.vishalag53.mp3.music.rhythmflow.data.local.model.Audio
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.AudioItem
@@ -19,6 +23,7 @@ import com.vishalag53.mp3.music.rhythmflow.presentation.mainactivity.MainViewMod
 import com.vishalag53.mp3.music.rhythmflow.presentation.parent.ParentUiState
 import com.vishalag53.mp3.music.rhythmflow.presentation.songs.components.SongsTopBar
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SongsRootScreen(
     audioList : List<Audio>,
@@ -31,15 +36,20 @@ fun SongsRootScreen(
     mainViewModel: MainViewModel,
     parentUiState: MutableState<ParentUiState>
 ) {
+    val scrollBehavior = SearchBarDefaults.enterAlwaysSearchBarScrollBehavior()
+
     Scaffold(
+        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             SongsTopBar(
                 audioList = audioList,
                 refreshAudioList = { mainViewModel.refreshAudioList() },
                 onSortByClick = onSortByClick,
-                parentUiState = parentUiState
+                parentUiState = parentUiState,
+                scrollBehavior = scrollBehavior
             )
         },
+        contentWindowInsets = WindowInsets(0,0,0,0)
     ) { innerPadding ->
         Box(
             modifier = Modifier

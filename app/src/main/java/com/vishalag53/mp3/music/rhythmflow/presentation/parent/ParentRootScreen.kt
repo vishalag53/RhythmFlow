@@ -9,15 +9,18 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -62,10 +65,7 @@ import com.vishalag53.mp3.music.rhythmflow.presentation.core.playingqueue.SongQu
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.rename.Rename
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.repeat.Repeat
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.sortBy.SortBy
-import com.vishalag53.mp3.music.rhythmflow.presentation.main.components.SelectTabMainModalBottomSheet
 import com.vishalag53.mp3.music.rhythmflow.presentation.mainactivity.MainViewModel
-import com.vishalag53.mp3.music.rhythmflow.presentation.search.SearchViewModel
-import com.vishalag53.mp3.music.rhythmflow.presentation.search.components.SelectTabSearchModalBottomSheet
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -82,7 +82,6 @@ fun ParentRootScreen(
     // Viewmodel
     val basePlayerViewModel = hiltViewModel<BasePlayerViewModel>()
     val menuViewModel = hiltViewModel<MenuViewModel>()
-    val searchViewModel = hiltViewModel<SearchViewModel>()
     val folderMenuViewModel = hiltViewModel<FolderMenuViewModel>()
 
     // Modal bottom sheet
@@ -107,12 +106,6 @@ fun ParentRootScreen(
 
     // playback speed
     val playbackSpeed = remember { mutableFloatStateOf(1.0F) }
-
-    // Search tab selector
-    val selectTabName = searchViewModel.selectTabName.collectAsStateWithLifecycle().value
-    val songs = searchViewModel.searchSongList.collectAsStateWithLifecycle().value
-    val folders = searchViewModel.searchFolderList.collectAsStateWithLifecycle().value
-    val playlists = searchViewModel.searchPlaylistList.collectAsStateWithLifecycle().value
 
     // Delete
     val pendingDelete = remember { mutableStateOf<Audio?>(null) }
@@ -366,40 +359,6 @@ fun ParentRootScreen(
                 scope.launch { sheetState.show() }
             }
 
-            ParentBottomSheetContent.SearchTabSelector -> {
-                showSheet.value = true
-                sheetContent.value = {
-                    modalBottomSheetBackgroundColor.value =
-                        MaterialTheme.colorScheme.primaryContainer
-                    SelectTabSearchModalBottomSheet(
-                        songsSize = songs.size,
-                        folderSize = folders.size,
-                        playlistSize = playlists.size,
-                        onClick = {
-                            parentUiState.value = ParentUiState()
-                        },
-                        onSelectClick = { selected ->
-                            searchViewModel.setSelectTabName(selected)
-                        },
-                        selectTabName = selectTabName
-                    )
-                }
-                scope.launch { sheetState.show() }
-            }
-
-            ParentBottomSheetContent.SelectTabName -> {
-                showSheet.value = true
-                sheetContent.value = {
-                    modalBottomSheetBackgroundColor.value =
-                        MaterialTheme.colorScheme.primaryContainer
-                    SelectTabMainModalBottomSheet(
-                        mainViewModel = mainViewModel, onClose = {
-                            parentUiState.value = ParentUiState(ParentBottomSheetContent.None)
-                        })
-                }
-                scope.launch { sheetState.show() }
-            }
-
             ParentBottomSheetContent.SortAudioBy -> {
                 showSheet.value = true
                 sheetContent.value = {
@@ -449,16 +408,23 @@ fun ParentRootScreen(
         }
     }
 
-    RootNavigation(
-        navController = navController,
-        mainViewModel = mainViewModel,
-        basePlayerViewModel = basePlayerViewModel,
-        menuViewModel = menuViewModel,
-        startNotificationService = { startNotificationService() },
-        parentUiState = parentUiState,
-        searchViewModel = searchViewModel,
-        folderMenuViewModel = folderMenuViewModel
-    )
+    Scaffold { innerPadding ->
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+        ) {
+            RootNavigation(
+                navController = navController,
+                mainViewModel = mainViewModel,
+                basePlayerViewModel = basePlayerViewModel,
+                menuViewModel = menuViewModel,
+                startNotificationService = { startNotificationService() },
+                parentUiState = parentUiState,
+                folderMenuViewModel = folderMenuViewModel
+            )
+        }
+    }
 
     if (showSheet.value) {
         ModalBottomSheet(

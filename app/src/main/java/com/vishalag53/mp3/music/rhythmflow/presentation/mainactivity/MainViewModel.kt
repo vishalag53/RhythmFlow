@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.vishalag53.mp3.music.rhythmflow.data.local.model.Audio
 import com.vishalag53.mp3.music.rhythmflow.data.local.repository.AudioRepository
 import com.vishalag53.mp3.music.rhythmflow.domain.core.FolderData
-import com.vishalag53.mp3.music.rhythmflow.domain.core.K
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -36,9 +35,6 @@ class MainViewModel @Inject constructor(
 
     private val _isAscAudio = MutableStateFlow(true)
     val isAscAudio = _isAscAudio.asStateFlow()
-
-    private val _selectTabName = MutableStateFlow(K.FOLDERS)
-    val selectTabName = _selectTabName.asStateFlow()
 
     private val _foldersList = MutableStateFlow<List<FolderData>>(emptyList())
     val foldersList = _foldersList.asStateFlow()
@@ -107,10 +103,6 @@ class MainViewModel @Inject constructor(
             list.filterNot { it.id == audio.id }
         }
         sortAudioListBy()
-    }
-
-    fun setSelectTabName(name: String) {
-        _selectTabName.value = name
     }
 
     fun refreshAudioList() {

@@ -9,8 +9,6 @@ sealed class ParentBottomSheetContent {
     data object Menu: ParentBottomSheetContent()
     data object FolderMenu: ParentBottomSheetContent()
     data object Repeat: ParentBottomSheetContent()
-    data object SearchTabSelector: ParentBottomSheetContent()
     data object SortAudioBy: ParentBottomSheetContent()
     data object SortFolderBy: ParentBottomSheetContent()
-    data object SelectTabName: ParentBottomSheetContent()
 }

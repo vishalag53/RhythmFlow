@@ -19,8 +19,7 @@ import com.vishalag53.mp3.music.rhythmflow.presentation.mainactivity.MainViewMod
 import com.vishalag53.mp3.music.rhythmflow.presentation.parent.ParentUiState
 import com.vishalag53.mp3.music.rhythmflow.presentation.playbackspeed.PlaybackSpeedRootScreen
 import com.vishalag53.mp3.music.rhythmflow.presentation.player.PlayerRootScreen
-import com.vishalag53.mp3.music.rhythmflow.presentation.search.SearchRootScreen
-import com.vishalag53.mp3.music.rhythmflow.presentation.search.SearchViewModel
+import com.vishalag53.mp3.music.rhythmflow.presentation.settings.SettingsRootScreen
 import kotlin.reflect.typeOf
 
 @RequiresApi(Build.VERSION_CODES.Q)
@@ -32,7 +31,6 @@ fun RootNavigation(
     basePlayerViewModel: BasePlayerViewModel,
     menuViewModel: MenuViewModel,
     parentUiState: MutableState<ParentUiState>,
-    searchViewModel: SearchViewModel,
     folderMenuViewModel: FolderMenuViewModel
 ) {
     NavHost(
@@ -55,17 +53,6 @@ fun RootNavigation(
             parentUiState = parentUiState
         )
 
-        search(
-            navController = navController,
-            mainViewModel = mainViewModel,
-            startNotificationService = startNotificationService,
-            basePlayerViewModel = basePlayerViewModel,
-            menuViewModel = menuViewModel,
-            parentUiState = parentUiState,
-            searchViewModel = searchViewModel,
-            folderMenuViewModel = folderMenuViewModel
-        )
-
         folder(
             navController = navController,
             mainViewModel = mainViewModel,
@@ -78,6 +65,8 @@ fun RootNavigation(
         playbackSpeed(
             navController = navController
         )
+
+        settings()
     }
 }
 
@@ -122,36 +111,6 @@ private fun NavGraphBuilder.playerGraph(
     }
 }
 
-private fun NavGraphBuilder.search(
-    navController: NavHostController,
-    mainViewModel: MainViewModel,
-    startNotificationService: () -> Unit,
-    basePlayerViewModel: BasePlayerViewModel,
-    menuViewModel: MenuViewModel,
-    parentUiState: MutableState<ParentUiState>,
-    searchViewModel: SearchViewModel,
-    folderMenuViewModel: FolderMenuViewModel
-) {
-    composable<Screens.Search> {
-        val args = it.toRoute<Screens.Search>()
-        SearchRootScreen(
-            from = args.from,
-            name = args.name,
-            navController = navController,
-            navigateBack = {
-                navController.popBackStack()
-            },
-            mainViewModel = mainViewModel,
-            basePlayerViewModel = basePlayerViewModel,
-            startNotificationService = startNotificationService,
-            menuViewModel = menuViewModel,
-            parentUiState = parentUiState,
-            searchViewModel = searchViewModel,
-            folderMenuViewModel = folderMenuViewModel
-        )
-    }
-}
-
 private fun NavGraphBuilder.folder(
     navController: NavHostController,
     mainViewModel: MainViewModel,
@@ -186,5 +145,11 @@ private fun NavGraphBuilder.playbackSpeed(
         PlaybackSpeedRootScreen(
             navController = navController
         )
+    }
+}
+
+private fun NavGraphBuilder.settings() {
+    composable<Screens.Settings> {
+        SettingsRootScreen()
     }
 }
