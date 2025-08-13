@@ -1,6 +1,10 @@
 package com.vishalag53.mp3.music.rhythmflow.presentation.songs.components
 
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -21,9 +25,17 @@ import androidx.compose.material3.rememberSearchBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Modifier
+import androidx.navigation.NavHostController
 import com.vishalag53.mp3.music.rhythmflow.data.local.model.Audio
 import com.vishalag53.mp3.music.rhythmflow.domain.core.totalAudioTime
+import com.vishalag53.mp3.music.rhythmflow.presentation.core.AudioItem
+import com.vishalag53.mp3.music.rhythmflow.presentation.core.baseplayer.BasePlayerViewModel
+import com.vishalag53.mp3.music.rhythmflow.presentation.core.menu.MenuViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.parent.ParentUiState
 import com.vishalag53.mp3.music.rhythmflow.presentation.songs.songallmenu.SongAllMenu
 import kotlinx.coroutines.launch
@@ -35,11 +47,29 @@ fun SongsTopBar(
     refreshAudioList: () -> Unit,
     onSortByClick: () -> Unit,
     parentUiState: MutableState<ParentUiState>,
-    scrollBehavior: SearchBarScrollBehavior
+    scrollBehavior: SearchBarScrollBehavior,
+    navController: NavHostController,
+    basePlayerViewModel: BasePlayerViewModel,
+    startNotificationService: () -> Unit,
+    onMenuClick: () -> Unit,
+    menuViewModel: MenuViewModel,
 ) {
     val scope = rememberCoroutineScope()
     val textFieldState = rememberTextFieldState()
     val searchBarState = rememberSearchBarState()
+
+    val searchAudioLists by remember(audioList, textFieldState.text) {
+        derivedStateOf {
+            val lowerQuery = textFieldState.text.toString().lowercase()
+            if (lowerQuery.isBlank()) {
+                emptyList()
+            } else {
+                audioList.filter {
+                    it.title.lowercase().contains(lowerQuery) || it.displayName.lowercase().contains(lowerQuery)
+                }
+            }
+        }
+    }
 
     LaunchedEffect(searchBarState.currentValue) {
         if (searchBarState.currentValue == SearchBarValue.Collapsed) {
@@ -133,6 +163,22 @@ fun SongsTopBar(
             containerColor = MaterialTheme.colorScheme.background
         )
     ) {
-
+        LazyColumn(
+            state = rememberLazyListState(),
+            modifier = Modifier.fillMaxSize()
+        ) {
+            itemsIndexed(searchAudioLists) { index, audio ->
+                AudioItem(
+                    audio = audio,
+                    audioList = searchAudioLists,
+                    navController = navController,
+                    basePlayerViewModel = basePlayerViewModel,
+                    index = index,
+                    startNotificationService = startNotificationService,
+                    onMenuClick = onMenuClick,
+                    menuViewModel = menuViewModel
+                )
+            }
+        }
     }
 }

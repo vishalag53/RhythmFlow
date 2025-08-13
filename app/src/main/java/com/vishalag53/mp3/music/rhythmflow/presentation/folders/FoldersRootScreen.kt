@@ -1,6 +1,7 @@
 package com.vishalag53.mp3.music.rhythmflow.presentation.folders
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -32,7 +33,8 @@ fun FoldersRootScreen(
                 refreshFolderList = { mainViewModel.refreshAudioList() },
                 onSortByClick = onSortByClick
             )
-        }
+        },
+        contentWindowInsets = WindowInsets(0,0,0,0)
     ) { innerPadding ->
         Box(
             modifier = Modifier

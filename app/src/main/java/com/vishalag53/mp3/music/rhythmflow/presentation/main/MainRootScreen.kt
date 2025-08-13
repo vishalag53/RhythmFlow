@@ -2,6 +2,7 @@ package com.vishalag53.mp3.music.rhythmflow.presentation.main
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
@@ -79,7 +80,8 @@ fun MainRootScreen(
                     }
                 )
             }
-        }
+        },
+        contentWindowInsets = WindowInsets(0,0,0,0)
     ) { innerPadding ->
         HorizontalPager(
             state = pagerState,

@@ -26,7 +26,7 @@ import com.vishalag53.mp3.music.rhythmflow.presentation.songs.components.SongsTo
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SongsRootScreen(
-    audioList : List<Audio>,
+    audioList: List<Audio>,
     navController: NavHostController,
     startNotificationService: () -> Unit,
     basePlayerViewModel: BasePlayerViewModel,
@@ -46,10 +46,15 @@ fun SongsRootScreen(
                 refreshAudioList = { mainViewModel.refreshAudioList() },
                 onSortByClick = onSortByClick,
                 parentUiState = parentUiState,
-                scrollBehavior = scrollBehavior
+                scrollBehavior = scrollBehavior,
+                navController = navController,
+                basePlayerViewModel = basePlayerViewModel,
+                startNotificationService = startNotificationService,
+                onMenuClick = onMenuClick,
+                menuViewModel = menuViewModel
             )
         },
-        contentWindowInsets = WindowInsets(0,0,0,0)
+        contentWindowInsets = WindowInsets(0, 0, 0, 0)
     ) { innerPadding ->
         Box(
             modifier = Modifier
