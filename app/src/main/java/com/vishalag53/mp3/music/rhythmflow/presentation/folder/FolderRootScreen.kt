@@ -19,6 +19,7 @@ import com.vishalag53.mp3.music.rhythmflow.presentation.core.menu.MenuViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.mainactivity.MainViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.parent.ParentBottomSheetContent
 import com.vishalag53.mp3.music.rhythmflow.presentation.parent.ParentUiState
+import com.vishalag53.mp3.music.rhythmflow.presentation.parent.ParentViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.smallplayer.SmallPlayerRootScreen
 import com.vishalag53.mp3.music.rhythmflow.presentation.songs.SongsRootScreen
 
@@ -31,6 +32,7 @@ fun FolderRootScreen(
     menuViewModel: MenuViewModel,
     mainViewModel: MainViewModel,
     parentUiState: MutableState<ParentUiState>,
+    parentViewModel: ParentViewModel,
 ) {
     Scaffold(
         topBar = {
@@ -69,18 +71,19 @@ fun FolderRootScreen(
             SongsRootScreen(
                 audioList = mainViewModel.audioList.collectAsStateWithLifecycle().value.filter { it.folderName == folder.name },
                 navController = navController,
-                basePlayerViewModel = basePlayerViewModel,
                 startNotificationService = startNotificationService,
+                basePlayerViewModel = basePlayerViewModel,
                 onMenuClick = {
                     menuViewModel.setMenuFrom(K.FOLDERS)
                     parentUiState.value = ParentUiState(ParentBottomSheetContent.Menu)
                 },
-                mainViewModel = mainViewModel,
                 menuViewModel = menuViewModel,
                 onSortByClick = {
                     parentUiState.value = ParentUiState(ParentBottomSheetContent.SortAudioBy)
                 },
-                parentUiState = parentUiState
+                mainViewModel = mainViewModel,
+                parentUiState = parentUiState,
+                parentViewModel = parentViewModel,
             )
         }
     }

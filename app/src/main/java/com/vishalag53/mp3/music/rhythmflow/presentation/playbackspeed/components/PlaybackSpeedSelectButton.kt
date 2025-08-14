@@ -22,9 +22,7 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun PlaybackSpeedSelectButton(
     text: Float,
-    onClose: () -> Unit,
-    onPlaybackSpeedChange: (Float) -> Unit,
-    onPlaybackSpeedChangeBasePlayer: (Float) -> Unit,
+    onClick: (String) -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -34,9 +32,7 @@ fun PlaybackSpeedSelectButton(
             .background(Color.White)
             .padding(horizontal = 6.dp, vertical = 1.dp)
             .clickable {
-                onPlaybackSpeedChangeBasePlayer(text)
-                onPlaybackSpeedChange(text)
-                onClose()
+                onClick(text.toString())
             },
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Absolute.Center

@@ -36,6 +36,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.vishalag53.mp3.music.rhythmflow.R
+import com.vishalag53.mp3.music.rhythmflow.data.roomdatabase.playbackspeed.upsertPlaybackSpeed
 
 @SuppressLint("DefaultLocale")
 @Composable
@@ -43,7 +44,8 @@ fun PlaybackSpeed(
     onClose: () -> Unit,
     playbackSpeed: Float,
     onPlaybackSpeedChange: (Float) -> Unit,
-    onPlaybackSpeedChangeBasePlayer: (Float) -> Unit
+    onPlaybackSpeedChangeBasePlayer: (Float) -> Unit,
+    from: String
 ) {
     val playbackSpeedList1 = listOf(
         0.75F, 1.0F, 1.25F, 1.5F
@@ -186,6 +188,11 @@ fun PlaybackSpeed(
                                         if (newSpeed in 0.25f..6.0f) {
                                             onPlaybackSpeedChange(newSpeed)
                                             onPlaybackSpeedChangeBasePlayer(newSpeed)
+                                            upsertPlaybackSpeed(
+                                                name = from,
+                                                playbackSpeed = newSpeed,
+                                                context = context
+                                            )
                                             onClose()
                                         } else {
                                             if (newSpeed < 0.25F) {
@@ -226,9 +233,9 @@ fun PlaybackSpeed(
                 for (i in playbackSpeedList1) {
                     PlaybackSpeedSelectButton(
                         text = i,
-                        onClose = onClose,
-                        onPlaybackSpeedChange = onPlaybackSpeedChange,
-                        onPlaybackSpeedChangeBasePlayer = onPlaybackSpeedChangeBasePlayer
+                        onClick = {
+                            playbackSpeedText.value = it
+                        }
                     )
                 }
             }
@@ -243,9 +250,9 @@ fun PlaybackSpeed(
                 for (i in playbackSpeedList2) {
                     PlaybackSpeedSelectButton(
                         text = i,
-                        onClose = onClose,
-                        onPlaybackSpeedChange = onPlaybackSpeedChange,
-                        onPlaybackSpeedChangeBasePlayer = onPlaybackSpeedChangeBasePlayer
+                        onClick = {
+                            playbackSpeedText.value = it
+                        }
                     )
                 }
             }

@@ -21,6 +21,7 @@ import com.vishalag53.mp3.music.rhythmflow.presentation.core.baseplayer.BasePlay
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.menu.MenuViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.mainactivity.MainViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.parent.ParentUiState
+import com.vishalag53.mp3.music.rhythmflow.presentation.parent.ParentViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.songs.components.SongsTopBar
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -34,7 +35,8 @@ fun SongsRootScreen(
     menuViewModel: MenuViewModel,
     onSortByClick: () -> Unit,
     mainViewModel: MainViewModel,
-    parentUiState: MutableState<ParentUiState>
+    parentUiState: MutableState<ParentUiState>,
+    parentViewModel: ParentViewModel
 ) {
     val scrollBehavior = SearchBarDefaults.enterAlwaysSearchBarScrollBehavior()
 
@@ -51,7 +53,8 @@ fun SongsRootScreen(
                 basePlayerViewModel = basePlayerViewModel,
                 startNotificationService = startNotificationService,
                 onMenuClick = onMenuClick,
-                menuViewModel = menuViewModel
+                menuViewModel = menuViewModel,
+                parentViewModel = parentViewModel
             )
         },
         contentWindowInsets = WindowInsets(0, 0, 0, 0)

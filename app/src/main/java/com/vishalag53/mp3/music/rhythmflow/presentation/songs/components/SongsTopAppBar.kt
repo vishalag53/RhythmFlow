@@ -37,6 +37,7 @@ import com.vishalag53.mp3.music.rhythmflow.presentation.core.AudioItem
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.baseplayer.BasePlayerViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.menu.MenuViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.parent.ParentUiState
+import com.vishalag53.mp3.music.rhythmflow.presentation.parent.ParentViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.songs.songallmenu.SongAllMenu
 import kotlinx.coroutines.launch
 
@@ -53,6 +54,7 @@ fun SongsTopBar(
     startNotificationService: () -> Unit,
     onMenuClick: () -> Unit,
     menuViewModel: MenuViewModel,
+    parentViewModel: ParentViewModel,
 ) {
     val scope = rememberCoroutineScope()
     val textFieldState = rememberTextFieldState()
@@ -121,7 +123,8 @@ fun SongsTopBar(
                     SongAllMenu(
                         onSortByClick = onSortByClick,
                         refreshAudioList = refreshAudioList,
-                        parentUiState = parentUiState
+                        parentUiState = parentUiState,
+                        parentViewModel = parentViewModel
                     )
                 } else if (textFieldState.text.toString().isNotEmpty()){
                     IconButton(

@@ -83,6 +83,7 @@ fun ParentRootScreen(
     val basePlayerViewModel = hiltViewModel<BasePlayerViewModel>()
     val menuViewModel = hiltViewModel<MenuViewModel>()
     val folderMenuViewModel = hiltViewModel<FolderMenuViewModel>()
+    val parentViewModel = hiltViewModel<ParentViewModel>()
 
     // Modal bottom sheet
     val parentUiStateSaver: Saver<ParentUiState, *> = Saver(save = {
@@ -229,7 +230,9 @@ fun ParentRootScreen(
                                     speed
                                 )
                             )
-                        })
+                        },
+                        from = parentViewModel.fromPlaybackSpeed.collectAsStateWithLifecycle().value
+                    )
                 }
                 scope.launch { sheetState.show() }
             }
@@ -362,7 +365,8 @@ fun ParentRootScreen(
             ParentBottomSheetContent.SortAudioBy -> {
                 showSheet.value = true
                 sheetContent.value = {
-                    modalBottomSheetBackgroundColor.value = MaterialTheme.colorScheme.primaryContainer
+                    modalBottomSheetBackgroundColor.value =
+                        MaterialTheme.colorScheme.primaryContainer
                     SortBy(
                         sortList = sortAudioList,
                         sortBy = mainViewModel.sortAudioBy.value,
@@ -385,7 +389,8 @@ fun ParentRootScreen(
             ParentBottomSheetContent.SortFolderBy -> {
                 showSheet.value = true
                 sheetContent.value = {
-                    modalBottomSheetBackgroundColor.value = MaterialTheme.colorScheme.primaryContainer
+                    modalBottomSheetBackgroundColor.value =
+                        MaterialTheme.colorScheme.primaryContainer
                     SortBy(
                         sortList = sortFolderList,
                         sortBy = mainViewModel.sortFolderBy.value,
@@ -421,7 +426,8 @@ fun ParentRootScreen(
                 menuViewModel = menuViewModel,
                 startNotificationService = { startNotificationService() },
                 parentUiState = parentUiState,
-                folderMenuViewModel = folderMenuViewModel
+                folderMenuViewModel = folderMenuViewModel,
+                parentViewModel = parentViewModel
             )
         }
     }
@@ -482,7 +488,11 @@ fun ParentRootScreen(
                             context = context
                         )
                         mainViewModel.removeAudio(menuViewModel.audio.value)
-                        Toast.makeText(context, "Delete ${menuViewModel.audio.value.displayName}", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            context,
+                            "Delete ${menuViewModel.audio.value.displayName}",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 )
                 menuViewModel.setDeleteDialog(false)
@@ -496,7 +506,8 @@ fun ParentRootScreen(
     if (menuViewModel.showRenameDialog.collectAsStateWithLifecycle().value) {
         parentUiState.value = ParentUiState()
 
-        val currentNameWithExtension = menuViewModel.audio.collectAsStateWithLifecycle().value.displayName
+        val currentNameWithExtension =
+            menuViewModel.audio.collectAsStateWithLifecycle().value.displayName
         val currentName = if (currentNameWithExtension.contains(".")) {
             currentNameWithExtension.substringBeforeLast(".")
         } else {
@@ -516,7 +527,8 @@ fun ParentRootScreen(
                 menuViewModel.setRenameBox(false)
             },
             onRename = { editDisplayName ->
-                val newDisplayName = editDisplayName.trim() + if (extension.isNotEmpty()) ".$extension" else ""
+                val newDisplayName =
+                    editDisplayName.trim() + if (extension.isNotEmpty()) ".$extension" else ""
                 val audio = menuViewModel.audio.value
 
                 requestRenamePermission(
@@ -531,7 +543,8 @@ fun ParentRootScreen(
                     },
                     onRenameSuccess = {
                         renameDisplayName(newDisplayName, audio, context)
-                        Toast.makeText(context, "Renamed to $newDisplayName", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, "Renamed to $newDisplayName", Toast.LENGTH_SHORT)
+                            .show()
                     }
                 )
             }

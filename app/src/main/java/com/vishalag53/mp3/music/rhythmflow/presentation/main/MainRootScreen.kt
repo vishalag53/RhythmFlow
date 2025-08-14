@@ -27,6 +27,7 @@ import com.vishalag53.mp3.music.rhythmflow.presentation.mainactivity.MainViewMod
 import com.vishalag53.mp3.music.rhythmflow.presentation.others.OthersRootScreen
 import com.vishalag53.mp3.music.rhythmflow.presentation.parent.ParentBottomSheetContent
 import com.vishalag53.mp3.music.rhythmflow.presentation.parent.ParentUiState
+import com.vishalag53.mp3.music.rhythmflow.presentation.parent.ParentViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.playlists.PlaylistsRootScreen
 import com.vishalag53.mp3.music.rhythmflow.presentation.smallplayer.SmallPlayerRootScreen
 import com.vishalag53.mp3.music.rhythmflow.presentation.songs.SongsRootScreen
@@ -41,7 +42,8 @@ fun MainRootScreen(
     menuViewModel: MenuViewModel,
     mainViewModel: MainViewModel,
     parentUiState: MutableState<ParentUiState>,
-    folderMenuViewModel: FolderMenuViewModel
+    folderMenuViewModel: FolderMenuViewModel,
+    parentViewModel: ParentViewModel
 ) {
     val pagerState = rememberPagerState(
         initialPage = 0,
@@ -106,7 +108,8 @@ fun MainRootScreen(
                             parentUiState.value =
                                 ParentUiState(ParentBottomSheetContent.SortAudioBy)
                         },
-                        parentUiState = parentUiState
+                        parentUiState = parentUiState,
+                        parentViewModel = parentViewModel
                     )
                 }
 
@@ -120,7 +123,8 @@ fun MainRootScreen(
                         },
                         navController = navController,
                         folderMenuViewModel = folderMenuViewModel,
-                        parentUiState = parentUiState
+                        parentUiState = parentUiState,
+                        parentViewModel = parentViewModel
                     )
                 }
 

@@ -25,12 +25,14 @@ import androidx.compose.ui.unit.dp
 import com.vishalag53.mp3.music.rhythmflow.R
 import com.vishalag53.mp3.music.rhythmflow.presentation.parent.ParentBottomSheetContent
 import com.vishalag53.mp3.music.rhythmflow.presentation.parent.ParentUiState
+import com.vishalag53.mp3.music.rhythmflow.presentation.parent.ParentViewModel
 
 @Composable
 fun SongAllMenu(
     refreshAudioList: () -> Unit,
     onSortByClick: () -> Unit,
-    parentUiState: MutableState<ParentUiState>
+    parentUiState: MutableState<ParentUiState>,
+    parentViewModel: ParentViewModel
 ) {
     var expanded by remember { mutableStateOf(false) }
 
@@ -115,6 +117,7 @@ fun SongAllMenu(
                     )
                 },
                 onClick = {
+                    parentViewModel.setFromPlaybackSpeed("Songs")
                     parentUiState.value = ParentUiState(ParentBottomSheetContent.PlaybackSpeed)
                     expanded = false
                 }

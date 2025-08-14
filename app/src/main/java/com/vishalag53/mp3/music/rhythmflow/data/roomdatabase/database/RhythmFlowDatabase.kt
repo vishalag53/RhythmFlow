@@ -7,14 +7,17 @@ import androidx.room.RoomDatabase
 import com.vishalag53.mp3.music.rhythmflow.data.local.model.Audio
 import com.vishalag53.mp3.music.rhythmflow.data.roomdatabase.playback.dao.PlaybackDao
 import com.vishalag53.mp3.music.rhythmflow.data.roomdatabase.playback.model.PlaybackState
+import com.vishalag53.mp3.music.rhythmflow.data.roomdatabase.playbackspeed.dao.PlaybackSpeedDao
+import com.vishalag53.mp3.music.rhythmflow.data.roomdatabase.playbackspeed.model.PlaybackSpeedModel
 
 @Database(
-    entities = [PlaybackState::class, Audio::class],
-    version = 1,
+    entities = [PlaybackState::class, Audio::class, PlaybackSpeedModel::class],
+    version = 2,
     exportSchema = false
 )
 abstract class RhythmFlowDatabase : RoomDatabase() {
     abstract fun playbackDao(): PlaybackDao
+    abstract fun playbackSpeedDao(): PlaybackSpeedDao
 
     companion object {
         @Volatile

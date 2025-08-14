@@ -17,6 +17,7 @@ import com.vishalag53.mp3.music.rhythmflow.presentation.folder.FolderRootScreen
 import com.vishalag53.mp3.music.rhythmflow.presentation.main.MainRootScreen
 import com.vishalag53.mp3.music.rhythmflow.presentation.mainactivity.MainViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.parent.ParentUiState
+import com.vishalag53.mp3.music.rhythmflow.presentation.parent.ParentViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.playbackspeed.PlaybackSpeedRootScreen
 import com.vishalag53.mp3.music.rhythmflow.presentation.player.PlayerRootScreen
 import com.vishalag53.mp3.music.rhythmflow.presentation.settings.SettingsRootScreen
@@ -31,7 +32,8 @@ fun RootNavigation(
     basePlayerViewModel: BasePlayerViewModel,
     menuViewModel: MenuViewModel,
     parentUiState: MutableState<ParentUiState>,
-    folderMenuViewModel: FolderMenuViewModel
+    folderMenuViewModel: FolderMenuViewModel,
+    parentViewModel: ParentViewModel
 ) {
     NavHost(
         navController = navController, startDestination = Screens.Main.Songs
@@ -43,7 +45,8 @@ fun RootNavigation(
             menuViewModel = menuViewModel,
             mainViewModel = mainViewModel,
             parentUiState = parentUiState,
-            folderMenuViewModel = folderMenuViewModel
+            folderMenuViewModel = folderMenuViewModel,
+            parentViewModel = parentViewModel
         )
 
         playerGraph(
@@ -59,7 +62,8 @@ fun RootNavigation(
             startNotificationService = startNotificationService,
             basePlayerViewModel = basePlayerViewModel,
             menuViewModel = menuViewModel,
-            parentUiState = parentUiState
+            parentUiState = parentUiState,
+            parentViewModel = parentViewModel
         )
 
         playbackSpeed(
@@ -78,7 +82,8 @@ private fun NavGraphBuilder.mainGraph(
     menuViewModel: MenuViewModel,
     mainViewModel: MainViewModel,
     parentUiState: MutableState<ParentUiState>,
-    folderMenuViewModel: FolderMenuViewModel
+    folderMenuViewModel: FolderMenuViewModel,
+    parentViewModel: ParentViewModel
 ) {
     composable<Screens.Main.Songs> {
         MainRootScreen(
@@ -88,7 +93,8 @@ private fun NavGraphBuilder.mainGraph(
             menuViewModel = menuViewModel,
             mainViewModel = mainViewModel,
             parentUiState = parentUiState,
-            folderMenuViewModel = folderMenuViewModel
+            folderMenuViewModel = folderMenuViewModel,
+            parentViewModel = parentViewModel
         )
     }
 }
@@ -117,7 +123,8 @@ private fun NavGraphBuilder.folder(
     startNotificationService: () -> Unit,
     basePlayerViewModel: BasePlayerViewModel,
     menuViewModel: MenuViewModel,
-    parentUiState: MutableState<ParentUiState>
+    parentUiState: MutableState<ParentUiState>,
+    parentViewModel: ParentViewModel
 ) {
     composable<Screens.Folder>(
         typeMap = mapOf(
@@ -133,7 +140,8 @@ private fun NavGraphBuilder.folder(
             basePlayerViewModel = basePlayerViewModel,
             menuViewModel = menuViewModel,
             mainViewModel = mainViewModel,
-            parentUiState = parentUiState
+            parentUiState = parentUiState,
+            parentViewModel = parentViewModel
         )
     }
 }

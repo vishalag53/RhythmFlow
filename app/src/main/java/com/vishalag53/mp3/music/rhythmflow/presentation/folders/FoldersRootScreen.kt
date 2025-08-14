@@ -16,6 +16,7 @@ import com.vishalag53.mp3.music.rhythmflow.domain.core.FolderData
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.folderMenu.FolderMenuViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.mainactivity.MainViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.parent.ParentUiState
+import com.vishalag53.mp3.music.rhythmflow.presentation.parent.ParentViewModel
 
 @Composable
 fun FoldersRootScreen(
@@ -24,7 +25,8 @@ fun FoldersRootScreen(
     onSortByClick: () -> Unit,
     navController: NavHostController,
     folderMenuViewModel: FolderMenuViewModel,
-    parentUiState: MutableState<ParentUiState>
+    parentUiState: MutableState<ParentUiState>,
+    parentViewModel: ParentViewModel
 ) {
     Scaffold(
         topBar = {
