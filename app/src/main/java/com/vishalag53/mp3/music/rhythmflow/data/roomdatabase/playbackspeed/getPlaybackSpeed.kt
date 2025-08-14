@@ -7,5 +7,5 @@ import kotlinx.coroutines.flow.map
 
 fun getPlaybackSpeed(context: Context, name: String): Flow<Float> {
     return RhythmFlowDatabase.getDatabase(context).playbackSpeedDao().getSongsPlaybackSpeed(name)
-        .map { it?.playbackSpeed ?: 1.0f }
+        .map { it?.playbackSpeed ?: 1.0f}
 }

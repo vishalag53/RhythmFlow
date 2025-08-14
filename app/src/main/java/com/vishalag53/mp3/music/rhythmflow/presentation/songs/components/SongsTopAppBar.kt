@@ -1,5 +1,6 @@
 package com.vishalag53.mp3.music.rhythmflow.presentation.songs.components
 
+import android.util.Log
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
@@ -30,12 +31,17 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.vishalag53.mp3.music.rhythmflow.data.local.model.Audio
+import com.vishalag53.mp3.music.rhythmflow.data.roomdatabase.playbackspeed.getPlaybackSpeed
+import com.vishalag53.mp3.music.rhythmflow.domain.core.K
 import com.vishalag53.mp3.music.rhythmflow.domain.core.totalAudioTime
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.AudioItem
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.baseplayer.BasePlayerViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.menu.MenuViewModel
+import com.vishalag53.mp3.music.rhythmflow.presentation.parent.ParentBottomSheetContent
 import com.vishalag53.mp3.music.rhythmflow.presentation.parent.ParentUiState
 import com.vishalag53.mp3.music.rhythmflow.presentation.parent.ParentViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.songs.songallmenu.SongAllMenu
@@ -56,6 +62,7 @@ fun SongsTopBar(
     menuViewModel: MenuViewModel,
     parentViewModel: ParentViewModel,
 ) {
+    val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val textFieldState = rememberTextFieldState()
     val searchBarState = rememberSearchBarState()
@@ -80,16 +87,13 @@ fun SongsTopBar(
             }
         }
     }
+    Log.d("AUDIO53", getPlaybackSpeed(context, K.SONGS).collectAsStateWithLifecycle(initialValue = 1.0f).toString())
 
     val inputField = @Composable {
         SearchBarDefaults.InputField(
             searchBarState = searchBarState,
             textFieldState = textFieldState,
-            onSearch = {
-                scope.launch {
-                    searchBarState.animateToCollapsed()
-                }
-            },
+            onSearch = {},
             placeholder = {
                 Text(
                     text = "Play all (${audioList.size})(${totalAudioTime(audioList)})"
@@ -121,10 +125,13 @@ fun SongsTopBar(
             trailingIcon = {
                 if (searchBarState.currentValue == SearchBarValue.Collapsed) {
                     SongAllMenu(
-                        onSortByClick = onSortByClick,
                         refreshAudioList = refreshAudioList,
-                        parentUiState = parentUiState,
-                        parentViewModel = parentViewModel
+                        onSortByClick = onSortByClick,
+                        onPlaybackSpeedClick = {
+                            parentViewModel.setFromPlaybackSpeed(K.SONGS)
+                            parentUiState.value = ParentUiState(ParentBottomSheetContent.PlaybackSpeed)
+                        },
+                        onPlaybackSpeedText = getPlaybackSpeed(context, K.SONGS).collectAsStateWithLifecycle(initialValue = 1.0f).value.toString() + "x"
                     )
                 } else if (textFieldState.text.toString().isNotEmpty()){
                     IconButton(
