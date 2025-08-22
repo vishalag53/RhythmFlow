@@ -1,10 +1,8 @@
-package com.vishalag53.mp3.music.rhythmflow.presentation.songs.songallmenu
+package com.vishalag53.mp3.music.rhythmflow.presentation.core
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
@@ -24,11 +22,10 @@ import androidx.compose.ui.unit.dp
 import com.vishalag53.mp3.music.rhythmflow.R
 
 @Composable
-fun SongAllMenu(
-    refreshAudioList: () -> Unit,
-    onSortByClick: () -> Unit,
-    onPlaybackSpeedClick: () -> Unit,
-    onPlaybackSpeedText: String
+fun SelectedMenu(
+    isAllSelected: Boolean,
+    onCancelClick: () -> Unit,
+    onSelectAllClick: () -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
 
@@ -46,88 +43,67 @@ fun SongAllMenu(
             onDismissRequest = { expanded = false },
             modifier = Modifier.background(Color(0xFFFDCF9E))
         ) {
+            if (isAllSelected) {
+                DropdownMenuItem(
+                    text = {
+                        Text(
+                            text = "Deselect all",
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.SemiBold,
+                            color = Color(0xFF324E82)
+                        )
+                    },
+                    onClick = {
+                        onCancelClick()
+                        expanded = false
+                    }
+                )
+            } else {
+                DropdownMenuItem(
+                    text = {
+                        Text(
+                            text = "Select all",
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.SemiBold,
+                            color = Color(0xFF324E82)
+                        )
+                    },
+                    onClick = {
+                        onSelectAllClick()
+                        expanded = false
+                    }
+                )
+            }
             DropdownMenuItem(
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Default.Refresh,
-                        contentDescription = null,
-                        tint = Color(0xFF001E2C)
-                    )
-                },
                 text = {
                     Text(
-                        text = "Refresh",
+                        text = "Move to",
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.SemiBold,
                         color = Color(0xFF324E82)
                     )
                 },
                 onClick = {
-                    refreshAudioList()
                     expanded = false
                 }
             )
             DropdownMenuItem(
-                leadingIcon = {
-                    Icon(
-                        painter = painterResource(R.drawable.ic_sort),
-                        contentDescription = null,
-                        tint = Color(0xFF001E2C)
-                    )
-                },
                 text = {
                     Text(
-                        text = "Sort",
+                        text = "Copy to",
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.SemiBold,
                         color = Color(0xFF324E82)
                     )
                 },
                 onClick = {
-                    onSortByClick()
                     expanded = false
                 }
             )
             DropdownMenuItem(
-                leadingIcon = {
-                    Icon(
-                        painter = painterResource(R.drawable.ic_playback_speed),
-                        contentDescription = null,
-                        tint = Color(0xFF001E2C)
-                    )
-                },
                 text = {
                     Text(
-                        text = "Playback Speed",
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.SemiBold,
-                        color = Color(0xFF324E82)
-                    )
-                },
-                trailingIcon = {
-                    Text(
-                        text = onPlaybackSpeedText,
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.SemiBold,
-                        color = Color(0xFF324E82)
-                    )
-                },
-                onClick = {
-                    onPlaybackSpeedClick()
-                    expanded = false
-                }
-            )
-            DropdownMenuItem(
-                leadingIcon = {
-                    Icon(
-                        painter = painterResource(R.drawable.ic_shuffle),
-                        contentDescription = null,
-                        tint = Color(0xFF001E2C)
-                    )
-                },
-                text = {
-                    Text(
-                        text = "Shuffle",
+                        text = "Add to favorite",
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.SemiBold,
                         color = Color(0xFF324E82)

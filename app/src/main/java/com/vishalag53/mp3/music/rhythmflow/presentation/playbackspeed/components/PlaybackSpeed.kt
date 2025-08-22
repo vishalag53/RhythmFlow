@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -35,7 +36,9 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.vishalag53.mp3.music.rhythmflow.R
+import com.vishalag53.mp3.music.rhythmflow.data.roomdatabase.playbackspeed.getPlaybackSpeed
 import com.vishalag53.mp3.music.rhythmflow.data.roomdatabase.playbackspeed.upsertPlaybackSpeed
 
 @SuppressLint("DefaultLocale")
@@ -55,13 +58,16 @@ fun PlaybackSpeed(
     )
 
     val context = LocalContext.current
-    val playbackSpeedText = remember { mutableStateOf(playbackSpeed.toString()) }
+    val defaultPlaybackSpeed = getPlaybackSpeed(context, from).collectAsStateWithLifecycle(initialValue = 1.0f).value.toString()
+    val playbackSpeedText = remember { mutableStateOf(defaultPlaybackSpeed) }
+    
 
     Box(
         modifier = Modifier.fillMaxWidth()
     ) {
         Column(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Spacer(modifier = Modifier.height(8.dp))
 
@@ -78,8 +84,6 @@ fun PlaybackSpeed(
                 )
             }
 
-            Spacer(modifier = Modifier.height(8.dp))
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
@@ -95,7 +99,6 @@ fun PlaybackSpeed(
                 )
             }
 
-            Spacer(modifier = Modifier.height(8.dp))
 
             Row(
                 modifier = Modifier
@@ -188,11 +191,13 @@ fun PlaybackSpeed(
                                         if (newSpeed in 0.25f..6.0f) {
                                             onPlaybackSpeedChange(newSpeed)
                                             onPlaybackSpeedChangeBasePlayer(newSpeed)
-                                            upsertPlaybackSpeed(
-                                                name = from,
-                                                playbackSpeed = newSpeed,
-                                                context = context
-                                            )
+                                            if (from.isNotEmpty()) {
+                                                upsertPlaybackSpeed(
+                                                    name = from,
+                                                    playbackSpeed = newSpeed,
+                                                    context = context
+                                                )
+                                            }
                                             onClose()
                                         } else {
                                             if (newSpeed < 0.25F) {
@@ -221,7 +226,27 @@ fun PlaybackSpeed(
                 )
             }
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Row (
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Absolute.Center
+            ){
+                TextButton(
+                    onClick = {
+                        playbackSpeedText.value = defaultPlaybackSpeed
+                    },
+                    shape = RoundedCornerShape(8.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color.White
+                    )
+                ) {
+                    Text(
+                        text = "DEFAULT",
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                }
+            }
 
             Row(
                 modifier = Modifier

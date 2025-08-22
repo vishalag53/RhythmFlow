@@ -1,11 +1,16 @@
 package com.vishalag53.mp3.music.rhythmflow.presentation.core
 
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.background
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.RadioButtonUnchecked
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -17,38 +22,34 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
 import com.vishalag53.mp3.music.rhythmflow.R
 import com.vishalag53.mp3.music.rhythmflow.data.local.model.Audio
 import com.vishalag53.mp3.music.rhythmflow.domain.core.formatDuration
 import com.vishalag53.mp3.music.rhythmflow.domain.core.stringCapitalized
-import com.vishalag53.mp3.music.rhythmflow.navigation.Screens
-import com.vishalag53.mp3.music.rhythmflow.presentation.core.baseplayer.BasePlayerEvents
-import com.vishalag53.mp3.music.rhythmflow.presentation.core.baseplayer.BasePlayerViewModel
-import com.vishalag53.mp3.music.rhythmflow.presentation.core.menu.MenuViewModel
 
 @Composable
 fun AudioItem(
     audio: Audio,
-    audioList: List<Audio>,
-    navController: NavHostController,
-    index: Int,
-    startNotificationService: () -> Unit,
-    basePlayerViewModel: BasePlayerViewModel,
     onMenuClick: () -> Unit,
-    menuViewModel: MenuViewModel
+    onClick: () -> Unit,
+    onLongClick: () -> Unit,
+    isSelected: Boolean,
+    setMenuAudio: () -> Unit,
+    isSelectedItemEmpty: Boolean
 ) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 4.dp)
-            .clickable {
-                basePlayerViewModel.onBasePlayerEvents(BasePlayerEvents.ClearMediaItems)
-                basePlayerViewModel.setAudioList(audioList)
-                basePlayerViewModel.onBasePlayerEvents(BasePlayerEvents.SelectedAudioChange(index))
-                navController.navigate(Screens.Player)
-                startNotificationService()
-            },
+            .padding(start = 4.dp, end = 6.dp, bottom = 4.dp)
+            .combinedClickable(
+                onClick = if (isSelectedItemEmpty) onClick else onLongClick,
+                onLongClick = onLongClick
+            )
+            .background(
+                color = if (isSelected) MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)
+                else MaterialTheme.colorScheme.background,
+                shape = RoundedCornerShape(8.dp)
+            )
     ) {
         Row(
             modifier = Modifier
@@ -80,17 +81,41 @@ fun AudioItem(
                     overflow = TextOverflow.Visible
                 )
 
-                IconButton(
-                    onClick = {
-                        menuViewModel.setAudio(audio)
-                        onMenuClick()
+                if (isSelectedItemEmpty) {
+                    IconButton(
+                        onClick = {
+                            setMenuAudio()
+                            onMenuClick()
+                        }
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_menu),
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.primary
+                        )
                     }
-                ) {
-                    Icon(
-                        painter = painterResource(R.drawable.ic_menu),
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.primary
-                    )
+                } else {
+                    if (isSelected) {
+                        IconButton(
+                            onClick = onLongClick
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.CheckCircle,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.primary
+                            )
+                        }
+                    } else {
+                        IconButton(
+                            onClick = onLongClick
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.RadioButtonUnchecked,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.primary
+                            )
+                        }
+                    }
                 }
             }
         }

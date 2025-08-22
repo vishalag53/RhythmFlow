@@ -123,6 +123,5 @@ fun requestDeletePermission(
 }
 
 
-fun deleteAudioFile(audio: Audio, context: Context) {
+fun deleteAudioFile(audio: Audio, context: Context) =
     context.contentResolver.delete(audio.uri, null, null)
-}

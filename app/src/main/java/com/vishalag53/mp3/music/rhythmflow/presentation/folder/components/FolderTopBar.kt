@@ -28,6 +28,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
@@ -41,13 +42,15 @@ import com.vishalag53.mp3.music.rhythmflow.R
 import com.vishalag53.mp3.music.rhythmflow.data.local.model.Audio
 import com.vishalag53.mp3.music.rhythmflow.data.roomdatabase.playbackspeed.getPlaybackSpeed
 import com.vishalag53.mp3.music.rhythmflow.domain.core.totalAudioTime
+import com.vishalag53.mp3.music.rhythmflow.navigation.Screens
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.AudioItem
+import com.vishalag53.mp3.music.rhythmflow.presentation.core.baseplayer.BasePlayerEvents
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.baseplayer.BasePlayerViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.menu.MenuViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.parent.ParentBottomSheetContent
 import com.vishalag53.mp3.music.rhythmflow.presentation.parent.ParentUiState
 import com.vishalag53.mp3.music.rhythmflow.presentation.parent.ParentViewModel
-import com.vishalag53.mp3.music.rhythmflow.presentation.songs.songallmenu.SongAllMenu
+import com.vishalag53.mp3.music.rhythmflow.presentation.core.SongAllMenu
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
@@ -65,8 +68,11 @@ fun FolderTopBar(
     basePlayerViewModel: BasePlayerViewModel,
     startNotificationService: () -> Unit,
     onMenuClick: () -> Unit,
-    menuViewModel: MenuViewModel
+    menuViewModel: MenuViewModel,
+    onSelectAllClick: () -> Unit
 ) {
+    val selectedItems = remember { mutableStateOf(setOf<Int>()) }
+    val isSelectedItemEmpty = selectedItems.value.isEmpty()
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val textFieldState = rememberTextFieldState()
@@ -139,13 +145,14 @@ fun FolderTopBar(
             }
 
             SongAllMenu(
-                onSortByClick = onSortByClick,
                 refreshAudioList = refreshAudioList,
+                onSortByClick = onSortByClick,
                 onPlaybackSpeedClick = {
                     parentViewModel.setFromPlaybackSpeed(folderName)
                     parentUiState.value = ParentUiState(ParentBottomSheetContent.PlaybackSpeed)
                 },
-                onPlaybackSpeedText = getPlaybackSpeed(context, folderName).collectAsStateWithLifecycle(initialValue = 1.0f).value.toString() + "x"
+                onPlaybackSpeedText = getPlaybackSpeed(context, folderName).collectAsStateWithLifecycle(initialValue = 1.0f).value.toString() + "x",
+                onSelectAllClick = onSelectAllClick
             )
         },
         windowInsets = WindowInsets(0,0,0,0),
@@ -223,15 +230,30 @@ fun FolderTopBar(
             modifier = Modifier.fillMaxSize()
         ) {
             itemsIndexed(searchAudioLists) { index, audio ->
+                val isSelected = selectedItems.value.contains(index)
+
                 AudioItem(
                     audio = audio,
-                    audioList = searchAudioLists,
-                    navController = navController,
-                    basePlayerViewModel = basePlayerViewModel,
-                    index = index,
-                    startNotificationService = startNotificationService,
                     onMenuClick = onMenuClick,
-                    menuViewModel = menuViewModel
+                    onClick = {
+                        basePlayerViewModel.onBasePlayerEvents(BasePlayerEvents.ClearMediaItems)
+                        basePlayerViewModel.setAudioList(audioList)
+                        basePlayerViewModel.onBasePlayerEvents(BasePlayerEvents.SelectedAudioChange(index))
+                        navController.navigate(Screens.Player)
+                        startNotificationService()
+                    },
+                    onLongClick = {
+                        selectedItems.value = if (isSelected) {
+                            selectedItems.value - index
+                        } else {
+                            selectedItems.value + index
+                        }
+                    },
+                    isSelected = isSelected,
+                    setMenuAudio = {
+                        menuViewModel.setAudio(audio)
+                    },
+                    isSelectedItemEmpty = isSelectedItemEmpty
                 )
             }
         }

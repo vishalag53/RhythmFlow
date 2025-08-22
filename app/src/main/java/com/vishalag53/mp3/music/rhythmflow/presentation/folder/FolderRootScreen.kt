@@ -13,6 +13,8 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -22,6 +24,7 @@ import com.vishalag53.mp3.music.rhythmflow.domain.core.K
 import com.vishalag53.mp3.music.rhythmflow.domain.core.totalAudioTime
 import com.vishalag53.mp3.music.rhythmflow.navigation.Screens
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.AudioItem
+import com.vishalag53.mp3.music.rhythmflow.presentation.core.SelectedTopAppBar
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.baseplayer.BasePlayerEvents
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.baseplayer.BasePlayerViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.menu.MenuViewModel
@@ -44,33 +47,54 @@ fun FolderRootScreen(
     parentUiState: MutableState<ParentUiState>,
     parentViewModel: ParentViewModel,
 ) {
+    val selectedItems = remember { mutableStateOf(setOf<Int>()) }
+    val isSelectedItemEmpty = selectedItems.value.isEmpty()
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
-    val audioList = mainViewModel.audioList.collectAsStateWithLifecycle().value.filter { it.folderName == folder.name }
+    val audioList =
+        mainViewModel.audioList.collectAsStateWithLifecycle().value.filter { it.folderName == folder.name }
 
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
-            FolderTopBar(
-                folderName = folder.name,
-                navController = navController,
-                scrollBehavior = scrollBehavior,
-                subtitle = "(${audioList.size})(${totalAudioTime(audioList)})",
-                refreshAudioList = { mainViewModel.refreshAudioList() },
-                parentUiState = parentUiState,
-                parentViewModel = parentViewModel,
-                onSortByClick = {
-                    parentUiState.value =
-                        ParentUiState(ParentBottomSheetContent.SortAudioBy)
-                },
-                audioList = audioList,
-                basePlayerViewModel = basePlayerViewModel,
-                startNotificationService = startNotificationService,
-                onMenuClick = {
-                    menuViewModel.setMenuFrom(K.MAIN)
-                    parentUiState.value = ParentUiState(ParentBottomSheetContent.Menu)
-                },
-                menuViewModel = menuViewModel
-            )
+            if (isSelectedItemEmpty) {
+                FolderTopBar(
+                    folderName = folder.name,
+                    navController = navController,
+                    scrollBehavior = scrollBehavior,
+                    subtitle = "(${audioList.size})(${totalAudioTime(audioList)})",
+                    refreshAudioList = { mainViewModel.refreshAudioList() },
+                    parentUiState = parentUiState,
+                    parentViewModel = parentViewModel,
+                    onSortByClick = {
+                        parentUiState.value =
+                            ParentUiState(ParentBottomSheetContent.SortAudioBy)
+                    },
+                    audioList = audioList,
+                    basePlayerViewModel = basePlayerViewModel,
+                    startNotificationService = startNotificationService,
+                    onMenuClick = {
+                        menuViewModel.setMenuFrom(K.MAIN)
+                        parentUiState.value = ParentUiState(ParentBottomSheetContent.Menu)
+                    },
+                    menuViewModel = menuViewModel,
+                    onSelectAllClick = {
+                        selectedItems.value = (0 until audioList.size).toSet()
+                    }
+                )
+            } else {
+                SelectedTopAppBar(
+                    selectedSize = selectedItems.value.size,
+                    onCancelClick = {
+                        selectedItems.value = emptySet()
+                    },
+                    onShareClick = {},
+                    onDeleteClick = {},
+                    isAllSelected = selectedItems.value.size == audioList.size,
+                    onSelectAllClick = {
+                        selectedItems.value = (0 until audioList.size).toSet()
+                    }
+                )
+            }
         },
         bottomBar = {
             if (basePlayerViewModel.currentSelectedAudio.collectAsState().value.title != "") {
@@ -93,7 +117,7 @@ fun FolderRootScreen(
                 )
             }
         },
-        contentWindowInsets = WindowInsets(0,0,0,0)
+        contentWindowInsets = WindowInsets(0, 0, 0, 0)
     ) { innerPadding ->
         Box(
             modifier = Modifier
@@ -105,18 +129,37 @@ fun FolderRootScreen(
                 modifier = Modifier.fillMaxSize()
             ) {
                 itemsIndexed(audioList) { index, audio ->
+                    val isSelected = selectedItems.value.contains(index)
+
                     AudioItem(
                         audio = audio,
-                        audioList = audioList,
-                        navController = navController,
-                        basePlayerViewModel = basePlayerViewModel,
-                        index = index,
-                        startNotificationService = startNotificationService,
                         onMenuClick = {
                             menuViewModel.setMenuFrom(K.FOLDERS)
                             parentUiState.value = ParentUiState(ParentBottomSheetContent.Menu)
                         },
-                        menuViewModel = menuViewModel
+                        onClick = {
+                            basePlayerViewModel.onBasePlayerEvents(BasePlayerEvents.ClearMediaItems)
+                            basePlayerViewModel.setAudioList(audioList)
+                            basePlayerViewModel.onBasePlayerEvents(
+                                BasePlayerEvents.SelectedAudioChange(
+                                    index
+                                )
+                            )
+                            navController.navigate(Screens.Player)
+                            startNotificationService()
+                        },
+                        onLongClick = {
+                            selectedItems.value = if (isSelected) {
+                                selectedItems.value - index
+                            } else {
+                                selectedItems.value + index
+                            }
+                        },
+                        isSelected = isSelected,
+                        setMenuAudio = {
+                            menuViewModel.setAudio(audio)
+                        },
+                        isSelectedItemEmpty = isSelectedItemEmpty,
                     )
                 }
             }
