@@ -22,15 +22,19 @@ import com.vishalag53.mp3.music.rhythmflow.presentation.core.baseplayer.BasePlay
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.folderMenu.FolderMenuViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.menu.MenuViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.folders.FoldersRootScreen
+import com.vishalag53.mp3.music.rhythmflow.presentation.hiddensongs.HiddenSongsRootScreen
+import com.vishalag53.mp3.music.rhythmflow.presentation.history.HistoryRootScreen
 import com.vishalag53.mp3.music.rhythmflow.presentation.main.components.MainTopAppBar
 import com.vishalag53.mp3.music.rhythmflow.presentation.mainactivity.MainViewModel
-import com.vishalag53.mp3.music.rhythmflow.presentation.others.OthersRootScreen
 import com.vishalag53.mp3.music.rhythmflow.presentation.parent.ParentBottomSheetContent
 import com.vishalag53.mp3.music.rhythmflow.presentation.parent.ParentUiState
 import com.vishalag53.mp3.music.rhythmflow.presentation.parent.ParentViewModel
+import com.vishalag53.mp3.music.rhythmflow.presentation.playbackspeed.PlaybackSpeedRootScreen
 import com.vishalag53.mp3.music.rhythmflow.presentation.playlists.PlaylistsRootScreen
+import com.vishalag53.mp3.music.rhythmflow.presentation.settings.SettingsRootScreen
 import com.vishalag53.mp3.music.rhythmflow.presentation.smallplayer.SmallPlayerRootScreen
 import com.vishalag53.mp3.music.rhythmflow.presentation.songs.SongsRootScreen
+import com.vishalag53.mp3.music.rhythmflow.presentation.trash.TrashRootScreen
 import kotlinx.coroutines.launch
 
 @RequiresApi(Build.VERSION_CODES.Q)
@@ -47,7 +51,7 @@ fun MainRootScreen(
 ) {
     val pagerState = rememberPagerState(
         initialPage = 0,
-        pageCount = { 4 }
+        pageCount = { 8 }
     )
     val coroutineScope = rememberCoroutineScope()
 
@@ -133,9 +137,25 @@ fun MainRootScreen(
                 }
 
                 3 -> {
-                    OthersRootScreen(
+                    PlaybackSpeedRootScreen(
                         navController = navController
                     )
+                }
+
+                4 -> {
+                    TrashRootScreen()
+                }
+
+                5 -> {
+                    HistoryRootScreen()
+                }
+
+                6 -> {
+                    HiddenSongsRootScreen()
+                }
+
+                7 -> {
+                    SettingsRootScreen()
                 }
             }
         }
