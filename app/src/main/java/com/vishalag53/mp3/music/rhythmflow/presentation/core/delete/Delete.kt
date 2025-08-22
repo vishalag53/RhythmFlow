@@ -58,7 +58,7 @@ fun Delete(
 
                 Text(
                     text = "Are you sure you want to delete \"$displayName\" ?" ,
-                    style = MaterialTheme.typography.titleLarge,
+                    style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.primary,
                     textAlign = TextAlign.Center
                 )
