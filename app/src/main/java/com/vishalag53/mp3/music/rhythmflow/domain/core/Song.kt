@@ -13,6 +13,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import java.util.concurrent.TimeUnit
+import android.net.Uri
 
 @SuppressLint("DefaultLocale")
 fun formatDuration(duration: Long): String {
@@ -119,6 +120,51 @@ fun requestDeletePermission(
         onPermissionGranted(e.userAction.actionIntent.intentSender)
     } catch (e: SecurityException) {
         e.printStackTrace()
+    }
+}
+
+
+fun requestDeletePermissionForList(
+    audios: List<Audio>,
+    context: Context,
+    onPermissionGranted: (IntentSender) -> Unit,
+    onDeleteSuccess: () -> Unit
+) {
+    if (audios.isEmpty()) {
+        onDeleteSuccess()
+        return
+    }
+
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+        val needingConsentUris = mutableListOf<Uri>()
+        audios.forEach { audio ->
+            try {
+                context.contentResolver.delete(audio.uri, null, null)
+            } catch (e: RecoverableSecurityException) {
+                needingConsentUris.add(audio.uri)
+            } catch (e: SecurityException) {
+                e.printStackTrace()
+            }
+        }
+
+        if (needingConsentUris.isEmpty()) {
+            onDeleteSuccess()
+        } else {
+            val pendingIntent = MediaStore.createDeleteRequest(context.contentResolver, needingConsentUris)
+            onPermissionGranted(pendingIntent.intentSender)
+        }
+    } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+        // Fallback: request for the first item; user approval grants access only for that item
+        // We'll handle the rest after result by attempting deletion again
+        requestDeletePermission(
+            audio = audios.first(),
+            context = context,
+            onPermissionGranted = onPermissionGranted,
+            onDeleteSuccess = onDeleteSuccess
+        )
+    } else {
+        // Pre-Q: direct delete
+        onDeleteSuccess()
     }
 }
 

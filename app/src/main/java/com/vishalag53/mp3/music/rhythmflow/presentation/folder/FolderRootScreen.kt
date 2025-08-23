@@ -34,6 +34,17 @@ import com.vishalag53.mp3.music.rhythmflow.presentation.parent.ParentBottomSheet
 import com.vishalag53.mp3.music.rhythmflow.presentation.parent.ParentUiState
 import com.vishalag53.mp3.music.rhythmflow.presentation.parent.ParentViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.smallplayer.SmallPlayerRootScreen
+import androidx.compose.ui.platform.LocalContext
+import android.app.Activity
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.IntentSenderRequest
+import androidx.activity.result.contract.ActivityResultContracts
+import android.os.Build
+import android.widget.Toast
+import com.vishalag53.mp3.music.rhythmflow.domain.core.requestDeletePermission
+import com.vishalag53.mp3.music.rhythmflow.domain.core.deleteAudioFile
+import com.vishalag53.mp3.music.rhythmflow.presentation.core.delete.Delete
+import com.vishalag53.mp3.music.rhythmflow.domain.core.requestDeletePermissionForList
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -47,11 +58,28 @@ fun FolderRootScreen(
     parentUiState: MutableState<ParentUiState>,
     parentViewModel: ParentViewModel,
 ) {
+    val context = LocalContext.current
     val selectedItems = remember { mutableStateOf(setOf<Int>()) }
     val isSelectedItemEmpty = selectedItems.value.isEmpty()
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     val audioList =
         mainViewModel.audioList.collectAsStateWithLifecycle().value.filter { it.folderName == folder.name }
+    val showMultiDeleteDialog = remember { mutableStateOf(false) }
+    val pendingDeleteList = remember { mutableStateOf<List<Audio>>(emptyList()) }
+
+    val deleteLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartIntentSenderForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            pendingDeleteList.value.forEach { audio ->
+                deleteAudioFile(audio, context)
+            }
+            mainViewModel.removeAudios(pendingDeleteList.value)
+            Toast.makeText(context, "Deleted ${pendingDeleteList.value.size} items", Toast.LENGTH_SHORT).show()
+            pendingDeleteList.value = emptyList()
+            selectedItems.value = emptySet()
+        }
+    }
 
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -88,7 +116,13 @@ fun FolderRootScreen(
                         selectedItems.value = emptySet()
                     },
                     onShareClick = {},
-                    onDeleteClick = {},
+                    onDeleteClick = {
+                        val toDelete = selectedItems.value.sorted().map { index -> audioList[index] }
+                        if (toDelete.isNotEmpty()) {
+                            showMultiDeleteDialog.value = true
+                            pendingDeleteList.value = toDelete
+                        }
+                    },
                     isAllSelected = selectedItems.value.size == audioList.size,
                     onSelectAllClick = {
                         selectedItems.value = (0 until audioList.size).toSet()
@@ -159,10 +193,40 @@ fun FolderRootScreen(
                         setMenuAudio = {
                             menuViewModel.setAudio(audio)
                         },
-                        isSelectedItemEmpty = isSelectedItemEmpty,
+                        isSelectedItemEmpty = isSelectedItemEmpty
                     )
                 }
             }
         }
+    }
+
+    if (showMultiDeleteDialog.value && pendingDeleteList.value.isNotEmpty()) {
+        Delete(
+            displayName = pendingDeleteList.value.first().displayName,
+            onConfirmDelete = {
+                requestDeletePermissionForList(
+                    audios = pendingDeleteList.value,
+                    context = context,
+                    onPermissionGranted = { intentSender ->
+                        deleteLauncher.launch(
+                            IntentSenderRequest.Builder(intentSender).build()
+                        )
+                    },
+                    onDeleteSuccess = {
+                        pendingDeleteList.value.forEach { audio -> deleteAudioFile(audio, context) }
+                        mainViewModel.removeAudios(pendingDeleteList.value)
+                        Toast.makeText(context, "Deleted ${pendingDeleteList.value.size} items", Toast.LENGTH_SHORT).show()
+                        pendingDeleteList.value = emptyList()
+                        selectedItems.value = emptySet()
+                    }
+                )
+                showMultiDeleteDialog.value = false
+            },
+            onDismiss = {
+                showMultiDeleteDialog.value = false
+                pendingDeleteList.value = emptyList()
+            },
+            count = pendingDeleteList.value.size
+        )
     }
 }

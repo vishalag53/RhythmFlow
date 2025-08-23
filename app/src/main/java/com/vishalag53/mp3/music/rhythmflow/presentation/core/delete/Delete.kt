@@ -27,7 +27,8 @@ import com.vishalag53.mp3.music.rhythmflow.R
 fun Delete(
     displayName: String,
     onConfirmDelete: () -> Unit,
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
+    count: Int? = null
 ) {
 
     Dialog(
@@ -57,7 +58,7 @@ fun Delete(
                 }
 
                 Text(
-                    text = "Are you sure you want to delete \"$displayName\" ?" ,
+                    text = if (count != null && count > 1) "Are you sure you want to delete $count items?" else "Are you sure you want to delete \"$displayName\" ?" ,
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.primary,
                     textAlign = TextAlign.Center
