@@ -30,7 +30,7 @@ fun FoldersRootScreen(
 ) {
     Scaffold(
         topBar = {
-            FolderTopAppBar(
+            FoldersTopAppBar(
                 size = folderList.size,
                 refreshFolderList = { mainViewModel.refreshAudioList() },
                 onSortByClick = onSortByClick

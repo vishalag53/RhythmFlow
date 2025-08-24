@@ -20,7 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -29,7 +29,7 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun MenuComponent(
     width: Dp,
-    painter: Int,
+    imageVector: ImageVector,
     text: String,
     backgroundColor: Color,
     backgroundIconColor: Color,
@@ -70,7 +70,7 @@ fun MenuComponent(
                     }
                 ) {
                     Icon(
-                        painter = painterResource(painter),
+                        imageVector = imageVector,
                         contentDescription = null,
                         tint = iconColor,
                         modifier = Modifier.size(24.dp)

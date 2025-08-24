@@ -12,6 +12,22 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.PlaylistAdd
+import androidx.compose.material.icons.automirrored.filled.VolumeUp
+import androidx.compose.material.icons.filled.Bluetooth
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.DeleteForever
+import androidx.compose.material.icons.filled.DriveEta
+import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material.icons.filled.GraphicEq
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.LibraryAdd
+import androidx.compose.material.icons.filled.Lyrics
+import androidx.compose.material.icons.filled.Repeat
+import androidx.compose.material.icons.filled.Share
+import androidx.compose.material.icons.filled.Shuffle
+import androidx.compose.material.icons.filled.Timer
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -19,8 +35,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -67,47 +84,47 @@ fun Menu(
 
     val songMenuItems = listOf(
         listOf(
-            MenuItemData(R.drawable.ic_rename, "Rename", onRenameClick),
-            MenuItemData(R.drawable.ic_edit_audio_info, "Edit song info") {}
+            MenuItemData(ImageVector.vectorResource(R.drawable.ic_rename), "Rename", onRenameClick),
+            MenuItemData(ImageVector.vectorResource(R.drawable.ic_edit_audio_info), "Edit song info") {}
         ),
         listOf(
-            MenuItemData(R.drawable.ic_trash, "Trash") {},
-            MenuItemData(R.drawable.ic_delete, "Delete", onDeleteClick)
+            MenuItemData(Icons.Default.DeleteForever, "Trash") {},
+            MenuItemData(Icons.Default.Delete, "Delete", onDeleteClick)
         ),
         listOf(
-            MenuItemData(R.drawable.ic_hide, "Hide") {},
-            MenuItemData(R.drawable.ic_round_lyrics, "Lyric") {}
+            MenuItemData(ImageVector.vectorResource(R.drawable.ic_hide), "Hide") {},
+            MenuItemData(Icons.Default.Lyrics, "Lyric") {}
         )
     )
 
     val generalMenuItems = listOf(
         listOf(
-            MenuItemData(R.drawable.ic_add_to_playing_queue, "Add to playing queue") {},
-            MenuItemData(R.drawable.ic_add_to_next_play, "Add to next play") {}
+            MenuItemData(Icons.Default.LibraryAdd, "Add to playing queue") {},
+            MenuItemData(ImageVector.vectorResource(R.drawable.ic_add_to_next_play), "Add to next play") {}
         ),
         listOf(
-            MenuItemData(R.drawable.ic_equalizer, "Equalizer") {},
-            MenuItemData(R.drawable.ic_repeat, repeatText, onRepeatClick)
+            MenuItemData(Icons.Default.GraphicEq, "Equalizer") {},
+            MenuItemData(Icons.Default.Repeat, repeatText, onRepeatClick)
         ),
         listOf(
-            MenuItemData(R.drawable.ic_shuffle, shuffleText, onShuffleChange),
-            MenuItemData(R.drawable.ic_bluetooth, "Bluetooth") {}
+            MenuItemData(Icons.Default.Shuffle, shuffleText, onShuffleChange),
+            MenuItemData(Icons.Default.Bluetooth, "Bluetooth") {}
         ),
         listOf(
-            MenuItemData(R.drawable.ic_add_to_playlist, "Add to playlist") {},
-            MenuItemData(R.drawable.ic_share, "Share") {}
+            MenuItemData(Icons.AutoMirrored.Filled.PlaylistAdd, "Add to playlist") {},
+            MenuItemData(Icons.Default.Share, "Share") {}
         ),
         listOf(
-            MenuItemData(R.drawable.ic_ringtone, "Use as a ringtone") {},
-            MenuItemData(R.drawable.ic_sleep_timer, "Sleep timer") {}
+            MenuItemData(ImageVector.vectorResource(R.drawable.ic_ringtone), "Use as a ringtone") {},
+            MenuItemData(Icons.Default.Timer, "Sleep timer") {}
         ),
         listOf(
-            MenuItemData(R.drawable.ic_drive_mode, "Drive mode") {},
-            MenuItemData(R.drawable.ic_go_to, "Go to") {}
+            MenuItemData(Icons.Default.DriveEta, "Drive mode") {},
+            MenuItemData(ImageVector.vectorResource(R.drawable.ic_go_to), "Go to") {}
         ),
         listOf(
-            MenuItemData(R.drawable.ic_volume, "Volume") {},
-            MenuItemData(R.drawable.ic_edit_audio, "Edit audio") {}
+            MenuItemData(Icons.AutoMirrored.Filled.VolumeUp, "Volume") {},
+            MenuItemData(ImageVector.vectorResource(R.drawable.ic_edit_audio), "Edit audio") {}
         )
     )
 
@@ -144,7 +161,7 @@ fun Menu(
                     onClick = onInfoClick
                 ) {
                     Icon(
-                        painter = painterResource(R.drawable.ic_info),
+                        imageVector = Icons.Default.Info,
                         contentDescription = null,
                         tint = Color(0xFF35363B)
                     )
@@ -153,7 +170,7 @@ fun Menu(
                 Spacer(modifier = Modifier.width(8.dp))
 
                 Icon(
-                    painter = painterResource(R.drawable.ic_favourite_off),
+                    imageVector = Icons.Default.FavoriteBorder,
                     contentDescription = null,
                     tint = Color(0xFF35363B)
                 )
@@ -198,7 +215,7 @@ fun Menu(
                 if (!isSongMenu) {
                     MenuComponent(
                         width = width,
-                        painter = R.drawable.ic_round_lyrics,
+                        imageVector = Icons.Default.Lyrics,
                         text = "Lyric",
                         backgroundColor = backgroundColor,
                         backgroundIconColor = backgroundIconColor,

@@ -12,6 +12,17 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.PlaylistAdd
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.DeleteForever
+import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.LibraryAdd
+import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.Share
+import androidx.compose.material.icons.filled.Shuffle
+import androidx.compose.material.icons.filled.SkipNext
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -19,8 +30,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -46,20 +58,20 @@ fun FolderMenu(
 
     val menuItems = listOf(
         listOf(
-            MenuItemData(R.drawable.ic_play, "Play") {},
-            MenuItemData(R.drawable.ic_player_next, "Play next") {}
+            MenuItemData(Icons.Default.PlayArrow, "Play") {},
+            MenuItemData(Icons.Default.SkipNext, "Play next") {}
         ),
         listOf(
-            MenuItemData(R.drawable.ic_add_to_playlist, "Add to playlist") {},
-            MenuItemData(R.drawable.ic_add_to_playing_queue, "Add to playing queue") {}
+            MenuItemData(Icons.AutoMirrored.Filled.PlaylistAdd, "Add to playlist") {},
+            MenuItemData(Icons.Default.LibraryAdd, "Add to playing queue") {}
         ),
         listOf(
-            MenuItemData(R.drawable.ic_trash, "Trash") {},
-            MenuItemData(R.drawable.ic_delete, "Delete") {}
+            MenuItemData(Icons.Default.DeleteForever, "Trash") {},
+            MenuItemData(Icons.Default.Delete, "Delete") {}
         ),
         listOf(
-            MenuItemData(R.drawable.ic_shuffle, "Shuffle all") {},
-            MenuItemData(R.drawable.ic_share, "Share") {}
+            MenuItemData(Icons.Default.Shuffle, "Shuffle all") {},
+            MenuItemData(Icons.Default.Share, "Share") {}
         )
     )
 
@@ -96,7 +108,7 @@ fun FolderMenu(
                     onClick = onInfoClick
                 ) {
                     Icon(
-                        painter = painterResource(R.drawable.ic_info),
+                        imageVector = Icons.Default.Info,
                         contentDescription = null,
                         tint = Color(0xFF35363B)
                     )
@@ -105,7 +117,7 @@ fun FolderMenu(
                 Spacer(modifier = Modifier.width(8.dp))
 
                 Icon(
-                    painter = painterResource(R.drawable.ic_favourite_off),
+                    imageVector = Icons.Default.FavoriteBorder,
                     contentDescription = null,
                     tint = Color(0xFF35363B)
                 )
@@ -135,7 +147,7 @@ fun FolderMenu(
 
                 MenuComponent(
                     width = width,
-                    painter = R.drawable.ic_hide,
+                    imageVector = ImageVector.vectorResource(R.drawable.ic_hide),
                     text = "Hide folder",
                     backgroundColor = backgroundColor,
                     backgroundIconColor = backgroundIconColor,

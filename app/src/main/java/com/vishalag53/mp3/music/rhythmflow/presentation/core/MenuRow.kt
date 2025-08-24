@@ -27,7 +27,7 @@ fun MenuRow(
         items.forEach { item ->
             MenuComponent(
                 width = width,
-                painter = item.icon,
+                imageVector = item.imageVector,
                 text = item.label,
                 backgroundColor = backgroundColor,
                 backgroundIconColor = backgroundIconColor,

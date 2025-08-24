@@ -2,6 +2,7 @@ package com.vishalag53.mp3.music.rhythmflow.presentation.playbackspeed.component
 
 import android.annotation.SuppressLint
 import android.widget.Toast
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,6 +15,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Remove
+import androidx.compose.material.icons.filled.Speed
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -30,14 +35,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.vishalag53.mp3.music.rhythmflow.R
 import com.vishalag53.mp3.music.rhythmflow.data.roomdatabase.playbackspeed.getPlaybackSpeed
 import com.vishalag53.mp3.music.rhythmflow.data.roomdatabase.playbackspeed.upsertPlaybackSpeed
 
@@ -60,7 +63,6 @@ fun PlaybackSpeed(
     val context = LocalContext.current
     val defaultPlaybackSpeed = getPlaybackSpeed(context, from).collectAsStateWithLifecycle(initialValue = 1.0f).value.toString()
     val playbackSpeedText = remember { mutableStateOf(defaultPlaybackSpeed) }
-    
 
     Box(
         modifier = Modifier.fillMaxWidth()
@@ -77,10 +79,10 @@ fun PlaybackSpeed(
                 horizontalArrangement = Arrangement.Absolute.Center
             ) {
                 Icon(
-                    painter = painterResource(R.drawable.ic_playback_speed),
+                    imageVector = Icons.Default.Speed,
                     contentDescription = null,
                     tint = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.size(24.dp)
+                    modifier = Modifier.size(36.dp)
                 )
             }
 
@@ -150,9 +152,12 @@ fun PlaybackSpeed(
                             }
                         ) {
                             Icon(
-                                painter = painterResource(R.drawable.ic_minus),
+                                imageVector = Icons.Default.Remove,
                                 contentDescription = null,
-                                tint = MaterialTheme.colorScheme.primary
+                                tint = Color.White,
+                                modifier = Modifier
+                                    .clip(RoundedCornerShape(8.dp))
+                                    .background(MaterialTheme.colorScheme.primary)
                             )
                         }
                     },
@@ -175,9 +180,12 @@ fun PlaybackSpeed(
                                 }
                             ) {
                                 Icon(
-                                    painter = painterResource(R.drawable.ic_add),
+                                    imageVector = Icons.Default.Add,
                                     contentDescription = null,
-                                    tint = MaterialTheme.colorScheme.primary
+                                    tint = Color.White,
+                                    modifier = Modifier
+                                        .clip(RoundedCornerShape(8.dp))
+                                        .background(MaterialTheme.colorScheme.primary)
                                 )
                             }
 

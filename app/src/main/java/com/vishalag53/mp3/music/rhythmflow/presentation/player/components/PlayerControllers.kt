@@ -6,14 +6,19 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Forward10
+import androidx.compose.material.icons.filled.PauseCircle
+import androidx.compose.material.icons.filled.PlayCircle
+import androidx.compose.material.icons.filled.Replay10
+import androidx.compose.material.icons.filled.SkipNext
+import androidx.compose.material.icons.filled.SkipPrevious
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.vishalag53.mp3.music.rhythmflow.R
 
 @Composable
 fun PlayerControllers(
@@ -34,18 +39,18 @@ fun PlayerControllers(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Icon(
-                painter = painterResource(R.drawable.ic_player_previous),
+                imageVector = Icons.Default.SkipPrevious,
                 contentDescription = null,
                 tint = Color(0xFFFDCF9E),
                 modifier = Modifier
-                    .size(24.dp)
+                    .size(48.dp)
                     .clickable {
                         onPrev()
                     }
             )
 
             Icon(
-                painter = painterResource(R.drawable.ic_rewind_10_second_back),
+                imageVector = Icons.Default.Replay10,
                 contentDescription = null,
                 tint = Color(0xFFFDCF9E),
                 modifier = Modifier
@@ -56,8 +61,8 @@ fun PlayerControllers(
             )
 
             Icon(
-                painter = if (isAudioPlaying) painterResource(R.drawable.ic_pause)
-                else painterResource(R.drawable.ic_play),
+                imageVector = if (isAudioPlaying) Icons.Default.PauseCircle
+                else Icons.Default.PlayCircle,
                 contentDescription = "Music play previous",
                 tint = Color(0xFFFDCF9E),
                 modifier = Modifier
@@ -68,7 +73,7 @@ fun PlayerControllers(
             )
 
             Icon(
-                painter = painterResource(R.drawable.ic_rewind_10_second_forward),
+                imageVector = Icons.Default.Forward10,
                 contentDescription = "Music play previous",
                 tint = Color(0xFFFDCF9E),
                 modifier = Modifier
@@ -79,11 +84,11 @@ fun PlayerControllers(
             )
 
             Icon(
-                painter = painterResource(R.drawable.ic_player_next),
+                imageVector = Icons.Default.SkipNext,
                 contentDescription = "Music play previous",
                 tint = Color(0xFFFDCF9E),
                 modifier = Modifier
-                    .size(24.dp)
+                    .size(48.dp)
                     .clickable {
                         onNext()
                     }
