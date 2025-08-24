@@ -5,6 +5,7 @@ import android.app.RecoverableSecurityException
 import android.content.ContentValues
 import android.content.Context
 import android.content.IntentSender
+import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
 import androidx.annotation.RequiresApi
@@ -44,24 +45,17 @@ fun formatSize(size: Long): String {
 }
 
 @SuppressLint("DefaultLocale")
-fun formatBitrate(bitrate: Long): String {
-    val bitrateKBPS = bitrate / 1000
-    return String.format("%d kbps", bitrateKBPS)
-}
+fun formatBitrate(bitrate: Long): String = String.format("%d kbps", bitrate / 1000)
 
 fun formatDate(date: Long): String {
     val simpleDateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault())
     return simpleDateFormat.format(Date(date * 1000L))
 }
 
-fun totalAudioTime(audioList: List<Audio>): String {
-    return formatDuration(audioList.sumOf { it.duration })
-}
+fun totalAudioTime(audioList: List<Audio>): String = formatDuration(audioList.sumOf { it.duration })
 
-fun stringCapitalized(string: String): String {
-    return string.split(" ").joinToString(" ") { word ->
-        word.replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
-    }
+fun stringCapitalized(string: String): String = string.split(" ").joinToString(" ") { word ->
+    word.replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
 }
 
 fun calculateProgressValue(
@@ -122,6 +116,55 @@ fun requestDeletePermission(
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.Q)
+fun requestDeletePermissionForList(
+    audioList: List<Audio>,
+    context: Context,
+    onPermissionGranted: (IntentSender) -> Unit,
+    onDeleteSuccess: () -> Unit
+) {
+    if (audioList.isEmpty()) {
+        onDeleteSuccess()
+        return
+    }
 
-fun deleteAudioFile(audio: Audio, context: Context) =
-    context.contentResolver.delete(audio.uri, null, null)
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+        val needingConsentUris = mutableListOf<Uri>()
+        val deleteNow = mutableListOf<Audio>()
+
+        audioList.forEach { audio ->
+            try {
+                val rows = context.contentResolver.delete(audio.uri, null, null)
+                if (rows > 0) deleteNow.add(audio)
+            } catch (e: RecoverableSecurityException) {
+                needingConsentUris.add(audio.uri)
+            } catch (e: SecurityException) {
+                e.printStackTrace()
+            }
+        }
+
+        if (needingConsentUris.isEmpty()) {
+            onDeleteSuccess()
+        } else {
+            val pendingIntent =
+                MediaStore.createDeleteRequest(context.contentResolver, needingConsentUris)
+            onPermissionGranted(pendingIntent.intentSender)
+        }
+    } else {
+        val first = audioList.first()
+        requestDeletePermission(
+            audio = first,
+            context = context,
+            onPermissionGranted = { sender -> onPermissionGranted(sender)},
+            onDeleteSuccess = { onDeleteSuccess()}
+        )
+    }
+}
+
+fun deleteAudioFile(audio: Audio, context: Context) {
+    try {
+        context.contentResolver.delete(audio.uri, null, null)
+    } catch (e: Exception) {
+        e.printStackTrace()
+    }
+}

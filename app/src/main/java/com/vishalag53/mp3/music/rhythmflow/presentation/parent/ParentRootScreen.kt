@@ -49,6 +49,7 @@ import com.vishalag53.mp3.music.rhythmflow.domain.core.formatDuration
 import com.vishalag53.mp3.music.rhythmflow.domain.core.formatSize
 import com.vishalag53.mp3.music.rhythmflow.domain.core.renameDisplayName
 import com.vishalag53.mp3.music.rhythmflow.domain.core.requestDeletePermission
+import com.vishalag53.mp3.music.rhythmflow.domain.core.requestDeletePermissionForList
 import com.vishalag53.mp3.music.rhythmflow.domain.core.requestRenamePermission
 import com.vishalag53.mp3.music.rhythmflow.navigation.RootNavigation
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.Loading
@@ -109,16 +110,30 @@ fun ParentRootScreen(
     val playbackSpeed = remember { mutableFloatStateOf(1.0F) }
 
     // Delete
-    val pendingDelete = remember { mutableStateOf<Audio?>(null) }
+    val pendingDelete = parentViewModel.pendingDelete.collectAsStateWithLifecycle().value
     val deleteLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartIntentSenderForResult()
     ) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
-            pendingDelete.value?.let { audio ->
+            pendingDelete?.let { audio ->
                 deleteAudioFile(audio, context)
-                mainViewModel.removeAudio(audio)
+                mainViewModel.refreshAudioList()
                 Toast.makeText(context, "Delete ${audio.displayName}", Toast.LENGTH_SHORT).show()
-                pendingDelete.value = null
+                parentViewModel.clearDelete()
+            }
+        }
+    }
+
+    val pendingMultiDeleteList = parentViewModel.pendingMultiDeleteList.collectAsStateWithLifecycle().value
+    val multiDeleteLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartIntentSenderForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            if (pendingMultiDeleteList.isNotEmpty()) {
+                pendingMultiDeleteList.forEach { audio -> deleteAudioFile(audio, context) }
+                mainViewModel.refreshAudioList()
+                Toast.makeText(context, "Deleted ${pendingMultiDeleteList.size} items", Toast.LENGTH_SHORT).show()
+                parentViewModel.clearMultiDelete()
             }
         }
     }
@@ -319,7 +334,8 @@ fun ParentRootScreen(
                             K.SEARCH -> true
                             K.PLAYER -> false
                             else -> true
-                        }
+                        },
+                        parentViewModel = parentViewModel
                     )
                 }
                 scope.launch { sheetState.show() }
@@ -467,39 +483,56 @@ fun ParentRootScreen(
         }
     }
 
-    if (menuViewModel.showDeleteDialog.collectAsStateWithLifecycle().value) {
+    if (parentViewModel.showDeleteDialog.collectAsStateWithLifecycle().value && pendingDelete != null) {
         parentUiState.value = ParentUiState()
 
         Delete(
-            displayName = menuViewModel.audio.collectAsStateWithLifecycle().value.displayName,
+            displayName = pendingDelete.displayName,
             onConfirmDelete = {
                 requestDeletePermission(
-                    audio = menuViewModel.audio.value,
+                    audio = pendingDelete,
                     context = context,
                     onPermissionGranted = { intentSender ->
-                        pendingDelete.value = menuViewModel.audio.value
                         deleteLauncher.launch(
                             IntentSenderRequest.Builder(intentSender).build()
                         )
                     },
                     onDeleteSuccess = {
-                        deleteAudioFile(
-                            audio = menuViewModel.audio.value,
-                            context = context
-                        )
-                        mainViewModel.removeAudio(menuViewModel.audio.value)
-                        Toast.makeText(
-                            context,
-                            "Delete ${menuViewModel.audio.value.displayName}",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        deleteAudioFile(audio = pendingDelete, context = context)
+                        mainViewModel.refreshAudioList()
+                        Toast.makeText(context, "Delete ${pendingDelete.displayName}", Toast.LENGTH_SHORT).show()
+                        parentViewModel.clearDelete()
                     }
                 )
-                menuViewModel.setDeleteDialog(false)
             },
             onDismiss = {
-                menuViewModel.setDeleteDialog(false)
+                parentViewModel.clearDelete()
             }
+        )
+    }
+
+    if (parentViewModel.showMultiDeleteDialog.collectAsStateWithLifecycle().value && pendingMultiDeleteList.isNotEmpty()) {
+        Delete(
+            displayName = pendingMultiDeleteList.first().displayName,
+            onConfirmDelete = {
+                requestDeletePermissionForList(
+                    audioList = pendingMultiDeleteList,
+                    context = context,
+                    onPermissionGranted = { intentSender ->
+                        multiDeleteLauncher.launch(IntentSenderRequest.Builder(intentSender).build())
+                    },
+                    onDeleteSuccess = {
+                        pendingMultiDeleteList.forEach { audio -> deleteAudioFile(audio, context) }
+                        mainViewModel.refreshAudioList()
+                        Toast.makeText(context, "Deleted ${pendingMultiDeleteList.size} items", Toast.LENGTH_SHORT).show()
+                        parentViewModel.clearMultiDelete()
+                    }
+                )
+            },
+            onDismiss = {
+                parentViewModel.clearMultiDelete()
+            },
+            count = pendingMultiDeleteList.size
         )
     }
 

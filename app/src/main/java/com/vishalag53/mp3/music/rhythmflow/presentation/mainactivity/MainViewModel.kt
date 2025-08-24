@@ -98,13 +98,6 @@ class MainViewModel @Inject constructor(
         sortAudioListBy()
     }
 
-    fun removeAudio(audio: Audio) {
-        _audioList.update { list ->
-            list.filterNot { it.id == audio.id }
-        }
-        sortAudioListBy()
-    }
-
     fun refreshAudioList() {
         viewModelScope.launch {
             _isRefresh.value = true

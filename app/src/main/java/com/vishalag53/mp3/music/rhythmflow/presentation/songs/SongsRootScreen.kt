@@ -1,5 +1,7 @@
 package com.vishalag53.mp3.music.rhythmflow.presentation.songs
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
@@ -29,6 +31,7 @@ import com.vishalag53.mp3.music.rhythmflow.presentation.parent.ParentUiState
 import com.vishalag53.mp3.music.rhythmflow.presentation.parent.ParentViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.songs.components.SongsTopBar
 
+@RequiresApi(Build.VERSION_CODES.Q)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SongsRootScreen(
@@ -74,7 +77,13 @@ fun SongsRootScreen(
                         selectedItems.value = emptySet()
                     },
                     onShareClick = {},
-                    onDeleteClick = {},
+                    onDeleteClick = {
+                        val toDelete = selectedItems.value.sorted().map { index -> audioList[index] }
+                        if (toDelete.isNotEmpty()) {
+                            parentViewModel.requestMultiDelete(toDelete)
+                            selectedItems.value = emptySet()
+                        }
+                    },
                     isAllSelected = selectedItems.value.size == audioList.size,
                     onSelectAllClick = {
                         selectedItems.value = (0 until audioList.size).toSet()

@@ -26,9 +26,6 @@ class MenuViewModel @Inject constructor() : ViewModel() {
     private val _showRenameDialog = MutableStateFlow(false)
     val showRenameDialog = _showRenameDialog.asStateFlow()
 
-    private val _showDeleteDialog = MutableStateFlow(false)
-    val showDeleteDialog = _showDeleteDialog.asStateFlow()
-
     fun setRepeatMode(repeat: String) {
         _repeatMode.value = repeat
     }
@@ -43,10 +40,6 @@ class MenuViewModel @Inject constructor() : ViewModel() {
 
     fun setRenameBox(show: Boolean) {
         _showRenameDialog.value = show
-    }
-
-    fun setDeleteDialog(isShow : Boolean) {
-        _showDeleteDialog.value = isShow
     }
 
     fun setMenuFrom(text: String) {

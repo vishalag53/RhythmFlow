@@ -1,5 +1,7 @@
 package com.vishalag53.mp3.music.rhythmflow.presentation.folder
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
@@ -35,6 +37,7 @@ import com.vishalag53.mp3.music.rhythmflow.presentation.parent.ParentUiState
 import com.vishalag53.mp3.music.rhythmflow.presentation.parent.ParentViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.smallplayer.SmallPlayerRootScreen
 
+@RequiresApi(Build.VERSION_CODES.Q)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FolderRootScreen(
@@ -88,7 +91,14 @@ fun FolderRootScreen(
                         selectedItems.value = emptySet()
                     },
                     onShareClick = {},
-                    onDeleteClick = {},
+                    onDeleteClick = {
+                        val toDelete =
+                            selectedItems.value.sorted().map { index -> audioList[index] }
+                        if (toDelete.isNotEmpty()) {
+                            parentViewModel.requestMultiDelete(toDelete)
+                            selectedItems.value = emptySet()
+                        }
+                    },
                     isAllSelected = selectedItems.value.size == audioList.size,
                     onSelectAllClick = {
                         selectedItems.value = (0 until audioList.size).toSet()
@@ -141,9 +151,7 @@ fun FolderRootScreen(
                             basePlayerViewModel.onBasePlayerEvents(BasePlayerEvents.ClearMediaItems)
                             basePlayerViewModel.setAudioList(audioList)
                             basePlayerViewModel.onBasePlayerEvents(
-                                BasePlayerEvents.SelectedAudioChange(
-                                    index
-                                )
+                                BasePlayerEvents.SelectedAudioChange(index)
                             )
                             navController.navigate(Screens.Player)
                             startNotificationService()
