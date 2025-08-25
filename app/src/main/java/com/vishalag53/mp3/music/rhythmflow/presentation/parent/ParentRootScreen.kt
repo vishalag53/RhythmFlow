@@ -177,8 +177,8 @@ fun ParentRootScreen(
     )
 
     // Song Info
-    val audioMenu = menuViewModel.audio.collectAsStateWithLifecycle().value
-    val aboutSong = arrayOf(
+    val songInfo = parentViewModel.songInfo.collectAsStateWithLifecycle().value
+    val aboutSong = listOf(
         "Song Name",
         "Display Name",
         "Artist",
@@ -191,30 +191,34 @@ fun ParentRootScreen(
         "Folder Name",
         "File Path"
     )
-    val aboutSongInfo = arrayOf(
-        audioMenu.title,
-        audioMenu.displayName,
-        audioMenu.artist,
-        audioMenu.album,
-        formatDuration(audioMenu.duration),
-        formatSize(audioMenu.size),
-        formatBitrate(audioMenu.bitrate),
-        formatDate(audioMenu.dateAdded),
-        formatDate(audioMenu.dateModified),
-        audioMenu.folderName,
-        audioMenu.path
-    )
+    val aboutSongInfo = if (songInfo != null) {
+        listOf(
+            songInfo.title,
+            songInfo.displayName,
+            songInfo.artist,
+            songInfo.album,
+            formatDuration(songInfo.duration),
+            formatSize(songInfo.size),
+            formatBitrate(songInfo.bitrate),
+            formatDate(songInfo.dateAdded),
+            formatDate(songInfo.dateModified),
+            songInfo.folderName,
+            songInfo.path
+        )
+    } else {
+        listOf("")
+    }
 
     // Folder Info
     val folder = folderMenuViewModel.folder.collectAsStateWithLifecycle().value
-    val aboutFolder = arrayOf(
+    val aboutFolder = listOf(
         "Name",
         "Total songs",
         "Total songs time",
         "Folder size",
         "Folder Path"
     )
-    val aboutFolderInfo = arrayOf(
+    val aboutFolderInfo = listOf(
         folder.name,
         folder.length.toString(),
         formatDuration(folder.totalTime),
@@ -455,6 +459,7 @@ fun ParentRootScreen(
             modifier = Modifier.statusBarsPadding(),
             onDismissRequest = {
                 parentUiState.value = ParentUiState()
+                parentViewModel.clearSongInfo()
             },
             sheetState = sheetState,
             containerColor = modalBottomSheetBackgroundColor.value,

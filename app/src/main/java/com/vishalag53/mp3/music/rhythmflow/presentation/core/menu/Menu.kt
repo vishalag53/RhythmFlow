@@ -167,7 +167,10 @@ fun Menu(
                 Spacer(modifier = Modifier.width(4.dp))
 
                 IconButton(
-                    onClick = onInfoClick
+                    onClick = {
+                        parentViewModel.setSongInfo(audio)
+                        onInfoClick()
+                    }
                 ) {
                     Icon(
                         imageVector = Icons.Default.Info,

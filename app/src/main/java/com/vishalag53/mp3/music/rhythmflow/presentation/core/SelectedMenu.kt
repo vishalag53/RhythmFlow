@@ -27,7 +27,8 @@ fun SelectedMenu(
     onCancelClick: () -> Unit,
     onSelectAllClick: () -> Unit,
     size: Int,
-    onRenameClick: () -> Unit
+    onRenameClick: () -> Unit,
+    onSongInfoClick: () -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
 
@@ -142,7 +143,7 @@ fun SelectedMenu(
                         )
                     },
                     onClick = {
-
+                        onSongInfoClick()
                         expanded = false
                     }
                 )

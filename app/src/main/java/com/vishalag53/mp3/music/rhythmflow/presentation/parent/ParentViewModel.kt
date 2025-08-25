@@ -67,4 +67,16 @@ class ParentViewModel @Inject constructor(): ViewModel() {
         _pendingRename.value = null
         _showRenameDialog.value = false
     }
+
+    // Song Info
+    private val _songInfo = MutableStateFlow<Audio?>(null)
+    val songInfo = _songInfo.asStateFlow()
+
+    fun setSongInfo(audio: Audio) {
+        _songInfo.value = audio
+    }
+
+    fun clearSongInfo() {
+        _songInfo.value = null
+    }
 }

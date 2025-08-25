@@ -23,7 +23,8 @@ fun SelectedTopAppBar(
     onDeleteClick: () -> Unit,
     isAllSelected: Boolean,
     onSelectAllClick: () -> Unit,
-    onRenameClick: () -> Unit
+    onRenameClick: () -> Unit,
+    onSongInfoClick: () -> Unit
 ) {
     TopAppBar(
         title = {
@@ -72,7 +73,8 @@ fun SelectedTopAppBar(
                 onCancelClick = onCancelClick,
                 onSelectAllClick = onSelectAllClick,
                 size = selectedSize,
-                onRenameClick = onRenameClick
+                onRenameClick = onRenameClick,
+                onSongInfoClick = onSongInfoClick
             )
         },
         windowInsets = WindowInsets(0, 0, 0, 0)

@@ -105,6 +105,10 @@ fun FolderRootScreen(
                     },
                     onRenameClick = {
                         parentViewModel.requestRename(audioList[selectedItems.value.first()])
+                    },
+                    onSongInfoClick = {
+                        parentViewModel.setSongInfo(audioList[selectedItems.value.first()])
+                        parentUiState.value = ParentUiState(ParentBottomSheetContent.SongInfo)
                     }
                 )
             }

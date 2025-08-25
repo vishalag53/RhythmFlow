@@ -27,6 +27,7 @@ import com.vishalag53.mp3.music.rhythmflow.presentation.core.baseplayer.BasePlay
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.baseplayer.BasePlayerViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.menu.MenuViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.mainactivity.MainViewModel
+import com.vishalag53.mp3.music.rhythmflow.presentation.parent.ParentBottomSheetContent
 import com.vishalag53.mp3.music.rhythmflow.presentation.parent.ParentUiState
 import com.vishalag53.mp3.music.rhythmflow.presentation.parent.ParentViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.songs.components.SongsTopBar
@@ -91,6 +92,10 @@ fun SongsRootScreen(
                     },
                     onRenameClick = {
                         parentViewModel.requestRename(audioList[selectedItems.value.first()])
+                    },
+                    onSongInfoClick = {
+                        parentViewModel.setSongInfo(audioList[selectedItems.value.first()])
+                        parentUiState.value = ParentUiState(ParentBottomSheetContent.SongInfo)
                     }
                 )
             }

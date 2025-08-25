@@ -15,8 +15,8 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun Info(
-    about: Array<String>,
-    aboutInfo: Array<String>
+    about: List<String>,
+    aboutInfo: List<String>
 ) {
     Box(
         modifier = Modifier
