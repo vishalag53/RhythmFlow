@@ -78,7 +78,8 @@ fun SongsRootScreen(
                     },
                     onShareClick = {},
                     onDeleteClick = {
-                        val toDelete = selectedItems.value.sorted().map { index -> audioList[index] }
+                        val toDelete =
+                            selectedItems.value.sorted().map { index -> audioList[index] }
                         if (toDelete.isNotEmpty()) {
                             parentViewModel.requestMultiDelete(toDelete)
                             selectedItems.value = emptySet()
@@ -87,6 +88,9 @@ fun SongsRootScreen(
                     isAllSelected = selectedItems.value.size == audioList.size,
                     onSelectAllClick = {
                         selectedItems.value = (0 until audioList.size).toSet()
+                    },
+                    onRenameClick = {
+                        parentViewModel.requestRename(audioList[selectedItems.value.first()])
                     }
                 )
             }

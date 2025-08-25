@@ -75,7 +75,7 @@ fun Menu(
         onShuffleClick(newShuffle)
     }
     val onRenameClick = {
-        menuViewModel.setRenameBox(true)
+        parentViewModel.requestRename(audio)
         onClose()
     }
     val onDeleteClick = {
@@ -85,7 +85,10 @@ fun Menu(
     val songMenuItems = listOf(
         listOf(
             MenuItemData(ImageVector.vectorResource(R.drawable.ic_rename), "Rename", onRenameClick),
-            MenuItemData(ImageVector.vectorResource(R.drawable.ic_edit_audio_info), "Edit song info") {}
+            MenuItemData(
+                ImageVector.vectorResource(R.drawable.ic_edit_audio_info),
+                "Edit song info"
+            ) {}
         ),
         listOf(
             MenuItemData(Icons.Default.DeleteForever, "Trash") {},
@@ -100,7 +103,10 @@ fun Menu(
     val generalMenuItems = listOf(
         listOf(
             MenuItemData(Icons.Default.LibraryAdd, "Add to playing queue") {},
-            MenuItemData(ImageVector.vectorResource(R.drawable.ic_add_to_next_play), "Add to next play") {}
+            MenuItemData(
+                ImageVector.vectorResource(R.drawable.ic_add_to_next_play),
+                "Add to next play"
+            ) {}
         ),
         listOf(
             MenuItemData(Icons.Default.GraphicEq, "Equalizer") {},
@@ -115,7 +121,10 @@ fun Menu(
             MenuItemData(Icons.Default.Share, "Share") {}
         ),
         listOf(
-            MenuItemData(ImageVector.vectorResource(R.drawable.ic_ringtone), "Use as a ringtone") {},
+            MenuItemData(
+                ImageVector.vectorResource(R.drawable.ic_ringtone),
+                "Use as a ringtone"
+            ) {},
             MenuItemData(Icons.Default.Timer, "Sleep timer") {}
         ),
         listOf(

@@ -55,7 +55,7 @@ import com.vishalag53.mp3.music.rhythmflow.navigation.RootNavigation
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.Loading
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.baseplayer.BasePlayerEvents
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.baseplayer.BasePlayerViewModel
-import com.vishalag53.mp3.music.rhythmflow.presentation.core.delete.Delete
+import com.vishalag53.mp3.music.rhythmflow.presentation.core.Delete
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.folderMenu.FolderMenu
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.folderMenu.FolderMenuViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.info.Info
@@ -63,7 +63,7 @@ import com.vishalag53.mp3.music.rhythmflow.presentation.core.menu.Menu
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.menu.MenuViewModel
 import com.vishalag53.mp3.music.rhythmflow.presentation.playbackspeed.components.PlaybackSpeed
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.playingqueue.SongQueueListsItem
-import com.vishalag53.mp3.music.rhythmflow.presentation.core.rename.Rename
+import com.vishalag53.mp3.music.rhythmflow.presentation.core.Rename
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.repeat.Repeat
 import com.vishalag53.mp3.music.rhythmflow.presentation.core.sortBy.SortBy
 import com.vishalag53.mp3.music.rhythmflow.presentation.mainactivity.MainViewModel
@@ -139,6 +139,7 @@ fun ParentRootScreen(
     }
 
     // Rename
+    val pendingRenameText = parentViewModel.pendingRename.collectAsStateWithLifecycle().value
     val pendingRename = remember { mutableStateOf<Pair<String, Audio>?>(null) }
     val renameLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartIntentSenderForResult()
@@ -146,9 +147,10 @@ fun ParentRootScreen(
         if (result.resultCode == Activity.RESULT_OK) {
             pendingRename.value?.let { (newName, audio) ->
                 renameDisplayName(newName, audio, context)
-                mainViewModel.updateDisplayName(audio.id, newName)
+                mainViewModel.refreshAudioList()
                 Toast.makeText(context, "Renamed to $newName", Toast.LENGTH_SHORT).show()
                 pendingRename.value = null
+                parentViewModel.clearRename()
             }
         }
     }
@@ -536,11 +538,10 @@ fun ParentRootScreen(
         )
     }
 
-    if (menuViewModel.showRenameDialog.collectAsStateWithLifecycle().value) {
+    if (parentViewModel.showRenameDialog.collectAsStateWithLifecycle().value && pendingRenameText != null) {
         parentUiState.value = ParentUiState()
 
-        val currentNameWithExtension =
-            menuViewModel.audio.collectAsStateWithLifecycle().value.displayName
+        val currentNameWithExtension = pendingRenameText.displayName
         val currentName = if (currentNameWithExtension.contains(".")) {
             currentNameWithExtension.substringBeforeLast(".")
         } else {
@@ -557,27 +558,27 @@ fun ParentRootScreen(
             currentNameWithExtension = currentNameWithExtension,
             currentName = currentName,
             onDismiss = {
-                menuViewModel.setRenameBox(false)
+                parentViewModel.clearRename()
             },
             onRename = { editDisplayName ->
                 val newDisplayName =
                     editDisplayName.trim() + if (extension.isNotEmpty()) ".$extension" else ""
-                val audio = menuViewModel.audio.value
 
                 requestRenamePermission(
                     newDisplayName = newDisplayName,
-                    audio = audio,
+                    audio = pendingRenameText,
                     context = context,
                     onPermissionGranted = { intentSender ->
-                        pendingRename.value = newDisplayName to audio
+                        pendingRename.value = newDisplayName to pendingRenameText
                         renameLauncher.launch(
                             IntentSenderRequest.Builder(intentSender).build()
                         )
                     },
                     onRenameSuccess = {
-                        renameDisplayName(newDisplayName, audio, context)
-                        Toast.makeText(context, "Renamed to $newDisplayName", Toast.LENGTH_SHORT)
-                            .show()
+                        renameDisplayName(newDisplayName, pendingRenameText, context)
+                        mainViewModel.refreshAudioList()
+                        Toast.makeText(context, "Renamed to $newDisplayName", Toast.LENGTH_SHORT).show()
+                        parentViewModel.clearRename()
                     }
                 )
             }

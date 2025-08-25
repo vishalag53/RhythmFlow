@@ -1,4 +1,4 @@
-package com.vishalag53.mp3.music.rhythmflow.presentation.core.delete
+package com.vishalag53.mp3.music.rhythmflow.presentation.core
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

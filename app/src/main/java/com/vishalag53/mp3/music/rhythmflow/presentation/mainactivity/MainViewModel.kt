@@ -9,7 +9,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -87,15 +86,6 @@ class MainViewModel @Inject constructor(
         }
         _foldersList.value = folders
         sortFolderListBy()
-    }
-
-    fun updateDisplayName(audioId: String, newDisplayName: String) {
-        _audioList.update { list ->
-            list.map {
-                if (it.id == audioId) it.copy(displayName = newDisplayName) else it
-            }
-        }
-        sortAudioListBy()
     }
 
     fun refreshAudioList() {

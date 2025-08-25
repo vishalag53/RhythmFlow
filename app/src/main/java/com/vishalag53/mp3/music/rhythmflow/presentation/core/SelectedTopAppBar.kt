@@ -22,7 +22,8 @@ fun SelectedTopAppBar(
     onShareClick: () -> Unit,
     onDeleteClick: () -> Unit,
     isAllSelected: Boolean,
-    onSelectAllClick: () -> Unit
+    onSelectAllClick: () -> Unit,
+    onRenameClick: () -> Unit
 ) {
     TopAppBar(
         title = {
@@ -69,7 +70,9 @@ fun SelectedTopAppBar(
             SelectedMenu(
                 isAllSelected = isAllSelected,
                 onCancelClick = onCancelClick,
-                onSelectAllClick = onSelectAllClick
+                onSelectAllClick = onSelectAllClick,
+                size = selectedSize,
+                onRenameClick = onRenameClick
             )
         },
         windowInsets = WindowInsets(0, 0, 0, 0)

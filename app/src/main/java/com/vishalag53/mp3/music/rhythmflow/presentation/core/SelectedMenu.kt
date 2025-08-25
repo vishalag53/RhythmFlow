@@ -25,7 +25,9 @@ import androidx.compose.ui.unit.dp
 fun SelectedMenu(
     isAllSelected: Boolean,
     onCancelClick: () -> Unit,
-    onSelectAllClick: () -> Unit
+    onSelectAllClick: () -> Unit,
+    size: Int,
+    onRenameClick: () -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
 
@@ -114,6 +116,37 @@ fun SelectedMenu(
                     expanded = false
                 }
             )
+            if (size == 1) {
+                DropdownMenuItem(
+                    text = {
+                        Text(
+                            text = "Rename",
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.SemiBold,
+                            color = Color(0xFF324E82)
+                        )
+                    },
+                    onClick = {
+                        onRenameClick()
+                        expanded = false
+                    }
+                )
+
+                DropdownMenuItem(
+                    text = {
+                        Text(
+                            text = "Song Info",
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.SemiBold,
+                            color = Color(0xFF324E82)
+                        )
+                    },
+                    onClick = {
+
+                        expanded = false
+                    }
+                )
+            }
         }
     }
 }

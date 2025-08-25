@@ -50,4 +50,21 @@ class ParentViewModel @Inject constructor(): ViewModel() {
         _pendingMultiDeleteList.value = emptyList()
         _showMultiDeleteDialog.value = false
     }
+
+    // Rename
+    private val _showRenameDialog = MutableStateFlow(false)
+    val showRenameDialog = _showRenameDialog.asStateFlow()
+
+    private val _pendingRename = MutableStateFlow<Audio?>(null)
+    val pendingRename = _pendingRename.asStateFlow()
+
+    fun requestRename(audio: Audio) {
+        _pendingRename.value = audio
+        _showRenameDialog.value = true
+    }
+
+    fun clearRename() {
+        _pendingRename.value = null
+        _showRenameDialog.value = false
+    }
 }

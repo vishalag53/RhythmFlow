@@ -102,6 +102,9 @@ fun FolderRootScreen(
                     isAllSelected = selectedItems.value.size == audioList.size,
                     onSelectAllClick = {
                         selectedItems.value = (0 until audioList.size).toSet()
+                    },
+                    onRenameClick = {
+                        parentViewModel.requestRename(audioList[selectedItems.value.first()])
                     }
                 )
             }
